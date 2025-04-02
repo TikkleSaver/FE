@@ -9,7 +9,7 @@ const StyledHeader = styled.div`
   left: 0;
   width: 100%;
   background-color: white; /* 배경을 흰색으로 설정 */
-  z-index: 1000;
+  z-index: 1000; 
 `;
 
 const Header = styled.div`
@@ -55,8 +55,6 @@ const Header = styled.div`
     color: white;
     cursor: pointer;
   }
-
-  
 `;
 
 function MainHeader() {
@@ -79,14 +77,14 @@ function MainHeader() {
             참견소
           </li>
           <li
-            className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/")}
+            className={location.pathname === "/challenges" ? "active" : ""}
+            onClick={() => navigate("/challenges")}
           >
             챌린지
           </li>
           <li
-            className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/")}
+             className={location.pathname === "/" ? "active" : ""}
+             onClick={() => navigate("/")}
           >
             소비 일기
           </li>
