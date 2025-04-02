@@ -45,6 +45,8 @@ const Header = styled.div`
 
   .active {
     transform: scale(1.1);
+    color: #2A6658;
+    font-weight: 600;
   }
 
   .apply {
