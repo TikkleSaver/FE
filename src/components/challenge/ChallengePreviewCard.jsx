@@ -1,0 +1,58 @@
+import React from "react";
+import styled from "styled-components";
+import imageUrl from "../../images/challengeImg.png";
+
+
+const CardContainer = styled.div`
+  border-radius: 8px;
+  cursor: pointer;
+  width: 250px;
+ 
+`;
+
+const ChallengeInfo = styled.div`
+   display: flex;
+   justify-content: space-between;
+   padding: 5px 10px;
+
+`;
+
+const ChallengeImage = styled.div`
+  width: 250px;
+  height: 188px;
+  background-color: rgba(57, 57, 57, 0.8);
+  border-radius: 20px;
+  margin-bottom: 10px;
+  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+`;
+
+const Title = styled.span`
+  font-size: 18px;
+  font-weight: 700;
+  color: #333333;
+`;
+
+const Category = styled.span`
+  font-size: 14px;
+  color: #6B6B6B;
+  font-weight: 600;
+`;
+
+const ChallengePreviewCard = () => {
+  return (
+    <>
+    <CardContainer>
+          <ChallengeImage imageUrl={imageUrl} />
+          <ChallengeInfo>
+          <Title>커피값 세이브</Title>
+          <Category>카페/간식</Category>
+          </ChallengeInfo>
+    </CardContainer>
+    </>
+  );
+};
+
+export default ChallengePreviewCard;
