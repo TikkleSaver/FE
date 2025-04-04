@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import imageUrl from "../../images/challengeImg.png";
 
@@ -42,9 +43,11 @@ const Category = styled.span`
 `;
 
 const ChallengePreviewCard = () => {
+  const navigate = useNavigate();
+
   return (
     <>
-    <CardContainer>
+    <CardContainer onClick={() => navigate("/signup-challenge")}>
           <ChallengeImage imageUrl={imageUrl} />
           <ChallengeInfo>
           <Title>커피값 세이브</Title>
