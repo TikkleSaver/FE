@@ -79,7 +79,7 @@ function MainHeader() {
             참견소
           </li>
           <li
-            className={location.pathname === "/challenges" ? "active" : ""}
+            className={location.pathname.startsWith("/challenges") ? "active" : ""}
             onClick={() => navigate("/challenges")}
           >
             챌린지
