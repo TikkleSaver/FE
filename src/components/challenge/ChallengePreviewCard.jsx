@@ -47,7 +47,7 @@ const ChallengePreviewCard = () => {
 
   return (
     <>
-    <CardContainer onClick={() => navigate("/signup-challenge")}>
+    <CardContainer onClick={() => navigate("/challenges/signup-challenge")}>
           <ChallengeImage imageUrl={imageUrl} />
           <ChallengeInfo>
           <Title>커피값 세이브</Title>

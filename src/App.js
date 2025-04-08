@@ -10,7 +10,7 @@ function App() {
       <MainHeader />
       <Routes>
         <Route path="/challenges" element={<ChallengePage />} />
-        <Route path="/signup-challenge" element={<SignUpPageChallengePage />} />
+        <Route path="/challenges/signup-challenge" element={<SignUpPageChallengePage />} />
    
       </Routes>
      </Router>
