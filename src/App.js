@@ -12,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/challenges" element={<ChallengePage />} />
         <Route path="/challenges/signup-challenge" element={ <SignUpPageChallengePage/>} />
+        <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
    
       </Routes>
      </Router>
