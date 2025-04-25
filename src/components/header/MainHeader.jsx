@@ -9,7 +9,7 @@ const StyledHeader = styled.div`
   left: 0;
   width: 100%;
   background-color: white; /* 배경을 흰색으로 설정 */
-  z-index: 1000; 
+  z-index: 1000;
 `;
 
 const Header = styled.div`
@@ -45,7 +45,7 @@ const Header = styled.div`
 
   .active {
     transform: scale(1.1);
-    color: #2A6658;
+    color: #2a6658;
     font-weight: 600;
   }
 
@@ -79,14 +79,18 @@ function MainHeader() {
             참견소
           </li>
           <li
-            className={location.pathname.startsWith("/challenges") ? "active" : ""}
+            className={
+              location.pathname.startsWith("/challenges") ? "active" : ""
+            }
             onClick={() => navigate("/challenges")}
           >
             챌린지
           </li>
           <li
-             className={location.pathname === "/" ? "active" : ""}
-             onClick={() => navigate("/")}
+            className={
+              location.pathname.startsWith("/expenseCalendar") ? "active" : ""
+            }
+            onClick={() => navigate("/expenseCalendar")}
           >
             소비 일기
           </li>
@@ -96,11 +100,8 @@ function MainHeader() {
           >
             나의 위시리스트
           </li>
-        
-          <button
-            className="apply"
-            onClick={() => ""}
-          >
+
+          <button className="apply" onClick={() => ""}>
             로그인
           </button>
         </ul>
