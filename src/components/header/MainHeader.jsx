@@ -74,7 +74,7 @@ function MainHeader() {
         <ul className="header__menulist">
           <li
             className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/meddling")}
           >
             참견소
           </li>
