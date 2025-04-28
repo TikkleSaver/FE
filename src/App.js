@@ -4,9 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ChallengePage from "./pages/challenge/ChallengePage";
 import SignUpPageChallengePage from "./pages/challenge/SignUpChallengePage"
 import MeddlePage from "./pages/meddling/MeddlingPage";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ChallengePage from './pages/challenge/ChallengePage';
-import SignUpPageChallengePage from './pages/challenge/SignUpChallengePage';
 import ExpenseCalendar from './pages/challenge/ExpenseCalendar';
 import './App.css';
 import SignUp from './pages/login/SignUp';
