@@ -13,6 +13,7 @@ const CardContainer = styled.div`   // 큰 상자
   align-items: flex-start;
   border-radius: 8px;
   cursor: pointer;
+  margin-top : 50px;
 `;
 
 const MeddlingInfoContainer = styled.span`    // 상품 이미지 제외 정보
