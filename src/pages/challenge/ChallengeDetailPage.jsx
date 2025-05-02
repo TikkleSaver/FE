@@ -5,6 +5,7 @@ import certifyIcon from "../../assets/certifyIcon.svg";
 import challengerIcon from "../../assets/challengerIcon.svg";
 import chaellengeImg from "../../images/challengeImg.png";
 import quitBtnIcon from "../../assets/quitBtnIcon.svg"
+import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent"
 
 
 const ChallengeContainer = styled.div`
@@ -21,6 +22,7 @@ const ChallengInfoContainer = styled.div`
   width:85%;
   display:flex;
   justify-content: space-between;
+
 
 img
 {  
@@ -147,6 +149,11 @@ const Tab = styled.div`
   margin-left: 6px;
   }
 `;
+
+const TabChallengeContainer = styled.div`
+
+`;
+
 const TopChallengeInnerContainer = styled.div`
 
 `;
@@ -160,6 +167,7 @@ function ChallengeDetailPage() {
   ];
 
   return (
+  <>
     <ChallengeContainer>
 
 <ChallengInfoContainer>
@@ -203,10 +211,14 @@ function ChallengeDetailPage() {
   ))}
   </TabInnerContainer>
 </TabContainer>
-      <TopChallengeInnerContainer>
-        {/* 선택된 탭에 따른 내용 */}
-      </TopChallengeInnerContainer>
+     
     </ChallengeContainer>
+    <TabChallengeContainer>
+    <TopChallengeInnerContainer>
+       <ChallengeMainComponent/>
+      </TopChallengeInnerContainer>
+    </TabChallengeContainer>
+    </>
   );
 }
 
