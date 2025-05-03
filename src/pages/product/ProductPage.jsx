@@ -79,7 +79,6 @@ function ProductPage() {
     const [searchTerm, setSearchTerm] = useState("");
 
     return (
-        <>
         <ProductPageContainer>
             <SearchContainer>
                 <SearchIconWrapper>
@@ -112,7 +111,6 @@ function ProductPage() {
                </ProductInnerContainer>
             </ProductContainer>
         </ProductPageContainer>
-        </>
     );
   }
   
