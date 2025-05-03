@@ -78,8 +78,8 @@ function MainHeader() {
         </div>
         <ul className="header__menulist">
           <li
-            className={location.pathname === '/' ? 'active' : ''}
-            onClick={() => navigate('/')}
+            className={location.pathname === "/" ? "active" : ""}
+            onClick={() => navigate("/meddling")}
           >
             참견소
           </li>
