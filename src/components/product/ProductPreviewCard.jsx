@@ -83,19 +83,17 @@ const ProductPreviewCard = () => {
     const navigate = useNavigate();
   
     return (
-      <>
-        <CardContainer>
-          <ProductImage />
-          <ProductName>바닐라딜라이트</ProductName>
-          <BottomContainer>
-            <ProductInfoContainer>
-              <ProductHighPrice>최고가 : 40000원</ProductHighPrice>
-              <ProductLowPrice>최저가 : 10000원</ProductLowPrice>
-            </ProductInfoContainer>
-            <ProductWishBtn>담기</ProductWishBtn>
-          </BottomContainer>
-        </CardContainer>
-      </>
+      <CardContainer>
+        <ProductImage />
+        <ProductName>바닐라딜라이트</ProductName>
+        <BottomContainer>
+          <ProductInfoContainer>
+            <ProductHighPrice>최고가 : 40000원</ProductHighPrice>
+            <ProductLowPrice>최저가 : 10000원</ProductLowPrice>
+          </ProductInfoContainer>
+          <ProductWishBtn>담기</ProductWishBtn>
+        </BottomContainer>
+      </CardContainer>
     );
   };
   
