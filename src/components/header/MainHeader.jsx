@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../images/logo.svg";
+import WishlistMenu from "./WishListHeader";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -9,7 +10,7 @@ const StyledHeader = styled.div`
   left: 0;
   width: 100%;
   background-color: white; /* 배경을 흰색으로 설정 */
-  z-index: 1000; 
+  z-index: 1000;
 `;
 
 const Header = styled.div`
@@ -45,7 +46,7 @@ const Header = styled.div`
 
   .active {
     transform: scale(1.1);
-    color: #2A6658;
+    color: #2a6658;
     font-weight: 600;
   }
 
@@ -63,6 +64,11 @@ function MainHeader() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 로그인 페이지에서는 헤더를 보여주지 않음
+  if (location.pathname === "/login" || location.pathname === "/signup") {
+    return null;
+  }
+
   return (
     <StyledHeader>
       <Header>
@@ -74,33 +80,32 @@ function MainHeader() {
         <ul className="header__menulist">
           <li
             className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/meddling")}
           >
             참견소
           </li>
           <li
-            className={location.pathname.startsWith("/challenges") ? "active" : ""}
+            className={
+              location.pathname.startsWith("/challenges") ? "active" : ""
+            }
             onClick={() => navigate("/challenges")}
           >
             챌린지
           </li>
           <li
-             className={location.pathname === "/" ? "active" : ""}
-             onClick={() => navigate("/")}
+            className={
+              location.pathname.startsWith("/expenseCalendar") ||
+              location.pathname.startsWith("/expense")
+                ? "active"
+                : ""
+            }
+            onClick={() => navigate("/expenseCalendar")}
           >
             소비 일기
           </li>
-          <li
-            className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/")}
-          >
-            나의 위시리스트
-          </li>
-        
-          <button
-            className="apply"
-            onClick={() => ""}
-          >
+          <WishlistMenu />
+
+          <button className="apply" onClick={() => navigate("/login")}>
             로그인
           </button>
         </ul>
