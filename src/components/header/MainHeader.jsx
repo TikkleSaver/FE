@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../images/logo.svg";
+import WishlistMenu from "./WishListHeader";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -102,12 +103,7 @@ function MainHeader() {
           >
             소비 일기
           </li>
-          <li
-            className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/")}
-          >
-            나의 위시리스트
-          </li>
+          <WishlistMenu />
 
           <button className="apply" onClick={() => navigate("/login")}>
             로그인

@@ -1,8 +1,9 @@
-import "./App.css";
-import MainHeader from "./components/header/MainHeader";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ChallengePage from "./pages/challenge/ChallengePage";
-import SignUpPageChallengePage from "./pages/challenge/SignUpChallengePage";
+import './App.css';
+import MainHeader from './components/header/MainHeader';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ChallengePage from './pages/challenge/ChallengePage';
+import SignUpPageChallengePage from './pages/challenge/SignUpChallengePage';
+import ProductPage from './pages/product/ProductPage';
 import MeddlePage from "./pages/meddling/MeddlingPage";
 import ExpenseCalendar from "./pages/expense/ExpenseCalendar";
 import "./App.css";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/expense" element={<Expense />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/products" element={<ProductPage />} />
       </Routes>
     </Router>
   );
