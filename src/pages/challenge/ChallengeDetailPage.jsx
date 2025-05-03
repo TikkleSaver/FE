@@ -7,6 +7,7 @@ import chaellengeImg from "../../images/challengeImg.png";
 import quitBtnIcon from "../../assets/quitBtnIcon.svg";
 import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
 import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
+import ChallengerComponent from "../../components/challenge/ChallengerComponent";
 
 const ChallengeContainer = styled.div`
 
@@ -211,7 +212,7 @@ function ChallengeDetailPage() {
         <TopChallengeInnerContainer>
           {selectedTab === "메인" && <ChallengeMainComponent />}
           {selectedTab === "인증하기" && <ChallengeCertifyComponent />}
-          {selectedTab === "챌린저" && <div></div>}
+          {selectedTab === "챌린저" && <ChallengerComponent/>}
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
     </>
