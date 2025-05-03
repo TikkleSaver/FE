@@ -1,7 +1,7 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import logo from '../../images/logo.svg';
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../../images/logo.svg";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -64,7 +64,7 @@ function MainHeader() {
   const location = useLocation();
 
   // 로그인 페이지에서는 헤더를 보여주지 않음
-  if (location.pathname === '/login' || location.pathname === '/signup') {
+  if (location.pathname === "/login" || location.pathname === "/signup") {
     return null;
   }
 
@@ -72,7 +72,7 @@ function MainHeader() {
     <StyledHeader>
       <Header>
         <div className="header-mobile">
-          <div onClick={() => navigate('/')}>
+          <div onClick={() => navigate("/")}>
             <img className="logo" src={logo} alt="Logo" />
           </div>
         </div>
@@ -85,28 +85,31 @@ function MainHeader() {
           </li>
           <li
             className={
-              location.pathname.startsWith('/challenges') ? 'active' : ''
+              location.pathname.startsWith("/challenges") ? "active" : ""
             }
-            onClick={() => navigate('/challenges')}
+            onClick={() => navigate("/challenges")}
           >
             챌린지
           </li>
           <li
             className={
-              location.pathname.startsWith('/expenseCalendar') ? 'active' : ''
+              location.pathname.startsWith("/expenseCalendar") ||
+              location.pathname.startsWith("/expense")
+                ? "active"
+                : ""
             }
-            onClick={() => navigate('/expenseCalendar')}
+            onClick={() => navigate("/expenseCalendar")}
           >
             소비 일기
           </li>
           <li
-            className={location.pathname === '/' ? 'active' : ''}
-            onClick={() => navigate('/')}
+            className={location.pathname === "/" ? "active" : ""}
+            onClick={() => navigate("/")}
           >
             나의 위시리스트
           </li>
 
-          <button className="apply" onClick={() => navigate('/login')}>
+          <button className="apply" onClick={() => navigate("/login")}>
             로그인
           </button>
         </ul>
