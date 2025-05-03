@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -55,6 +56,10 @@ const DateCell = styled.div`
   color: ${(props) => (props.isToday ? "green" : "#4A5660 ")};
 `;
 
+const DateNumber = styled.div`
+  cursor: pointer;
+`;
+
 const ExpenseAmount = styled.div`
   color: ${(props) => (props.isOver ? "red" : "black")};
   font-size: 0.9rem;
@@ -84,26 +89,27 @@ const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
 // 임시 데이터
 const dummyExpenses = {
-  "2025-04-01": -120000,
-  "2025-04-03": -80000,
-  "2025-04-04": -120000,
-  "2025-04-05": 100,
-  "2025-04-06": -120000,
-  "2025-04-07": -120000,
-  "2025-04-08": -120000,
-  "2025-04-10": -80000,
-  "2025-04-11": -120000,
-  "2025-04-12": 100,
-  "2025-04-13": -120000,
-  "2025-04-14": -120000,
-  "2025-04-15": -120000,
-  "2025-04-17": -80000,
-  "2025-04-18": -120000,
-  "2025-04-19": 19,
-  "2025-04-20": 100,
+  "2025-05-01": -120000,
+  "2025-05-03": -80000,
+  "2025-05-04": -120000,
+  "2025-05-05": 100,
+  "2025-05-06": -120000,
+  "2025-05-07": -120000,
+  "2025-05-08": -120000,
+  "2025-05-10": -80000,
+  "2025-05-11": -120000,
+  "2025-05-12": 100,
+  "2025-05-13": -120000,
+  "2025-05-14": -120000,
+  "2025-05-15": -120000,
+  "2025-05-17": -80000,
+  "2025-05-18": -120000,
+  "2025-05-19": 19,
+  "2025-05-20": 100,
 };
 
 const ExpenseCalendar = () => {
+  const navigate = useNavigate();
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth()); // 0~11월
@@ -129,6 +135,11 @@ const ExpenseCalendar = () => {
   // 달의 시작 요일을 가져오는 함수
   const getStartDayOfWeek = (year, month) => {
     return new Date(year, month, 1).getDay();
+  };
+
+  // 특정 날짜의 지출 목록 페이지로 이동하는 함수
+  const handleDateClick = (dateKey) => {
+    navigate("/expense", { state: { date: dateKey } }); // dateKey: '2025-04-15'
   };
 
   const renderCells = () => {
@@ -159,7 +170,9 @@ const ExpenseCalendar = () => {
 
       cells.push(
         <DateCell key={dateKey} isToday={isToday}>
-          <div>{date}</div>
+          <DateNumber onClick={() => handleDateClick(dateKey)}>
+            {date}
+          </DateNumber>
           {expense !== undefined && (
             <ExpenseAmount isOver={isOverBudget}>{expense}원</ExpenseAmount>
           )}

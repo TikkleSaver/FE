@@ -9,6 +9,7 @@ import ExpenseCalendar from "./pages/expense/ExpenseCalendar";
 import "./App.css";
 import SignUp from "./pages/login/SignUp";
 import Login from "./pages/login/Login";
+import Expense from "./pages/expense/Expense";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           element={<SignUpPageChallengePage />}
         />
         <Route path="/expenseCalendar" element={<ExpenseCalendar />} />
+        <Route path="/expense" element={<Expense />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
