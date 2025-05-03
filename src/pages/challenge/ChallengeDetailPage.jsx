@@ -4,9 +4,9 @@ import mainIcon from "../../assets/mainIcon.svg";
 import certifyIcon from "../../assets/certifyIcon.svg";
 import challengerIcon from "../../assets/challengerIcon.svg";
 import chaellengeImg from "../../images/challengeImg.png";
-import quitBtnIcon from "../../assets/quitBtnIcon.svg"
-import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent"
-
+import quitBtnIcon from "../../assets/quitBtnIcon.svg";
+import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
+import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
 
 const ChallengeContainer = styled.div`
 
@@ -157,9 +157,10 @@ const TabChallengeContainer = styled.div`
 const TopChallengeInnerContainer = styled.div`
 
 `;
-function ChallengeDetailPage() {
 
+function ChallengeDetailPage() {
   const [selectedTab, setSelectedTab] = useState("메인");
+
   const tabs = [
     { name: "메인", icon: mainIcon },
     { name: "인증하기", icon: certifyIcon },
@@ -167,57 +168,52 @@ function ChallengeDetailPage() {
   ];
 
   return (
-  <>
-    <ChallengeContainer>
+    <>
+      <ChallengeContainer>
+        <ChallengInfoContainer>
+          <ChallengeInnerWrapper>
+            <img src={chaellengeImg} />
+            <ChallengeInfoWrapper>
+              <ChallengeTitle>커피값 세이브</ChallengeTitle>
+              <ChallengeCheckList>
+                <li>밥 먹기</li>
+                <li>밥 먹기</li>
+              </ChallengeCheckList>
+            </ChallengeInfoWrapper>
+          </ChallengeInnerWrapper>
+          <ChallengeQuitBtn>
+            <img src={quitBtnIcon} alt="나가기" />
+          </ChallengeQuitBtn>
+        </ChallengInfoContainer>
 
-<ChallengInfoContainer>
-    <ChallengeInnerWrapper>
-    <img src={chaellengeImg}/>
-   
-   <ChallengeInfoWrapper>
-        <ChallengeTitle>커피값 세이브</ChallengeTitle>
-        <ChallengeCheckList>
-            <li>
-                밥 먹기
-            </li>
-            <li>
-                밥 먹기
-            </li>
-        </ChallengeCheckList>
-        </ChallengeInfoWrapper>
-        </ChallengeInnerWrapper>
-        <ChallengeQuitBtn>
-            <img src={quitBtnIcon} alt="나가기"/>
-        </ChallengeQuitBtn>
-</ChallengInfoContainer>
-<TabContainer>
-    <TabInnerContainer>
-  {tabs.map((tab) => (
-    <Tab
-      key={tab.name}
-      $active={selectedTab === tab.name ? "true" : "false"}
-      onClick={() => setSelectedTab(tab.name)}
-    >
-      <img src={tab.icon} alt={tab.name} />
-      <span>
-      {tab.name}
-      {tab.name === "챌린저" && tab.count !== undefined && (
-        <span className="CountStyle">
-          {tab.count}
-        </span>
-      )}
-    </span>
-    </Tab>
-  ))}
-  </TabInnerContainer>
-</TabContainer>
-     
-    </ChallengeContainer>
-    <TabChallengeContainer>
-    <TopChallengeInnerContainer>
-       <ChallengeMainComponent/>
-      </TopChallengeInnerContainer>
-    </TabChallengeContainer>
+        <TabContainer>
+          <TabInnerContainer>
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.name}
+                $active={selectedTab === tab.name ? "true" : "false"}
+                onClick={() => setSelectedTab(tab.name)}
+              >
+                <img src={tab.icon} alt={tab.name} />
+                <span>
+                  {tab.name}
+                  {tab.name === "챌린저" && tab.count !== undefined && (
+                    <span className="CountStyle">{tab.count}</span>
+                  )}
+                </span>
+              </Tab>
+            ))}
+          </TabInnerContainer>
+        </TabContainer>
+      </ChallengeContainer>
+
+      <TabChallengeContainer>
+        <TopChallengeInnerContainer>
+          {selectedTab === "메인" && <ChallengeMainComponent />}
+          {selectedTab === "인증하기" && <ChallengeCertifyComponent />}
+          {selectedTab === "챌린저" && <div></div>}
+        </TopChallengeInnerContainer>
+      </TabChallengeContainer>
     </>
   );
 }
