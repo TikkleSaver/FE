@@ -53,7 +53,7 @@ function CertifyComponent({ name, imgSrc }) {
 }
 
 const ChallengerComponent = () => {
-  // 목데이터 배열
+
   const mockData = [
     { name: "홍길동", imgSrc: top3RankImg },
     { name: "김철수", imgSrc: top3RankImg },

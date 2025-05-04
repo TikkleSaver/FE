@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import imageUrl from "../../images/challengeImg.png";
 import emptyImageUrl from "../../images/emptyCertificationImg.svg"
