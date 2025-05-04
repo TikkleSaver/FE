@@ -6,6 +6,7 @@ import MyCommentCard from "../../components/expense/MyCommentCard";
 import FriendExpenseCard from "../../components/expense/FriendExpenseCard";
 import FriendCommentCard from "../../components/expense/FriendCommentCard";
 import SubmitBtn from "./../../assets/arrowUp.svg";
+import AddExpenseModal from "../../components/expense/modal/AddExpenseModal";
 
 // 최상위 container
 const ExpenseContainer = styled.div`
@@ -157,6 +158,7 @@ const Expense = () => {
   const location = useLocation();
   const selectedDate = location.state?.date;
   const [newComment, setNewComment] = useState("");
+  const [showAddModal, setShowAddModal] = useState(false);
 
   // 임시 로그인한 사용자 ID
   const loggedInUserId = "meartangLove0005";
@@ -185,9 +187,14 @@ const Expense = () => {
     setNewComment("");
   };
 
-  // 지출 추가 모달 열기 or 페이지 이동 등
-  const handleAddExpense = () => {
-    alert("지출 추가하기 버튼 클릭됨");
+  // 지출 추가 모달 열기
+  const handleAddExpenseModal = () => {
+    setShowAddModal(true);
+  };
+
+  // 지출 추가가 모달 닫기
+  const handleCloseAddExpenseModal = () => {
+    setShowAddModal(false);
   };
 
   const items = Array(9).fill({
@@ -224,7 +231,7 @@ const Expense = () => {
           )}
         </ExpenseItems>
         {isMyExpense && (
-          <AddExpenseButton onClick={handleAddExpense}>
+          <AddExpenseButton onClick={handleAddExpenseModal}>
             + 지출 추가하기
           </AddExpenseButton>
         )}
@@ -254,6 +261,8 @@ const Expense = () => {
           </CommentInputWrapper>
         )}
       </ExpenseCommentListContainer>
+
+      {showAddModal && <AddExpenseModal onClose={handleCloseAddExpenseModal} />}
     </ExpenseContainer>
   );
 };
