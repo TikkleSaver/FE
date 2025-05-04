@@ -99,7 +99,7 @@ const SubmitButton = styled.button`
   align-self: flex-end;
   margin-top: 12px;
   padding: 10px 35px;
-  background-color: #2a6658;
+  background-color: #3d8d7a;
   color: white;
   border: none;
   border-radius: 10px;
