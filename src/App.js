@@ -11,11 +11,12 @@ import SignUp from "./pages/login/SignUp";
 import Login from "./pages/login/Login";
 import Expense from "./pages/expense/Expense";
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
-
+import GlobalStyle from './styles/GlobalStyle';
 
 function App() {
   return (
     <Router>
+      <GlobalStyle />
       <MainHeader />
       <Routes>
         <Route path="/meddling" element={<MeddlePage />} />
