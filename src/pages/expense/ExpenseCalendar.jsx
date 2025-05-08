@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Colors from "../../constanst/color.mjs";
 
 const Wrapper = styled.div`
   max-width: 965px;
@@ -10,7 +11,7 @@ const Wrapper = styled.div`
 const CalendarWrapper = styled.div`
   padding: 1.5rem 0;
   margin-top: 100px;
-  border: 1.5px solid #b5b3c6;
+  border: 1.5px solid ${Colors.secondary100};
   border-radius: 25px;
 `;
 
@@ -26,13 +27,13 @@ const ArrowButton = styled.button`
   border: none;
   margin: 0 3rem;
   font-size: 1.5rem;
-  color: #b5bec6;
+  color: ${Colors.secondary100};
   cursor: pointer;
 `;
 
 const Title = styled.h2`
   font-size: 27px;
-  color: #4a5660;
+  color: ${Colors.secondary400};
   font-weight: bold;
 `;
 
@@ -44,7 +45,7 @@ const Grid = styled.div`
 
 const Day = styled.div`
   font-weight: bold;
-  color: #b5bec6;
+  color: ${Colors.secondary100};
   margin-bottom: 0.5rem;
 `;
 
@@ -53,7 +54,7 @@ const DateCell = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: ${(props) => (props.isToday ? "green" : "#4A5660 ")};
+  color: ${(props) => (props.isToday ? "green" : "${Colors.secondary400}")};
 `;
 
 const DateNumber = styled.div`
@@ -75,7 +76,7 @@ const Footer = styled.div`
 
   input {
     border: none;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid ${Colors.secondary100};
     background: transparent;
     padding: 6px 4px;
     font-size: 14px;
