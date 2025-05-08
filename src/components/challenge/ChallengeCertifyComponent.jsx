@@ -3,17 +3,14 @@ import styled from "styled-components";
 import prevMonthIcon from "../../assets/prevMonthIcon.svg"
 import nextMonthIcon from "../../assets/nextMonthIcon.svg"
 import emptyImg from "../../images/emptyImg.svg"
-
-
+import Colors from "../../constanst/color.mjs";
 
 const ChallengeCertifyWrapper = styled.div`
-
   width: 80%;
   max-width: 100%;
   margin: 30px auto;
   display:flex;
   align-items: stretch;
-
 
 `;
 
@@ -31,7 +28,7 @@ const CalendarContainer = styled.div`
   height: auto;
   min-height: 480px;
 
-  border: 2px solid #CBCBCB;
+  border: 2px solid ${Colors.secondary100};
   border-radius: 10px;
   text-align: center;
 `;
@@ -65,7 +62,7 @@ const Day = styled.div`
   padding: 20px;
   font-size: 18px;
   font-weight: 500;
-  color: #B5BEC6;
+  color: ${Colors.secondary100};
 `;
 
 const DateCell = styled.div`
@@ -111,13 +108,11 @@ const DateCell = styled.div`
 `;
 const ChallengeCertifyContainer = styled.div`
   width: 450px;
- flex: 1;
+  flex: 1;
   height: auto;
-    margin: 20px auto;
-
-    border: 2px solid #CBCBCB;
+  margin: 20px auto;
+  border: 2px solid ${Colors.secondary100};
   padding: 20px;
-
   border-radius: 10px;
   text-align: center;
   display: flex;
@@ -145,12 +140,10 @@ const ChallengeCertifyImg= styled.img`
 `;
 
 const CertifyTextContainer = styled.div`
-
   display: flex;
- position: relative;
+  position: relative;
   width:75%;
   margin: 40px auto;
-  margin
   
 `;
 
@@ -175,8 +168,8 @@ const CharCount = styled.div`
 `;
 
 const CertifyBtn = styled.button`
-    border: 1px solid #2A6658;
-    background-color: #3D8D7A;
+    border: 1px solid ${Colors.primary500};
+    background-color: ${Colors.primary};
     color: white;
     padding: 10px 30px;
     font-size: 15px;
