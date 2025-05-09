@@ -39,7 +39,7 @@ export default function EditProfile() {
     <Wrapper>
       <TitleContainer>
         <img src={editIcon2} alt="My Page" />
-        프로필 편집
+        <span>프로필 편집</span>
       </TitleContainer>
       <ProfileContainer>
         <ImageWrapper onClick={handleImageClick}>
@@ -94,16 +94,70 @@ export default function EditProfile() {
 
       <TitleContainer>
         <img src={pwIcon} alt="My Page" />
-        비밀번호 변경
-        <p>
-          비밀번호는 최소 6자 이상이어야 하며 숫자, 영문, 특수 문자(!$@%)의
-          조합을 포함해야 합니다.
-        </p>
+        <div>
+          <span>비밀번호 변경</span>
+          <p>
+            비밀번호는 최소 6자 이상이어야 하며 숫자, 영문, 특수 문자(!$@%)의
+            조합을 포함해야 합니다.
+          </p>
+        </div>
+        <UpdateBtn2 onClick={() => alert('변경되었습니다')}>
+          변경하기
+        </UpdateBtn2>
       </TitleContainer>
+      <PwContainer>
+        <Label htmlFor="pw">현재 비밀번호</Label>
+        <InputPW id="pw" type="password" />
+
+        <Label htmlFor="new">새 비밀번호</Label>
+        <InputPW id="new" type="password" />
+
+        <Label htmlFor="re">새 비밀번호 재입력</Label>
+        <InputPW id="re" type="password" />
+      </PwContainer>
     </Wrapper>
   );
 }
+const UpdateBtn2 = styled.button`
+  margin-left: 20px;
+  height: fit-content;
+  padding: 7px 20px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1px #e5e5e5 solid;
+  background-color: transparent;
+  white-space: nowrap;
+  position: absolute;
+  bottom: 10px;
+  right: 0;
+`;
 
+const PwContainer = styled.div`
+  margin: 0 0 30px 98px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputPW = styled.input`
+  margin: 10px 0 20px;
+  width: 290px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px #cad6d2 solid;
+  font-size: 1rem;
+  padding-left: 10px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Label = styled.label`
+  color: #7d817f;
+  font-size: 1rem;
+  font-weight: 400;
+`;
 const NickNameInputSizer = styled.span`
   position: absolute;
   visibility: hidden;
@@ -117,18 +171,20 @@ const NickName = styled.input`
   color: black;
   font-size: 27px;
   font-weight: 500;
-  padding-left: 10px;
+  text-align: center;
   border: none;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #6b6b6b;
   &:focus {
     outline: none;
   }
 `;
 
 const TitleContainer = styled.div`
-  margin: 30px 50px;
+  position: relative;
+  margin: 20px 50px;
   width: 100%;
-  align-items: center;
+  min-width: 800px;
+  display: flex;
   font-size: 1.5rem;
   font-weight: 700;
   padding-bottom: 10px;
@@ -137,9 +193,11 @@ const TitleContainer = styled.div`
     margin: 0 15px;
     height: 23px;
   }
-  > p {
+  p {
+    white-space: nowrap;
     font-size: 1rem;
     font-weight: 400;
+    margin-bottom: 0;
   }
 `;
 
@@ -189,7 +247,7 @@ const PlusBtn = styled.button`
 const UpdateBtn = styled.button`
   margin-left: 20px;
   width: 150px;
-  font-size: 15px;
+  font-size: 1.1rem;
   font-weight: 400;
   border-radius: 6px;
   word-wrap: break-word;
