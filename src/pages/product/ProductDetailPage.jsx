@@ -26,7 +26,7 @@ const ProductImage = styled.span`  // 상품 이미지
 `;
 
 const ProductTextInfoContainer = styled.div`  // 상품 이미지 제외 정보
-  margin-left: 75px;
+  margin-left: 45px;
 `;
 
 const ProductCategory = styled.div`   // 상품 카테고리

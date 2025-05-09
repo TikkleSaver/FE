@@ -14,6 +14,7 @@ import Expense from './pages/expense/Expense';
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
 import MyWishPage from './pages/wish/MyWishPage';
 import FriendWishPage from './pages/wish/FriendWishPage';
+import AddWishExistPage from './pages/wish/AddWishExistPage';
 import GlobalStyle from './styles/GlobalStyle';
 import Category from './pages/onboarding/Category';
 import Goal from './pages/onboarding/Goal';
@@ -38,6 +39,7 @@ function App() {
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/my-wish" element={<MyWishPage />} />
         <Route path="/friend-wish" element={<FriendWishPage />} />
+        <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
