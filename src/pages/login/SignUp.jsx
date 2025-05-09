@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as S from '../style/Login.style';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../../images/logo.svg';
 
 export default function SignUp() {
-  const [ID, setID] = useState('');
   const [Password, setPassword] = useState('');
   const [idValid, setIDValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
   const navigate = useNavigate(); // 페이지 이동용 훅
-
-  const onChangeId = (e) => {
-    setID(e.target.value);
-    const regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    setIDValid(regex.test(e.target.value));
-  };
 
   const onChangePasswords = (e) => {
     setPassword(e.target.value);
@@ -24,12 +17,12 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault(); // form 기본 제출 막기
-    if (!idValid || !passwordValid) {
-      alert('이메일과 비밀번호를 모두 올바르게 입력해주세요');
-      return;
-    }
+    // if (!idValid || !passwordValid) {
+    //   alert('이메일과 비밀번호를 모두 올바르게 입력해주세요');
+    //   return;
+    // }
     // 로그인 성공 로직 추가하면 됨
-    navigate('/'); // 로그인 성공 시 홈으로 이동
+    navigate('/onboarding/category'); // 로그인 성공 시 홈으로 이동
   };
 
   return (

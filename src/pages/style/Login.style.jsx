@@ -51,7 +51,7 @@ export const HomeWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; //footer 때문에 받아주셔야 합니다ㅜ
+  min-height: 100vh;
 `;
 //메인화면 전체를 감싸주기 위한 스타일드 컴포넌트입니다.
 
