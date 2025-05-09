@@ -12,6 +12,7 @@ import Login from './pages/login/Login';
 import Expense from './pages/expense/Expense';
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
 import MyWishPage from './pages/wish/MyWishPage';
+import FriendWishPage from './pages/wish/FriendWishPage';
 import GlobalStyle from './styles/GlobalStyle';
 import Category from './pages/onboarding/Category';
 import Goal from './pages/onboarding/Goal';
@@ -34,6 +35,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/my-wish" element={<MyWishPage />} />
+        <Route path="/friend-wish" element={<FriendWishPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
