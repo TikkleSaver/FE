@@ -19,7 +19,7 @@ export default function ProfileMenu() {
       </ProfileButton>
 
       <Dropdown className="dropdown">
-        <DropdownItem onClick={() => navigate('/products')}>
+        <DropdownItem onClick={() => navigate('/myprofile')}>
           <img src={icon1} alt="My Page" />내 프로필
         </DropdownItem>
         <DropdownItem onClick={() => navigate('/')}>
