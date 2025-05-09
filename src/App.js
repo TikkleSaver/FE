@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ChallengePage from './pages/challenge/ChallengePage';
 import SignUpPageChallengePage from './pages/challenge/SignUpChallengePage';
 import ProductPage from './pages/product/ProductPage';
+import ProductDetailPage from './pages/product/ProductDetailPage';
 import MeddlePage from './pages/meddling/MeddlingPage';
 import ExpenseCalendar from './pages/expense/ExpenseCalendar';
 import './App.css';
@@ -34,6 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
+        <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/my-wish" element={<MyWishPage />} />
         <Route path="/friend-wish" element={<FriendWishPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
