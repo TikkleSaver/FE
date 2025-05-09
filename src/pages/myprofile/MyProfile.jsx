@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import profileImage from '../../images/profile.svg';
 import friend from '../../images/myprofile/friend.svg';
+import { Link } from 'react-router-dom';
 
 export default function MyProfile() {
   return (
@@ -13,8 +14,11 @@ export default function MyProfile() {
           <Top>
             <NickName>티모</NickName>
             <ButtonGroup>
-              <UpdateBtn>프로필 편집</UpdateBtn>
-              <PlusBtn>
+              <UpdateBtn as={Link} to="/editprofile">
+                프로필 편집
+              </UpdateBtn>
+
+              <PlusBtn as={Link} to="/onboarding/goal">
                 + <img src={friend} alt="My Page" />
               </PlusBtn>
             </ButtonGroup>
@@ -78,6 +82,10 @@ const PlusBtn = styled.button`
   cursor: pointer;
   border: 1px #e5e5e5 solid;
   background-color: transparent;
+  padding: 0 3px;
+  text-decoration: none;
+  color: inherit;
+  justify-content: center; /* 중앙 정렬 */
 
   img {
     width: 15px;
@@ -95,6 +103,13 @@ const UpdateBtn = styled.button`
   cursor: pointer;
   border: 1px #e5e5e5 solid;
   background-color: transparent;
+
+  /* Link로 쓸 때 깨지는 것 방지 */
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Top = styled.div`

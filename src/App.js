@@ -15,6 +15,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import Category from './pages/onboarding/Category';
 import Goal from './pages/onboarding/Goal';
 import MyProfile from './pages/myprofile/MyProfile';
+import EditProfile from './pages/myprofile/EditProfile';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
         <Route path="/myprofile" element={<MyProfile />} />
+        <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
     </Router>
   );
