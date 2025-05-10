@@ -16,6 +16,7 @@ import Category from './pages/onboarding/Category';
 import Goal from './pages/onboarding/Goal';
 import MyProfile from './pages/myprofile/MyProfile';
 import EditProfile from './pages/myprofile/EditProfile';
+import SavedChallenge from './pages/myprofile/SavedChallenge';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/onboarding/goal" element={<Goal />} />
         <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/editprofile" element={<EditProfile />} />
+        <Route path="/savedChallenge" element={<SavedChallenge />} />
       </Routes>
     </Router>
   );

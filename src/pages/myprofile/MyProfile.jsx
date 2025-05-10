@@ -40,7 +40,10 @@ export default function MyProfile() {
         </ProfileBox>
       </ProfileContainer>
       <ChallengeContainer>
-        <TopChallengeText>저장한 챌린지</TopChallengeText>
+        <TopChallengeText>
+          <div>저장한 챌린지</div>{' '}
+          <MoreBtn to="/savedChallenge">{'더보기>'}</MoreBtn>
+        </TopChallengeText>
         <TopChallengeInnerContainer>
           <ChallengePreviewCard />
           <ChallengePreviewCard />
@@ -156,7 +159,7 @@ const ProfileContainer = styled.div`
 `;
 const ChallengeContainer = styled.div`
   margin: 50px auto;
-  width: 100%;
+  width: fit-content;
 `;
 const TopChallengeInnerContainer = styled.div`
   width: fit-content;
@@ -169,8 +172,26 @@ const TopChallengeInnerContainer = styled.div`
 `;
 
 const TopChallengeText = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   margin-bottom: 30px;
   font-size: 25px;
   font-weight: 600;
+  > span {
+    color: #6b6b6b;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+`;
+
+const MoreBtn = styled(Link)`
+  color: #6b6b6b;
+  font-size: 1rem;
+  font-weight: 400;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
