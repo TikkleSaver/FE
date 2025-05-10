@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-const WishlistWrapper = styled.div` 
+const WishlistWrapper = styled.div`
   position: relative;
   display: inline-block;
 
@@ -11,8 +11,8 @@ const WishlistWrapper = styled.div`
   }
 `;
 
-const MenuItem = styled.li`
-  padding: 0.5rem 1.5rem;
+const MenuItem = styled.div`
+  padding: 0px;
   cursor: pointer;
 
   &:hover {
@@ -21,19 +21,20 @@ const MenuItem = styled.li`
 `;
 
 const Dropdown = styled.div`
+  font-size: 0.8em;
   display: none;
   position: absolute;
   top: 40px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 100px;
+  width: fit-content;
+  height: fit-content;
   background: white;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   border: 0.3px solid #2a6658;
-  margin-top : 10px;
-  padding: 10px 15px;
+  margin-top: 10px;
+  padding: 2px 10px;
   z-index: 10;
   white-space: nowrap;
 `;
@@ -41,11 +42,11 @@ const Dropdown = styled.div`
 const DropdownItem = styled.div`
   padding: 8px 12px;
   cursor: pointer;
-  text-align: center;       
-  display: flex;            
-  justify-content: center;  
-  align-items: center;      
-  height: 30px; 
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
 `;
 
 function WishlistMenu() {
@@ -64,6 +65,7 @@ function WishlistMenu() {
         </Dropdown>
       </WishlistWrapper>
     );
+
 }
 
 export default WishlistMenu;
