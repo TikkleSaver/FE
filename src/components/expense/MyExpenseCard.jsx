@@ -3,6 +3,7 @@ import styled from "styled-components";
 import PenIcon from "./../../assets/pen.svg";
 import TrashIcon from "./../../assets/trash.svg";
 import Colors from "../../constanst/color.mjs";
+import UpdateExpenseModal from "./modal/UpdateExpenseModal";
 
 const ExpenseItem = styled.div`
   position: relative;
@@ -75,28 +76,34 @@ const Button = styled.button`
 `;
 
 const MyExpenseCard = ({ item }) => {
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
   const imageSrc = require(`./../../assets/${item.image}`);
 
   return (
-    <ExpenseItem>
-      <ItemImage src={imageSrc} />
-      <ItemInfo>
-        <ItemDetail>
-          <ItemCategory>{item.category}</ItemCategory>
-          <ItemName>{item.expenseName}</ItemName>
-          <ItemPlace>{item.expensePlace}</ItemPlace>
-        </ItemDetail>
-        <ItemPrice>{item.cost}원</ItemPrice>
-      </ItemInfo>
-      <ButtonContainer>
-        <Button onClick={() => alert("수정 클릭")}>
-          <img src={PenIcon} alt="수정" width="24" height="24" />
-        </Button>
-        <Button onClick={() => alert("삭제 클릭")}>
-          <img src={TrashIcon} alt="삭제" width="24" height="24" />
-        </Button>
-      </ButtonContainer>
-    </ExpenseItem>
+    <>
+      <ExpenseItem>
+        <ItemImage src={imageSrc} />
+        <ItemInfo>
+          <ItemDetail>
+            <ItemCategory>{item.category}</ItemCategory>
+            <ItemName>{item.expenseName}</ItemName>
+            <ItemPlace>{item.expensePlace}</ItemPlace>
+          </ItemDetail>
+          <ItemPrice>{item.cost}원</ItemPrice>
+        </ItemInfo>
+        <ButtonContainer>
+          <Button onClick={() => setIsEditOpen(true)}>
+            <img src={PenIcon} alt="수정" width="24" height="24" />
+          </Button>
+          <Button onClick={() => alert("삭제 클릭")}>
+            <img src={TrashIcon} alt="삭제" width="24" height="24" />
+          </Button>
+        </ButtonContainer>
+      </ExpenseItem>
+      {isEditOpen && (
+        <UpdateExpenseModal item={item} onClose={() => setIsEditOpen(false)} />
+      )}
+    </>
   );
 };
 
