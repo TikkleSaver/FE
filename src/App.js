@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ChallengePage from './pages/challenge/ChallengePage';
 import SignUpPageChallengePage from './pages/challenge/SignUpChallengePage';
 import ProductPage from './pages/product/ProductPage';
+import ProductDetailPage from './pages/product/ProductDetailPage';
 import MeddlePage from './pages/meddling/MeddlingPage';
 import ExpenseCalendar from './pages/expense/ExpenseCalendar';
 import './App.css';
@@ -11,6 +12,9 @@ import SignUp from './pages/login/SignUp';
 import Login from './pages/login/Login';
 import Expense from './pages/expense/Expense';
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
+import MyWishPage from './pages/wish/MyWishPage';
+import FriendWishPage from './pages/wish/FriendWishPage';
+import AddWishExistPage from './pages/wish/AddWishExistPage';
 import GlobalStyle from './styles/GlobalStyle';
 import Category from './pages/onboarding/Category';
 import Goal from './pages/onboarding/Goal';
@@ -35,7 +39,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
-        <Route path="/challenge-info" element={<ChallengeDetailPage />} />
+        <Route path="/product-info" element={<ProductDetailPage />} />
+        <Route path="/my-wish" element={<MyWishPage />} />
+        <Route path="/friend-wish" element={<FriendWishPage />} />
+        <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
+        <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
         <Route path="/myprofile" element={<MyProfile />} />

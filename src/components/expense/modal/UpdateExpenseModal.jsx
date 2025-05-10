@@ -77,6 +77,11 @@ const Input = styled.input`
   border: 1px solid ${Colors.secondary100};
   border-radius: 8px;
   font-size: 14px;
+  color: ${Colors.secondary300};
+
+  &::placeholder {
+    color: ${Colors.secondary100};
+  }
 `;
 
 const CategoryWrap = styled.div`
@@ -120,7 +125,7 @@ const ImageUpload = styled.div`
   cursor: pointer;
 `;
 
-const AddExpenseModal = ({ onClose }) => {
+const UpdateExpenseModal = ({ onClose, item }) => {
   const categories = [
     "식비",
     "카페",
@@ -130,35 +135,49 @@ const AddExpenseModal = ({ onClose }) => {
     "교통비",
     "기타 생활비",
   ];
-  const [selectedCategory, setSelectedCategory] = React.useState("식비");
+  const [selectedCategory, setSelectedCategory] = React.useState(item.category);
+  const [expenseName, setExpenseName] = React.useState(item.expenseName);
+  const [expensePlace, setExpensePlace] = React.useState(item.expensePlace);
+  const [cost, setCost] = React.useState(item.cost);
 
-  // 배경 클릭 시 모달 닫기
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+  const handleSubmit = () => {
+    const updated = {
+      ...item,
+      category: selectedCategory,
+      expenseName,
+      expensePlace,
+      cost,
+    };
+    //onSubmit(updated); -> 나중에 api 연결 수정
+    onClose();
   };
 
   return (
-    <Overlay onClick={handleOverlayClick}>
+    <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
         <HeaderRow>
-          <ModalTitle>지출 등록하기</ModalTitle>
+          <ModalTitle>지출 수정하기</ModalTitle>
           <CloseButton onClick={onClose}>X</CloseButton>
         </HeaderRow>
-
         <Row>
           <ImageUpload>
-            <img src={Camera} alt="사진진" width="40" height="40" />
+            <img src={Camera} alt="사진" width="40" height="40" />
           </ImageUpload>
           <Column>
             <Label>지출명</Label>
-            <Input type="text" />
+            <Input
+              value={expenseName}
+              placeholder="지출명을 입력하세요"
+              onChange={(e) => setExpenseName(e.target.value)}
+            />
             <Label>지출처</Label>
-            <Input type="text" />
+            <Input
+              value={expensePlace}
+              placeholder="지출처를 입력하세요"
+              onChange={(e) => setExpensePlace(e.target.value)}
+            />
           </Column>
         </Row>
-
         <div>
           <Label>카테고리</Label>
           <CategoryWrap>
@@ -173,15 +192,17 @@ const AddExpenseModal = ({ onClose }) => {
             ))}
           </CategoryWrap>
           <Label>금액</Label>
-          <Input type="number" />
+          <Input
+            type="number"
+            value={cost}
+            placeholder="지출 금액을 입력하세요"
+            onChange={(e) => setCost(e.target.value)}
+          />
         </div>
-
-        <SubmitButton onClick={() => alert("등록하기기 클릭")}>
-          등록하기
-        </SubmitButton>
+        <SubmitButton onClick={handleSubmit}>저장하기</SubmitButton>
       </ModalBox>
     </Overlay>
   );
 };
 
-export default AddExpenseModal;
+export default UpdateExpenseModal;
