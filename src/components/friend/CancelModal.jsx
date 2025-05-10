@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Colors from '../../constanst/color.mjs';
 
 const Overlay = styled.div`
   position: fixed;

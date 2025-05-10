@@ -6,6 +6,8 @@ import FriendCard from '../../components/friend/FriendCard';
 import friends from '../../images/myprofile/fa-solid_user-friends.svg';
 import alarm from '../../images/myprofile/alarm_icon.svg';
 import redIcon from '../../images/myprofile/red_icon.svg';
+import DeleteModal from '../../components/friend/DeleteModal';
+import RequestListModal from '../../components/friend/RequestListModal';
 
 const SearchFreindPageContainer = styled.div`
   display: flex;
@@ -21,6 +23,8 @@ const ContainerWrapper = styled.div`
   width: 70%;
   height: 30px;
   max-width: 800px;
+  min-width: 450px;
+
   margin: 0 auto;
   position: fixed;
   z-index: 3;
@@ -69,20 +73,24 @@ const AlarmBtn = styled.div`
   cursor: pointer;
 `;
 
-const items = Array(25).fill({
+const items = Array(10).fill({
   name: '티모시',
   image: 'food.jpg',
 });
 export default function FriendsPage() {
   const [hasNewRequest, setHasNewRequest] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
   return (
     <SearchFreindPageContainer>
       <ContainerWrapper>
         <img src={friends} alt="friends" style={{ width: '30px' }} />
         <Title>친구</Title>
         <FriendNum>{items.length}</FriendNum>
-        <AlarmBtn>
+        <AlarmBtn onClick={() => setShowDeleteModal(true)}>
           <img src={alarm} alt="friends" style={{ width: '35px' }} />
           {hasNewRequest && <RedIcon src={redIcon} alt="friends" />}
         </AlarmBtn>
@@ -93,6 +101,7 @@ export default function FriendsPage() {
           <FriendCard key={index} item={item} />
         ))}
       </Items>
+      {showDeleteModal && <RequestListModal onClose={handleCloseDeleteModal} />}
     </SearchFreindPageContainer>
   );
 }
