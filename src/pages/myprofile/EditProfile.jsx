@@ -114,10 +114,22 @@ export default function EditProfile() {
 
         <Label htmlFor="re">새 비밀번호 재입력</Label>
         <InputPW id="re" type="password" />
+        <MoreBtn to="/savedChallenge">{'회원탈퇴'}</MoreBtn>
       </PwContainer>
     </Wrapper>
   );
 }
+const MoreBtn = styled(Link)`
+  color: #6b6b6b;
+  font-size: 1rem;
+  font-weight: 400;
+  text-decoration: none;
+  width: fit-content;
+  &:hover {
+    text-decoration: underline;
+  }
+  margin-left: auto; /* 오른쪽 정렬 */
+`;
 const UpdateBtn2 = styled.button`
   margin-left: 20px;
   height: fit-content;
@@ -135,9 +147,11 @@ const UpdateBtn2 = styled.button`
 `;
 
 const PwContainer = styled.div`
-  margin: 0 0 30px 98px;
+  /* margin: 0 0 30px 98px; */
+  margin: 0 50px 30px 50px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const InputPW = styled.input`
@@ -151,12 +165,14 @@ const InputPW = styled.input`
   &:focus {
     outline: none;
   }
+  margin-left: 48px;
 `;
 
 const Label = styled.label`
   color: #7d817f;
   font-size: 1rem;
   font-weight: 400;
+  margin-left: 48px;
 `;
 const NickNameInputSizer = styled.span`
   position: absolute;
