@@ -2,12 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import PenIcon from "./../../assets/pen.svg";
 import TrashIcon from "./../../assets/trash.svg";
+import Colors from "../../constanst/color.mjs";
 
 const ExpenseItem = styled.div`
   position: relative;
   display: flex;
   gap: 20px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid ${Colors.secondary50};
   width: 390px;
   padding: 10px;
   margin-bottom: 10px;
@@ -35,7 +36,7 @@ const ItemDetail = styled.div`
 
 const ItemCategory = styled.div`
   background-color: #f19797;
-  color: #fff;
+  color: white;
   font-size: 11px;
   border-radius: 2px;
   padding: 0 4px;
@@ -48,12 +49,12 @@ const ItemName = styled.div`
 
 const ItemPlace = styled.div`
   font-size: 13px;
-  color: #999;
+  color: ${Colors.secondary200};
 `;
 
 const ItemPrice = styled.div`
   font-size: 17px;
-  color: #1e1e1e;
+  color: ${Colors.primary700};
 `;
 
 const ButtonContainer = styled.div`

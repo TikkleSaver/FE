@@ -7,6 +7,7 @@ import FriendExpenseCard from "../../components/expense/FriendExpenseCard";
 import FriendCommentCard from "../../components/expense/FriendCommentCard";
 import SubmitBtn from "./../../assets/arrowUp.svg";
 import AddExpenseModal from "../../components/expense/modal/AddExpenseModal";
+import Colors from "../../constanst/color.mjs";
 
 // 최상위 container
 const ExpenseContainer = styled.div`
@@ -23,7 +24,7 @@ const ExpenseListContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #b5bec6;
+  border: 1px solid ${Colors.secondary100};
   border-radius: 20px;
   width: 472px;
   height: 610px;
@@ -47,7 +48,7 @@ const ExpenseItems = styled.div`
     width: 6px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #2a6658;
+    background-color: ${Colors.btnStroke};
     border-radius: 10px;
     cursor: pointer;
   }
@@ -59,7 +60,7 @@ const ExpenseDateHeader = styled.div`
   justify-content: center;
   align-items: center;
   gap: 100px;
-  color: #4a5660;
+  color: ${Colors.secondary400};
 `;
 
 // 지출 일자 변경 버튼
@@ -68,7 +69,7 @@ const ArrowButton = styled.button`
   border: none;
   padding-top: 10px;
   font-size: 1.5rem;
-  color: #b5bec6;
+  color: ${Colors.secondary100};
   cursor: pointer;
 `;
 
@@ -76,7 +77,7 @@ const ArrowButton = styled.button`
 const ExpenseCommentListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid #b5bec6;
+  border: 1px solid ${Colors.secondary100};
   border-radius: 20px;
   width: 619px;
   height: 610px;
@@ -89,7 +90,7 @@ const ExpenseCommentTittle = styled.div`
   width: 295px;
   height: 30px;
   margin: 20px 30px 10px 30px;
-  color: #2d3331;
+  color: ${Colors.secondary400};
   font-weight: bold;
 `;
 
@@ -107,7 +108,7 @@ const ExpenseComments = styled.div`
     width: 6px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #2a6658;
+    background-color: ${Colors.btnStroke};
     border-radius: 10px;
     cursor: pointer;
   }
@@ -116,14 +117,14 @@ const ExpenseComments = styled.div`
 const CommentInputWrapper = styled.div`
   position: relative;
   padding: 10px 20px;
-  background-color: #fff;
+  background-color: white;
 `;
 
 const CommentInput = styled.input`
   width: 570px;
   height: 45px;
   padding: 0 50px 0 15px; /* 오른쪽에 버튼 공간 확보 */
-  border: 1px solid #ddd;
+  border: 1px solid ${Colors.secondary100};
   border-radius: 20px;
   font-size: 14px;
   outline: none;
@@ -151,7 +152,7 @@ const AddExpenseButton = styled.button`
   font-weight: 700;
   border: none;
   cursor: pointer;
-  border-top: 1px solid #eee;
+  border-top: 1px solid ${Colors.secondary25};
 `;
 
 const Expense = () => {
