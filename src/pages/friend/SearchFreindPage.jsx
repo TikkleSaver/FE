@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SearchIcon from '../../assets/search.svg';
-
-import FriendCard from '../../components/friend/FriendCard';
+import UserCard from '../../components/friend/UserCard';
 
 const SearchFreindPageContainer = styled.div`
   display: flex;
@@ -85,7 +84,7 @@ export default function SearchFreindPage() {
 
       <ExpenseItems>
         {items.map((item, index) => (
-          <FriendCard key={index} item={item} />
+          <UserCard key={index} item={item} />
         ))}
       </ExpenseItems>
     </SearchFreindPageContainer>

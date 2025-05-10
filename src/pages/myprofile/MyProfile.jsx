@@ -4,8 +4,11 @@ import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCar
 import profileImage from '../../images/profile.svg';
 import friend from '../../images/myprofile/friend.svg';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyProfile() {
+  const navigate = useNavigate();
+
   return (
     <Wrapper>
       <ProfileContainer>
@@ -32,7 +35,10 @@ export default function MyProfile() {
               <Number>4</Number>
               <Name>참여중인 챌린지</Name>
             </Group>
-            <Group>
+            <Group
+              onClick={() => navigate('/friends')}
+              style={{ cursor: 'pointer' }}
+            >
               <Number>17</Number>
               <Name>친구</Name>
             </Group>

@@ -25,33 +25,9 @@ const ItemImage = styled.img`
 const ItemName = styled.div`
   font-size: 16px;
   font-weight: 600;
-  white-space: nowrap;
 `;
-const UpdateBtn2 = styled.button`
-  margin-left: 10px;
-  height: fit-content;
-  padding: 10px 15px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: 12px;
-  color: #606060;
-  cursor: pointer;
-  border: 1px #e5e5e5 solid;
-  background-color: transparent;
-  white-space: nowrap;
-  z-index: 2;
-  &:hover {
-    background-color: #51b69e;
-    border: none;
-    color: white;
-  }
-`;
-const BtnGroup = styled.div`
-  margin-left: auto;
-  display: flex;
-  flex-wrap: nowrap;
-`;
-const FriendCard = ({ item }) => {
+
+const UserCard = ({ item }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -62,12 +38,8 @@ const FriendCard = ({ item }) => {
     <Item onClick={handleClick}>
       <ItemImage src={profileImage} />
       <ItemName>{item.name}</ItemName>
-      <BtnGroup>
-        <UpdateBtn2>위시리스트</UpdateBtn2>
-        <UpdateBtn2>구매 목록</UpdateBtn2>
-      </BtnGroup>
     </Item>
   );
 };
 
-export default FriendCard;
+export default UserCard;

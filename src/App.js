@@ -23,6 +23,8 @@ import EditProfile from './pages/myprofile/EditProfile';
 import SavedChallenge from './pages/myprofile/SavedChallenge';
 import SearchFreindPage from './pages/friend/SearchFreindPage';
 import FriendProfile from './pages/friend/FriendProfile';
+import FreindsPage from './pages/friend/FriendsPage';
+import FriendsPage from './pages/friend/FriendsPage';
 
 function App() {
   return (
@@ -53,6 +55,7 @@ function App() {
         <Route path="/savedChallenge" element={<SavedChallenge />} />
         <Route path="/searchFreind" element={<SearchFreindPage />} />
         <Route path="/friendprofile" element={<FriendProfile />} />
+        <Route path="/friends" element={<FriendsPage />} />
       </Routes>
     </Router>
   );
