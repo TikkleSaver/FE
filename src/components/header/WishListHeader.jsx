@@ -37,6 +37,7 @@ const Dropdown = styled.div`
   padding: 2px 10px;
   z-index: 10;
   white-space: nowrap;
+  z-index: 3;
 `;
 
 const DropdownItem = styled.div`

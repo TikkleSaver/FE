@@ -18,7 +18,7 @@ export default function MyProfile() {
                 프로필 편집
               </UpdateBtn>
 
-              <PlusBtn as={Link} to="/onboarding/goal">
+              <PlusBtn as={Link} to="/searchFreind">
                 + <img src={friend} alt="My Page" />
               </PlusBtn>
             </ButtonGroup>

@@ -21,6 +21,8 @@ import Goal from './pages/onboarding/Goal';
 import MyProfile from './pages/myprofile/MyProfile';
 import EditProfile from './pages/myprofile/EditProfile';
 import SavedChallenge from './pages/myprofile/SavedChallenge';
+import SearchFreindPage from './pages/friend/SearchFreindPage';
+import FriendProfile from './pages/friend/FriendProfile';
 
 function App() {
   return (
@@ -43,12 +45,14 @@ function App() {
         <Route path="/my-wish" element={<MyWishPage />} />
         <Route path="/friend-wish" element={<FriendWishPage />} />
         <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
-        <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
+        <Route path="/challenge-info" element={<ChallengeDetailPage />} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
         <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/editprofile" element={<EditProfile />} />
         <Route path="/savedChallenge" element={<SavedChallenge />} />
+        <Route path="/searchFreind" element={<SearchFreindPage />} />
+        <Route path="/friendprofile" element={<FriendProfile />} />
       </Routes>
     </Router>
   );

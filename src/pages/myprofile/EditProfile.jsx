@@ -300,7 +300,6 @@ const ProfileBox = styled.div`
 
 const Wrapper = styled.div`
   width: 80%;
-  max-width: fit-content;
   margin: 120px auto;
 `;
 
