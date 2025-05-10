@@ -37,6 +37,7 @@ const Dropdown = styled.div`
   padding: 2px 10px;
   z-index: 10;
   white-space: nowrap;
+  z-index: 3;
 `;
 
 const DropdownItem = styled.div`
@@ -50,22 +51,21 @@ const DropdownItem = styled.div`
 `;
 
 function WishlistMenu() {
-    const navigate = useNavigate();
-  
-    return (
-      <WishlistWrapper as="li">
-        <MenuItem>나의 위시리스트</MenuItem>
-        <Dropdown className="dropdown">
-          <DropdownItem onClick={() => navigate('/products')}>
-            상품 검색
-          </DropdownItem>
-          <DropdownItem onClick={() => navigate('/my-wish')}>
-            위시 목록
-          </DropdownItem>
-        </Dropdown>
-      </WishlistWrapper>
-    );
+  const navigate = useNavigate();
 
+  return (
+    <WishlistWrapper as="li">
+      <MenuItem>나의 위시리스트</MenuItem>
+      <Dropdown className="dropdown">
+        <DropdownItem onClick={() => navigate('/products')}>
+          상품 검색
+        </DropdownItem>
+        <DropdownItem onClick={() => navigate('/my-wish')}>
+          위시 목록
+        </DropdownItem>
+      </Dropdown>
+    </WishlistWrapper>
+  );
 }
 
 export default WishlistMenu;

@@ -1,13 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import profileImage from '../../images/profile.svg';
-import friend from '../../images/myprofile/friend.svg';
+import check from '../../images/myprofile/material-symbols_check-rounded.svg';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import AddExpenseModal from '../../components/expense/modal/AddExpenseModal';
+import CancelModal from '../../components/friend/CancelModal';
+import DeleteModal from '../../components/friend/DeleteModal';
 
-export default function MyProfile() {
-  const navigate = useNavigate();
+export default function FriendProfile() {
+  const [friendStatus, setFriendStatus] = useState('accepted'); // 상태: 'none' | 'pending' | 'accepted'
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleFriendRequest = () => {
+    if (friendStatus === 'none') {
+      setFriendStatus('pending'); // 친구 요청 보냄
+    }
+  };
+  const handleAddExpenseModal = () => {
+    setShowAddModal(true);
+  };
+
+  const handleCloseAddExpenseModal = () => {
+    setShowAddModal(false);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
 
   return (
     <Wrapper>
@@ -17,13 +38,35 @@ export default function MyProfile() {
           <Top>
             <NickName>티모</NickName>
             <ButtonGroup>
-              <UpdateBtn as={Link} to="/editprofile">
-                프로필 편집
+              <UpdateBtn
+                onClick={
+                  friendStatus === 'none'
+                    ? handleFriendRequest
+                    : friendStatus === 'pending'
+                    ? handleAddExpenseModal
+                    : friendStatus === 'accepted'
+                    ? () => setShowDeleteModal(true)
+                    : undefined
+                }
+                $status={friendStatus}
+              >
+                {friendStatus === 'none' && '친구 요청'}
+                {friendStatus === 'pending' && '대기 중'}
+                {friendStatus === 'accepted' && (
+                  <>
+                    친구
+                    <img
+                      src={check}
+                      alt="친구 상태"
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        marginLeft: '8px',
+                      }}
+                    />
+                  </>
+                )}
               </UpdateBtn>
-
-              <PlusBtn as={Link} to="/searchFreind">
-                + <img src={friend} alt="My Page" />
-              </PlusBtn>
             </ButtonGroup>
           </Top>
           <Bottom>
@@ -35,19 +78,17 @@ export default function MyProfile() {
               <Number>4</Number>
               <Name>참여중인 챌린지</Name>
             </Group>
-            <Group
-              onClick={() => navigate('/friends')}
-              style={{ cursor: 'pointer' }}
-            >
+            <Group>
               <Number>17</Number>
               <Name>친구</Name>
             </Group>
           </Bottom>
         </ProfileBox>
       </ProfileContainer>
+
       <ChallengeContainer>
         <TopChallengeText>
-          <div>저장한 챌린지</div>{' '}
+          <div>참여중인 챌린지</div>
           <MoreBtn to="/savedChallenge">{'더보기>'}</MoreBtn>
         </TopChallengeText>
         <TopChallengeInnerContainer>
@@ -57,9 +98,12 @@ export default function MyProfile() {
           <ChallengePreviewCard />
         </TopChallengeInnerContainer>
       </ChallengeContainer>
+      {showAddModal && <CancelModal onClose={handleCloseAddExpenseModal} />}
+      {showDeleteModal && <DeleteModal onClose={handleCloseDeleteModal} />}
     </Wrapper>
   );
 }
+
 const Group = styled.div`
   display: flex;
   flex-direction: column;
@@ -70,55 +114,43 @@ const Name = styled.span`
   font-size: 1.2rem;
   font-weight: 400;
 `;
+
 const Number = styled.span`
   margin: 30px 0;
   color: black;
   font-size: 1.3rem;
   font-weight: 500;
 `;
+
 const ButtonGroup = styled.div`
   display: flex;
   gap: 10px;
-`;
-
-const PlusBtn = styled.button`
-  display: flex;
-  align-items: center;
-  font-size: 15px;
-  font-weight: 400;
-  border-radius: 6px;
-  word-wrap: break-word;
-  cursor: pointer;
-  border: 1px #e5e5e5 solid;
-  background-color: transparent;
-  padding: 0 3px;
-  text-decoration: none;
-  color: inherit;
-  justify-content: center; /* 중앙 정렬 */
-
-  img {
-    width: 15px;
-    height: 15px;
-  }
 `;
 
 const UpdateBtn = styled.button`
   margin-left: 20px;
   width: 150px;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 500;
   border-radius: 6px;
-  word-wrap: break-word;
   cursor: pointer;
-  border: 1px #e5e5e5 solid;
-  background-color: transparent;
+  border: ${({ $status }) =>
+    $status === 'accepted' ? '1px solid #51b69e' : 'none'};
 
-  /* Link로 쓸 때 깨지는 것 방지 */
   text-decoration: none;
-  color: inherit;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  background-color: ${({ $status }) =>
+    $status === 'none'
+      ? '#51b69e'
+      : $status === 'pending'
+      ? '#C7C7C7'
+      : '#fff'};
+
+  color: ${({ $status }) =>
+    $status === 'none' ? 'white' : $status === 'pending' ? 'white' : '#51b69e'};
 `;
 
 const Top = styled.div`
@@ -128,6 +160,7 @@ const Top = styled.div`
   min-width: 100%;
   max-width: fit-content;
 `;
+
 const Bottom = styled.div`
   display: flex;
   width: max-content;
@@ -141,32 +174,38 @@ const NickName = styled.span`
   font-family: Pretendard;
   font-weight: 500;
 `;
+
 const ProfileBox = styled.div`
   margin-right: 220px;
   width: fit-content;
   display: flex;
   flex-direction: column;
 `;
+
 const Wrapper = styled.div`
   width: 80%;
   max-width: fit-content;
   margin: 120px auto;
 `;
+
 const ProfileContainer = styled.div`
   display: flex;
   margin: 50px 30px;
   width: fit-content;
   align-items: center;
+
   > img {
     width: 220px;
     height: 220px;
     margin: 0 50px;
   }
 `;
+
 const ChallengeContainer = styled.div`
   margin: 50px auto;
   width: fit-content;
 `;
+
 const TopChallengeInnerContainer = styled.div`
   width: fit-content;
   min-width: max-content;
@@ -184,6 +223,7 @@ const TopChallengeText = styled.div`
   margin-bottom: 30px;
   font-size: 25px;
   font-weight: 600;
+
   > span {
     color: #6b6b6b;
     font-size: 1rem;
