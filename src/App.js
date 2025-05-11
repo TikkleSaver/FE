@@ -16,6 +16,7 @@ import FriendWishPage from "./pages/wish/FriendWishPage";
 import AddWishExistPage from "./pages/wish/AddWishExistPage";
 import AddWishNotExistPage from "./pages/wish/AddWishNotExistPage";
 import UpdateWishExistPage from './pages/wish/UpdateWishExistPage';
+import UpdateWishNotExistPage from './pages/wish/UpdateWishNotExistPage';
 import GlobalStyle from "./styles/GlobalStyle";
 import Category from "./pages/onboarding/Category";
 import Goal from "./pages/onboarding/Goal";
@@ -51,6 +52,7 @@ function App() {
         <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
         <Route path="/add-wish-not-exist-product" element={<AddWishNotExistPage />} />
         <Route path="/update-wish-exist-product" element={<UpdateWishExistPage />} />
+        <Route path="/update-wish-not-exist-product" element={<UpdateWishNotExistPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
