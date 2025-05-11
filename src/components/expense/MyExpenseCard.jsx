@@ -2,12 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import PenIcon from "./../../assets/pen.svg";
 import TrashIcon from "./../../assets/trash.svg";
+import Colors from "../../constanst/color.mjs";
+import UpdateExpenseModal from "./modal/UpdateExpenseModal";
 
 const ExpenseItem = styled.div`
   position: relative;
   display: flex;
   gap: 20px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid ${Colors.secondary50};
   width: 390px;
   padding: 10px;
   margin-bottom: 10px;
@@ -35,7 +37,7 @@ const ItemDetail = styled.div`
 
 const ItemCategory = styled.div`
   background-color: #f19797;
-  color: #fff;
+  color: white;
   font-size: 11px;
   border-radius: 2px;
   padding: 0 4px;
@@ -48,12 +50,12 @@ const ItemName = styled.div`
 
 const ItemPlace = styled.div`
   font-size: 13px;
-  color: #999;
+  color: ${Colors.secondary200};
 `;
 
 const ItemPrice = styled.div`
   font-size: 17px;
-  color: #1e1e1e;
+  color: ${Colors.primary700};
 `;
 
 const ButtonContainer = styled.div`
@@ -74,28 +76,34 @@ const Button = styled.button`
 `;
 
 const MyExpenseCard = ({ item }) => {
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
   const imageSrc = require(`./../../assets/${item.image}`);
 
   return (
-    <ExpenseItem>
-      <ItemImage src={imageSrc} />
-      <ItemInfo>
-        <ItemDetail>
-          <ItemCategory>{item.category}</ItemCategory>
-          <ItemName>{item.expenseName}</ItemName>
-          <ItemPlace>{item.expensePlace}</ItemPlace>
-        </ItemDetail>
-        <ItemPrice>{item.cost}원</ItemPrice>
-      </ItemInfo>
-      <ButtonContainer>
-        <Button onClick={() => alert("수정 클릭")}>
-          <img src={PenIcon} alt="수정" width="24" height="24" />
-        </Button>
-        <Button onClick={() => alert("삭제 클릭")}>
-          <img src={TrashIcon} alt="삭제" width="24" height="24" />
-        </Button>
-      </ButtonContainer>
-    </ExpenseItem>
+    <>
+      <ExpenseItem>
+        <ItemImage src={imageSrc} />
+        <ItemInfo>
+          <ItemDetail>
+            <ItemCategory>{item.category}</ItemCategory>
+            <ItemName>{item.expenseName}</ItemName>
+            <ItemPlace>{item.expensePlace}</ItemPlace>
+          </ItemDetail>
+          <ItemPrice>{item.cost}원</ItemPrice>
+        </ItemInfo>
+        <ButtonContainer>
+          <Button onClick={() => setIsEditOpen(true)}>
+            <img src={PenIcon} alt="수정" width="24" height="24" />
+          </Button>
+          <Button onClick={() => alert("삭제 클릭")}>
+            <img src={TrashIcon} alt="삭제" width="24" height="24" />
+          </Button>
+        </ButtonContainer>
+      </ExpenseItem>
+      {isEditOpen && (
+        <UpdateExpenseModal item={item} onClose={() => setIsEditOpen(false)} />
+      )}
+    </>
   );
 };
 

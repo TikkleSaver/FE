@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Profile from "./../../assets/defaultProfile.svg";
+import Colors from "../../constanst/color.mjs";
 
 const CommentCardContainer = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const CommentCardContainer = styled.div`
   width: 555px;
   margin: 15px 20px;
   gap: 12px;
-  color: #333;
+  color: ${Colors.secondary500};
 `;
 
 const UserName = styled.div`
