@@ -31,30 +31,71 @@ const ProductTextInfoContainer = styled.div`  // 상품 이미지 제외 정보
   margin-left: 45px;
 `;
 
-const ProductCategory = styled.div`   // 상품 카테고리
-  color: #6B6B6B;
-  font-size: 16px;
-  font-family: Inter;
-  font-weight: 500;
-  line-height: 30px;
-  word-wrap: break-word;
-`;
-
-const ProductName = styled.div` // 상품 이름
-  margin-top: 10px;
-  color: black;
-  font-size: 28px;
-  font-family: Inter;
-  font-weight: 600;
-  line-height: 30px;
-  word-wrap: break-word;
-`;
-
-const ProductInputInfoContainer = styled.div`   // 설정해야할 정보 (카테고리, 공개, 가격)
-  margin-top: 17px;
+const ProductInputInfoContainer = styled.div`   // 설정해야할 정보 (제품명, 브랜드, 카테고리, 공개, 가격)
+  margin-top: -15px;
   display: flex;            
   flex-direction: column;  
-  gap: 25px;   
+  gap: 15px;   
+`;
+
+const ProductNameContainer = styled.div`  // 제품명 상자
+
+`;
+
+const ProductNameText = styled.div`     // 제품명 제목
+  color: #333333;
+  font-size: 15px;
+  font-family: Pretendard;
+  font-weight: 700;
+  line-height: 24px;
+  word-wrap: break-word;
+`;
+
+const ProductNameInputContainer = styled.div` // 제품명 입력 상자
+  margin-top: 5px;
+  position: relative;
+  width: fit-content;
+`;
+
+const PRoductNameInput = styled.input`    // 제품명 입력
+  width: 520px;
+  height: 40px;
+  padding: 0px 10px 0px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
+`;
+
+const ProductBrandContainer = styled.div`  // 브랜드 상자
+
+`;
+
+const ProductBrandText = styled.div`     // 브랜드 제목
+  color: #333333;
+  font-size: 15px;
+  font-family: Pretendard;
+  font-weight: 700;
+  line-height: 24px;
+  word-wrap: break-word;
+`;
+
+const ProductBrandInputContainer = styled.div` // 브랜드 입력 상자
+  margin-top: 5px;
+  position: relative;
+  width: fit-content;
+`;
+
+const PRoductBrandInput = styled.input`    // 브랜드 입력
+  width: 520px;
+  height: 40px;
+  padding: 0px 10px 0px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
 `;
 
 const ProductCategoryContainer = styled.div`  // 카테고리 상자
@@ -212,13 +253,13 @@ const ProductPriceExplain = styled.div`     // 가격 설명
   gap: 2.5px;
 `;
 
-const SearchContainer = styled.div` // 가격 입력 상자
+const ProductPriceInputContainer = styled.div` // 가격 입력 상자
   margin-top: 5px;
   position: relative;
   width: fit-content;
 `;
 
-const SearchInput = styled.input`    // 가격 입력
+const PRoductPriceInput = styled.input`    // 가격 입력
   width: 132px;
   height: 40px;
   padding: 0px 30px 0px 10px;
@@ -242,10 +283,10 @@ const ProductPriceWonText = styled.div`     // 가격 '원' 텍스트
 
 const ProductAddBtn = styled.button` // 위시 추가 버튼
   display: flex;                
-  align-items: center;         
-  gap: 8px;    
+  align-items: center;   
+  justify-content: center;        
   background-color: #3D8D7A;
-  width: 160px;
+  width: 130px;
   height: 45px;
   color: white;
   border: none;
@@ -253,19 +294,9 @@ const ProductAddBtn = styled.button` // 위시 추가 버튼
   padding: 12px 12px;
   cursor: pointer;
   font-size: 15px;
-  margin-top: 40px;
+  margin-top: 31px;
   font-weight: 700;
   word-wrap: break-word;
-`;
-
-const  ProductAddImage = styled.span` // 위시 추가 로고
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat; 
 `;
 
 function AddWishExistPage() {
@@ -274,16 +305,38 @@ function AddWishExistPage() {
     const [selectedCategory, setCategory] = useState("식비");
     const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
     const [isPublic, setIsPublic] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [inputName, setInputName] = useState("");
+    const [inputBrand, setInputBrand] = useState("");
+    const [inputPrice, setInputPrice] = useState("");
 
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
             <ProductImage />
             <ProductTextInfoContainer>
-              <ProductCategory>문구{">"}필기류{">"}색연필</ProductCategory>
-              <ProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치 5세대 4세대 10.9인치 오드밤</ProductName>
               <ProductInputInfoContainer>
+                <ProductNameContainer>
+                  <ProductNameText>제품 명</ProductNameText>
+                  <ProductNameInputContainer>
+                    <PRoductNameInput
+                        type="text"
+                        placeholder=""
+                        value={inputName}
+                        onChange={(e) => setInputName(e.target.value)}
+                    />
+                  </ProductNameInputContainer>
+                </ProductNameContainer>
+                <ProductBrandContainer>
+                  <ProductBrandText>브랜드</ProductBrandText>
+                  <ProductBrandInputContainer>
+                    <PRoductBrandInput
+                        type="text"
+                        placeholder=""
+                        value={inputBrand}
+                        onChange={(e) => setInputBrand(e.target.value)}
+                    />
+                  </ProductBrandInputContainer>
+                </ProductBrandContainer>
                 <ProductCategoryContainer>
                   <ProductCategoryText>카테고리</ProductCategoryText>
                   <ProductCatgoryTabWrapper>
@@ -321,20 +374,18 @@ function AddWishExistPage() {
                   <ProductPriceContainer>
                     <ProductPriceText>가격</ProductPriceText>
                     <ProductPriceExplain>가격은 원 단위로 입력하세요.</ProductPriceExplain>
-                    <SearchContainer>
-                      <SearchInput
+                    <ProductPriceInputContainer>
+                      <PRoductPriceInput
                           type="text"
                           placeholder=""
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
+                          value={inputPrice}
+                          onChange={(e) => setInputPrice(e.target.value)}
                       />
                       <ProductPriceWonText>원</ProductPriceWonText>
-                    </SearchContainer>
+                    </ProductPriceInputContainer>
                   </ProductPriceContainer>
               </ProductInputInfoContainer>
-              <ProductAddBtn>
-                <ProductAddImage imageUrl={addImageURL}/>
-                위시 추가하기</ProductAddBtn>
+              <ProductAddBtn>작성 완료</ProductAddBtn>
             </ProductTextInfoContainer>
           </ProductInfoContainer>
         </ProductPageContainer>

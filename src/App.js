@@ -7,7 +7,6 @@ import ProductPage from "./pages/product/ProductPage";
 import ProductDetailPage from "./pages/product/ProductDetailPage";
 import MeddlePage from "./pages/meddling/MeddlingPage";
 import ExpenseCalendar from "./pages/expense/ExpenseCalendar";
-import "./App.css";
 import SignUp from "./pages/login/SignUp";
 import Login from "./pages/login/Login";
 import Expense from "./pages/expense/Expense";
@@ -15,6 +14,7 @@ import ChallengeDetailPage from "./pages/challenge/ChallengeDetailPage";
 import MyWishPage from "./pages/wish/MyWishPage";
 import FriendWishPage from "./pages/wish/FriendWishPage";
 import AddWishExistPage from "./pages/wish/AddWishExistPage";
+import AddWishNotExistPage from "./pages/wish/AddWishNotExistPage";
 import UpdateWishExistPage from './pages/wish/UpdateWishExistPage';
 import GlobalStyle from "./styles/GlobalStyle";
 import Category from "./pages/onboarding/Category";
@@ -24,7 +24,6 @@ import EditProfile from "./pages/myprofile/EditProfile";
 import SavedChallenge from "./pages/myprofile/SavedChallenge";
 import SearchFreindPage from "./pages/friend/SearchFreindPage";
 import FriendProfile from "./pages/friend/FriendProfile";
-import FreindsPage from "./pages/friend/FriendsPage";
 import FriendsPage from "./pages/friend/FriendsPage";
 import ExpenseAnalysis from "./pages/expense/ExpenseAnalysis";
 
@@ -50,6 +49,7 @@ function App() {
         <Route path="/my-wish" element={<MyWishPage />} />
         <Route path="/friend-wish" element={<FriendWishPage />} />
         <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
+        <Route path="/add-wish-not-exist-product" element={<AddWishNotExistPage />} />
         <Route path="/update-wish-exist-product" element={<UpdateWishExistPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
         <Route path="/onboarding/category" element={<Category />} />

@@ -24,7 +24,7 @@ const Dropdown = styled.div`
   font-size: 0.8em;
   display: none;
   position: absolute;
-  top: 40px;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
   width: fit-content;
