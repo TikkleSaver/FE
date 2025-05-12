@@ -1,0 +1,9 @@
+.mySwiper {
+  min-width: 1000px;
+  height: 350px;
+  margin-top: 150px; /* 또는 Swiper 자체를 아래로 내립니다 */
+}
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
