@@ -11,10 +11,7 @@ export default function ProfileMenu() {
 
   return (
     <WishlistWrapper as="li">
-      <ProfileButton
-        className="profile-button"
-        onClick={() => navigate('/myPage')}
-      >
+      <ProfileButton className="profile-button">
         <img src={profileImage} alt="My Page" />
       </ProfileButton>
 
@@ -22,7 +19,7 @@ export default function ProfileMenu() {
         <DropdownItem onClick={() => navigate('/myprofile')}>
           <img src={icon1} alt="My Page" />내 프로필
         </DropdownItem>
-        <DropdownItem onClick={() => navigate('/')}>
+        <DropdownItem onClick={() => navigate('/friends')}>
           <img src={icon2} alt="My Page" />
           친구 목록
         </DropdownItem>
