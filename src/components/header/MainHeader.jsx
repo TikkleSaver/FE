@@ -1,10 +1,10 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import styled from "styled-components";
-import logo from "../../images/logo.svg";
-import WishlistMenu from "./WishListHeader";
-import ProfileMenu from "./ProfileMenu";
-import ExpenseMenu from "./ExpenseMenu";
+import React, { useState } from 'react'; // 추가
+import { useNavigate, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import logo from '../../images/logo.svg';
+import WishlistMenu from './WishListHeader';
+import ProfileMenu from './ProfileMenu';
+import ExpenseMenu from './ExpenseMenu';
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -68,14 +68,14 @@ function MainHeader() {
   const location = useLocation();
 
   // 실제 로그인 여부 판단 로직에 맞게 대체할 것
-  const isLoggedIn = true;
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 상태 관리
 
   // 로그인 페이지에서는 헤더를 보여주지 않음
   if (
-    location.pathname === "/login" ||
-    location.pathname === "/signup" ||
-    location.pathname === "/onboarding/category" ||
-    location.pathname === "/onboarding/goal"
+    location.pathname === '/login' ||
+    location.pathname === '/signup' ||
+    location.pathname === '/onboarding/category' ||
+    location.pathname === '/onboarding/goal'
   ) {
     return null;
   }
@@ -84,22 +84,22 @@ function MainHeader() {
     <StyledHeader>
       <Header>
         <div className="header-mobile">
-          <div onClick={() => navigate("/")}>
+          <div onClick={() => navigate('/')}>
             <img className="logo" src={logo} alt="Logo" />
           </div>
         </div>
         <ul className="header__menulist">
           <li
-            className={location.pathname === "/" ? "active" : ""}
-            onClick={() => navigate("/meddling")}
+            className={location.pathname === '/' ? 'active' : ''}
+            onClick={() => navigate('/meddling')}
           >
             참견소
           </li>
           <li
             className={
-              location.pathname.startsWith("/challenges") ? "active" : ""
+              location.pathname.startsWith('/challenges') ? 'active' : ''
             }
-            onClick={() => navigate("/challenges")}
+            onClick={() => navigate('/challenges')}
           >
             챌린지
           </li>
@@ -107,9 +107,9 @@ function MainHeader() {
           <WishlistMenu />
 
           {isLoggedIn ? (
-            <ProfileMenu />
+            <ProfileMenu setIsLoggedIn={setIsLoggedIn} />
           ) : (
-            <button className="apply" onClick={() => navigate("/login")}>
+            <button className="apply" onClick={() => navigate('/login')}>
               로그인
             </button>
           )}

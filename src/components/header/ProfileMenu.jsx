@@ -6,9 +6,13 @@ import icon1 from '../../images/header/profile_icon1.svg';
 import icon2 from '../../images/header/profile_icon2.svg';
 import icon3 from '../../images/header/logout_icon.svg';
 
-export default function ProfileMenu() {
+export default function ProfileMenu({ setIsLoggedIn }) {
   const navigate = useNavigate();
-
+  const handleLogout = () => {
+    // 실제 로그아웃 처리 로직 추가 가능 (ex. localStorage.clear())
+    setIsLoggedIn(false);
+    navigate('/');
+  };
   return (
     <WishlistWrapper as="li">
       <ProfileButton className="profile-button">
@@ -25,7 +29,7 @@ export default function ProfileMenu() {
         </DropdownItem>
         <DropdownItem
           style={{ borderTop: '1px solid #CAD6D2' }}
-          onClick={() => navigate('/')}
+          onClick={handleLogout}
         >
           <img src={icon3} alt="My Page" />
           로그아웃
