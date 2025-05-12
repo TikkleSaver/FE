@@ -1,6 +1,6 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules'; // ✅ Autoplay 추가
 import 'swiper/css';
 import 'swiper/css/pagination';
 import '../../pages/style/MainPage.css'; // 필요 시 사용
@@ -83,8 +83,10 @@ export default function Top() {
     <>
       <Swiper
         pagination={{ clickable: true }}
-        modules={[Pagination]}
+        modules={[Pagination, Autoplay]}
+        autoplay={{ delay: 3000, disableOnInteraction: false }} // ✅ 3초마다 자동 슬라이드
         className="mySwiper"
+        loop={true}
       >
         <SwiperSlide>
           <Slide1>
