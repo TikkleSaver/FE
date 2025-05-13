@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import satisfactionImageUrl from "../../images/Meddling/satisfaction.png";
-import agreeImageUrl from "../../images/Meddling/Agree.png";
-import disagreeImageUrl from "../../images/Meddling/DisAgree.png";
-import commentImageUrl from "../../images/Meddling/comment.png";
+import satisfactionImageUrl from "../../assets/wishSatisfaction.svg";
+import agreeImageUrl from "../../assets/wishAgree.svg";
+import disagreeImageUrl from "../../assets/wishDisagree.svg";
+import commentImageUrl from "../../assets/wishComment.svg";
 
 
 const CardContainer = styled.div`   // 큰 상자
