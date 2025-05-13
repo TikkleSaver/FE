@@ -11,6 +11,7 @@ import SignUp from './pages/login/SignUp';
 import Login from './pages/login/Login';
 import Expense from './pages/expense/Expense';
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
+import CreateChallengePage from './pages/challenge/CreateChallengePage';
 import WishInfoPage from "./pages/wish/WishInfoPage";
 import MyWishPage from './pages/wish/MyWishPage';
 import FriendWishPage from './pages/wish/FriendWishPage';
@@ -49,6 +50,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
+        <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
+        <Route path="/create-challenge" element={<CreateChallengePage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/wish-info" element={<WishInfoPage />} />
         <Route path="/wish/mine" element={<MyWishPage />} />
