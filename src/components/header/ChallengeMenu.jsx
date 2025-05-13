@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
+import Colors from "../../constanst/color.mjs";
 
 const ExpenseWrapper = styled.div`
   position: relative;
@@ -11,14 +12,14 @@ const Dropdown = styled.div`
   font-size: 0.8em;
   position: absolute;
   top: 100%;
-  left: 50%;
+  left: 45%;
   transform: translateX(-50%);
   width: fit-content;
   height: fit-content;
   background: white;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  border: 0.3px solid #2a6658;
+  border: 0.3px solid ${Colors.primary500};
   padding: 2px 10px;
   z-index: 10;
   white-space: nowrap;
@@ -51,13 +52,13 @@ const Menu = styled.button`
   cursor: pointer;
 `;
 
-const ExpenseMenu = () => {
+const ChallengeMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef(null);
 
-  const isActive = location.pathname.startsWith("/expense");
+  const isActive = location.pathname.startsWith("/challenges");
 
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current);
@@ -77,24 +78,24 @@ const ExpenseMenu = () => {
       onMouseLeave={handleMouseLeave}
       className={isActive ? "active" : ""}
     >
-      <Menu>소비 일기</Menu>
+      <Menu>챌린지</Menu>
 
       <Dropdown className="dropdown" $open={open}>
         <DropdownItem
-          onClick={() => navigate("/expense-calendar")}
-          $active={location.pathname === "/expense-calendar"}
+          onClick={() => navigate("/challenges")}
+          $active={location.pathname === "/challenges"}
         >
-          지출 내역
+          챌린지 탐색
         </DropdownItem>
         <DropdownItem
-          onClick={() => navigate("/expense-analysis")}
-          $active={location.pathname === "/expense-analysis"}
+          onClick={() => navigate("/create-challenge")}
+          $active={location.pathname === "/create-challenge"}
         >
-          지출 분석
+          챌린지 생성
         </DropdownItem>
       </Dropdown>
     </ExpenseWrapper>
   );
 };
 
-export default ExpenseMenu;
+export default ChallengeMenu;

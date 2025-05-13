@@ -5,6 +5,7 @@ import logo from "../../images/logo.svg";
 import WishlistMenu from "./WishListHeader";
 import ProfileMenu from "./ProfileMenu";
 import ExpenseMenu from "./ExpenseMenu";
+import ChallengeMenu from "./ChallengeMenu";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -44,11 +45,10 @@ const Header = styled.div`
   }
 
   li:hover {
-    transform: scale(1.1);
+
   }
 
   .active {
-    transform: scale(1.1);
     color: #2a6658;
     font-weight: 600;
   }
@@ -95,14 +95,7 @@ function MainHeader() {
           >
             참견소
           </li>
-          <li
-            className={
-              location.pathname.startsWith("/challenges") ? "active" : ""
-            }
-            onClick={() => navigate("/challenges")}
-          >
-            챌린지
-          </li>
+          <ChallengeMenu />
           <ExpenseMenu />
           <WishlistMenu />
 
