@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChallengePreviewCard from "../../components/challenge/ChallengePreviewCard";
-import SearchIcon from "../../assets/search.svg"
+import SearchIcon from "../../assets/search.svg";
 import Colors from "../../constanst/color.mjs";
-import { Link } from 'react-router-dom';
 
-const ChallengePageContainer = styled.div`
+const ChallengeListWrapper= styled.div`
   width:80%;
   max-width: 100%;
   margin: 120px auto;
@@ -21,7 +20,7 @@ const SearchContainer = styled.div`
 `;
 
 const SearchInput = styled.input`
- width: 100%;
+  width: 100%;
   padding: 18px 18px 18px 55px; 
   border: 1px solid ${Colors.secondary100};
   border-radius: 15px;
@@ -50,7 +49,8 @@ const ChallengeContainer = styled.div`
   width:100%;
 
 `;
-const TopChallengeInnerContainer = styled.div`
+
+const ChallengeInnerContainer = styled.div`
   width: 90%; 
   max-width: 1200px; 
   margin: 5px auto;
@@ -60,23 +60,14 @@ const TopChallengeInnerContainer = styled.div`
   gap: 40px;
   justify-content: center;
 
-`;
 
-const TopChallengeText = styled.div`
-
-  margin-left: 65px;
-  margin-bottom: 30px;
-  font-size: 25px;
-  font-weight: 600;
-  
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   gap: 10px;
   margin-left: 65px;
-  margin-bottom: 50px;
-  position: relative;
+  margin-bottom: 40px;
 
 `;
 
@@ -96,23 +87,14 @@ const CateButton = styled.button`
 
 `;
 
-const MoreBtn = styled(Link)`
-  color: ${Colors.secondary200};
-  font-size: 18px;
-  font-weight: 500;
-  text-decoration: none;
-  position: absolute;
-  right: 70px;
 
-`;
-
-function ChallengePage() {
+function ChallengeListPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
-  const categories = ["전체", "식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
+    const [selectedCategory, setSelectedCategory] = useState("전체");
+    const categories = ["전체", "식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
 
   return (
-    <ChallengePageContainer>
+    <ChallengeListWrapper>
         <SearchContainer>
       <SearchIconWrapper>
         <img src={SearchIcon} alt="Search Icon" width="20" height="20" />
@@ -124,20 +106,9 @@ function ChallengePage() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
     </SearchContainer>
+    
     <ChallengeContainer>
-      <TopChallengeText>
-      인기 챌린지🔥
-      </TopChallengeText>
-      <TopChallengeInnerContainer>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      </TopChallengeInnerContainer>
-    </ChallengeContainer>
-
-    <ChallengeContainer>
-    <ButtonContainer>
+      <ButtonContainer>
           {categories.map((category) => (
             <CateButton
               key={category}
@@ -147,9 +118,8 @@ function ChallengePage() {
               {category}
             </CateButton>
           ))}
-          <MoreBtn to="/challenges/challenge-list">{'더보기 >'}</MoreBtn>
         </ButtonContainer>
-      <TopChallengeInnerContainer>
+      <ChallengeInnerContainer>
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
@@ -158,11 +128,14 @@ function ChallengePage() {
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
-      
-      </TopChallengeInnerContainer>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      </ChallengeInnerContainer>
     </ChallengeContainer>
-    </ChallengePageContainer>
+    </ChallengeListWrapper>
   );
 }
 
-export default ChallengePage;
+export default ChallengeListPage;
