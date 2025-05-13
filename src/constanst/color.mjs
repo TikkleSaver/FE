@@ -4,6 +4,7 @@ const Colors ={
     primary100: "#c6fcec",
     primary200: "#65e0c3",
     primary300: "#51b69e",
+    primary400: "#3D8D7A",
     primary500: "#2a6658",
     primary600: "#194238",
     primary700: "#09211b",
@@ -18,7 +19,13 @@ const Colors ={
 
     mainBtn:"#3D8D7A",
     smallBtn:"#51B69E",
-    btnStroke:"#2A6658"
+    btnStroke:"#2A6658",
+
+    greyTab:"#606060",
+    yellowTab:"#FFB129",
+
+    purchasedBox:"#B60000",
+    satisfactionBox:"#0341BE"
 
 }
 

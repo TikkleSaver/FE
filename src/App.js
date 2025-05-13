@@ -51,21 +51,12 @@ function App() {
         <Route path="/products" element={<ProductPage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/wish-info" element={<WishInfoPage />} />
-        <Route path="/my-wish" element={<MyWishPage />} />
-        <Route path="/friend-wish" element={<FriendWishPage />} />
-        <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
-        <Route
-          path="/add-wish-not-exist-product"
-          element={<AddWishNotExistPage />}
-        />
-        <Route
-          path="/update-wish-exist-product"
-          element={<UpdateWishExistPage />}
-        />
-        <Route
-          path="/update-wish-not-exist-product"
-          element={<UpdateWishNotExistPage />}
-        />
+        <Route path="/wish/mine" element={<MyWishPage />} />
+        <Route path="/wish/friend" element={<FriendWishPage />} />
+        <Route path="/wish/add/exist" element={<AddWishExistPage />} />
+        <Route path="/wish/add/not-exist" element={<AddWishNotExistPage />} />
+        <Route path="/wish/update/exist" element={<UpdateWishExistPage />} />
+        <Route path="/wish/update/not-exist" element={<UpdateWishNotExistPage />} />
         <Route path="/challenge-info" element={<ChallengeDetailPage />} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MeddlePreviewCard from "../../components/meddle/MeddlingPreviewCard";
 
 const MeddlePageContainer = styled.div`
-    width:70%;
+    width: 65%;
     max-width: 100%;
     margin: 120px auto;
 `;

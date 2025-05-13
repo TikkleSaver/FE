@@ -6,9 +6,12 @@ import disagreeImageUrl from "../../assets/wishDisagree.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import unLockImageUrl from "../../assets/wishUnlock.svg";
 import etcImageUrl from "../../assets/wishEtc.svg";
+import ProfileImageUrl from "./../../assets/defaultProfile.svg";
+import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
+import Colors from "../../constanst/color.mjs";
 
-
-const CardContainer = styled.div`   // 큰 상자
+// 큰 상자
+const CardContainer = styled.div`   
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -17,68 +20,77 @@ const CardContainer = styled.div`   // 큰 상자
   margin-top : 50px;
 `;
 
-const MyWishInfoContainer = styled.span`    // 상품 이미지 제외 정보
+// 상품 이미지 제외 정보
+const MyWishInfoContainer = styled.span`    
     display: inline-block;
     width: calc(100% - 255px);
 `;
 
-const MyWishTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부
+// 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부
+const MyWishTopContainer = styled.div`    
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 `;
 
-const MyWishLeftTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 생성 날짜
+// 프로필 사진 & 닉네임 & 생성 날짜
+const MyWishLeftTopContainer = styled.div`    
   display: flex;
   align-items: center;
 `;
 
-const MyWishRightTopContainer = styled.div`   // 공개 여부 & 점 3개
+// 공개 여부 & 점 3개
+const MyWishRightTopContainer = styled.div`   
   display: flex;
   gap: 10px;
 `;
 
-const MyWishNickNDateContainer = styled.span` // 닉네임 & 날짜
+// 닉네임 & 날짜
+const MyWishNickNDateContainer = styled.span` 
     display: inline-block;
     padding-left: 20px;
 `;
 
-
-const MyWishProfileImg = styled.span`   // 사람 프로필
+// 사람 프로필
+const MyWishProfileImg = styled.span`   
     display: inline-block;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%; 
-    background: #111111;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 `;
 
-const MyWishNickname = styled.div`  // 닉네임
-    color: black;
+// 닉네임
+const MyWishNickname = styled.div`  
+    color: ${Colors.secondary500};
     font-size: 20px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const MyWishCreatedDate = styled.div`   // 날짜
-    color: #A6A9AF;
+// 날짜
+const MyWishCreatedDate = styled.div`   
+    color: ${Colors.secondary200};
     font-size: 14px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-
-const MyWishPublicBtn = styled.button` // 공개 여부
-    width: 89px;
+// 공개 여부
+const MyWishPublicBtn = styled.button` 
+    width: 86px;
     height: 30px;
     flex-shrink: 0;
-    border: 1px solid #539E84; 
-    color : #539E84; 
-    background : #FFFFFF;
+    font-size: 15px;
+    border: 1px solid ${Colors.primary300}; 
+    color : ${Colors.primary300}; 
+    background : white;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -86,7 +98,8 @@ const MyWishPublicBtn = styled.button` // 공개 여부
     gap: 10px; 
 `;
 
-const MyWishEtcImage = styled.span` // 점 3개
+// 점 3개
+const MyWishEtcImage = styled.span` 
   width: 35px;
   height: 35px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -95,47 +108,51 @@ const MyWishEtcImage = styled.span` // 점 3개
   background-repeat: no-repeat; 
 `;
 
-
-const MyWishSatisfactionImage = styled.div`
+// 공개 로고
+const MyWishPublicImage = styled.div`
   width: 20px;
   height: 20px;
-  border-radius: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat; 
 `;
 
-const MyWishProductName = styled.div`   // 상품 이름
-    color: black;
+// 상품 이름
+const MyWishProductName = styled.div`   
+    color: ${Colors.secondary500};
     font-size: 35px;
-    font-family: Inter;
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 40px;
 `;
 
-const MyWishProductPrice = styled.div`  // 상품 가격
-    color: #6B6B6B;
+// 상품 가격
+const MyWishProductPrice = styled.div`  
+    color: ${Colors.secondary300};
     font-size: 22px;
-    font-family: Inter;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 22px;
 `;
 
-const MyWishProductImg = styled.span`   // 상품 이미지
+// 상품 이미지
+const MyWishProductImg = styled.span`   
     display: inline-block;
     width: 245px;
     height: 245px;
-    background: #D9D9D9;
     border-radius: 20px;
-    margin-top: 20px;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    margin-top: 15px;
 `;
 
-const MyWishBottomContainer = styled.div`    // 찬성 & 반대 & 댓글 & 구매 확정 버튼 상자
+// 찬성 & 반대 & 댓글 & 구매 확정 버튼 상자
+const MyWishBottomContainer = styled.div`    
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -144,12 +161,14 @@ const MyWishBottomContainer = styled.div`    // 찬성 & 반대 & 댓글 & 구�
     flex-wrap: nowrap;
 `;
 
-const MyWishBottomButtonContainer = styled.span`    // 찬성 & 반대 & 댓글 버튼
+// 찬성 & 반대 & 댓글 버튼
+const MyWishBottomButtonContainer = styled.span`    
     display: flex;
     gap: 30px;
 `;
 
-const MyWishAgreeContainer = styled.span` // 찬성
+// 찬성
+const MyWishAgreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -160,7 +179,8 @@ const MyWishAgreeContainer = styled.span` // 찬성
     gap: 6px; 
 `;
 
-const MyWishAgreeImage = styled.span` // 찬성 로고
+// 찬성 로고
+const MyWishAgreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -169,19 +189,22 @@ const MyWishAgreeImage = styled.span` // 찬성 로고
   background-repeat: no-repeat; 
 `;
 
-const MyWishAgreeText = styled.span` // 찬성 글자
-    color: #7D817F;
+// 찬성 글자
+const MyWishAgreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MyWishAgreeCntText = styled.span` // 찬성 개수
-    color: #7D817F;
+// 찬성 개수
+const MyWishAgreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MyWishDisagreeContainer = styled.span` // 반대
+// 반대
+const MyWishDisagreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -192,7 +215,8 @@ const MyWishDisagreeContainer = styled.span` // 반대
     gap: 6px; 
 `;
 
-const MyWishDisagreeImage = styled.span` // 반대 로고
+// 반대 로고
+const MyWishDisagreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -201,19 +225,22 @@ const MyWishDisagreeImage = styled.span` // 반대 로고
   background-repeat: no-repeat; 
 `;
 
-const MyWishDisagreeText = styled.span` // 반대 글자
-    color: #7D817F;
+// 반대 글자
+const MyWishDisagreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MyWishDisagreeCntText = styled.span` // 반대 개수
-    color: #7D817F;
+// 반대 개수
+const MyWishDisagreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MyWishCommentContainer = styled.span` // 댓글
+// 댓글
+const MyWishCommentContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -224,7 +251,8 @@ const MyWishCommentContainer = styled.span` // 댓글
     gap: 6px; 
 `;
 
-const MyWishCommentImage = styled.span` // 댓글 로고
+// 댓글 로고
+const MyWishCommentImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -233,39 +261,41 @@ const MyWishCommentImage = styled.span` // 댓글 로고
   background-repeat: no-repeat; 
 `;
 
-const MyWishCommentText = styled.span` // 댓글 글자
-    color: #7D817F;
+// 댓글 글자
+const MyWishCommentText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MyWishCommentCntText = styled.span` // 댓글 개수
-    color: #7D817F;
+// 댓글 개수
+const MyWishCommentCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MyWishPurchaseBtn = styled.button` // 구매 확정
+// 구매 확정
+const MyWishPurchaseBtn = styled.button` 
     width: 100px;
     height: 36px;
     flex-shrink: 0;
     border: 0px; 
-    color : #FFFFFF; 
-    background : #2A6658;
+    color : white; 
+    font-size: 15px;
+    background : ${Colors.primary500};
     border-radius: 10px;
     margin-right: 30px;
 `;
 
-const MyWishLine = styled.div`    // 구분선
-    width: 100%;
-    height: 100%;
-    outline: 0.5px solid #7D817F;
-    outline-offset: 0px;
+// 구분선
+const MyWishLine = styled.div`    
+    border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
-    margin-bottom: 75px;
+    margin-bottom: 50px;
 `;
 
-const MeddlePreviewCard = () => {
+const MyWishPlannedCard = () => {
     const navigate = useNavigate();
 
     return (
@@ -274,7 +304,7 @@ const MeddlePreviewCard = () => {
             <MyWishInfoContainer>
                 <MyWishTopContainer>
                     <MyWishLeftTopContainer>
-                        <MyWishProfileImg/>
+                        <MyWishProfileImg imageUrl={ProfileImageUrl}/>
                         <MyWishNickNDateContainer>
                             <MyWishNickname>닉네임</MyWishNickname>
                             <MyWishCreatedDate>2025.04.04 11:30</MyWishCreatedDate>
@@ -282,7 +312,7 @@ const MeddlePreviewCard = () => {
                     </MyWishLeftTopContainer>  
                     <MyWishRightTopContainer>
                         <MyWishPublicBtn>
-                        <MyWishSatisfactionImage imageUrl={unLockImageUrl} />
+                        <MyWishPublicImage imageUrl={unLockImageUrl} />
                             공개</MyWishPublicBtn>
                             <MyWishEtcImage imageUrl={etcImageUrl} />
                     </MyWishRightTopContainer>
@@ -313,11 +343,11 @@ const MeddlePreviewCard = () => {
                     <MyWishPurchaseBtn>구매 확정</MyWishPurchaseBtn>
                 </MyWishBottomContainer>
             </MyWishInfoContainer>
-            <MyWishProductImg/>
+            <MyWishProductImg imageUrl={ProductImageUrl}/>
         </CardContainer>
         <MyWishLine/>
         </>
     );
 };
 
-export default MeddlePreviewCard;
+export default MyWishPlannedCard;

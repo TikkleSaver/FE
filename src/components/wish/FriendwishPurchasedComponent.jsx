@@ -5,9 +5,12 @@ import agreeImageUrl from "../../assets/wishAgree.svg";
 import disagreeImageUrl from "../../assets/wishDisagree.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import satisfactionImageUrl from "../../assets/wishSatisfaction.svg";
+import ProfileImageUrl from "./../../assets/defaultProfile.svg";
+import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
+import Colors from "../../constanst/color.mjs";
 
-
-const CardContainer = styled.div`   // 큰 상자
+// 큰 상자
+const CardContainer = styled.div`   
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -16,78 +19,88 @@ const CardContainer = styled.div`   // 큰 상자
   margin-top : 50px;
 `;
 
-const FriendWishInfoContainer = styled.span`    // 상품 이미지 제외 정보
+// 상품 이미지 제외 정보
+const FriendWishInfoContainer = styled.span`    
     display: inline-block;
     width: calc(100% - 272px);
 `;
 
-const FriendWishTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부
+// 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부
+const FriendWishTopContainer = styled.div`    
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 `;
 
-const FriendWishLeftTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 생성 날짜
+// 프로필 사진 & 닉네임 & 생성 날짜
+const FriendWishLeftTopContainer = styled.div`    
   display: flex;
   align-items: center;
 `;
 
-const FriendWishRightTopContainer = styled.div`   // 구매 완료 & 만족
+// 구매 완료 & 만족
+const FriendWishRightTopContainer = styled.div`   
   display: flex;
   gap: 10px;
 `;
 
-const FriendWishNickNDateContainer = styled.span` // 닉네임 & 날짜
+// 닉네임 & 날짜
+const FriendWishNickNDateContainer = styled.span` 
     display: inline-block;
     padding-left: 20px;
 `;
 
-
-const FriendWishProfileImg = styled.span`   // 사람 프로필
+// 사람 프로필
+const FriendWishProfileImg = styled.span`   
     display: inline-block;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%; 
-    background: #111111;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 `;
 
-const FriendWishNickname = styled.div`  // 닉네임
-    color: black;
+// 닉네임
+const FriendWishNickname = styled.div`  
+    color: ${Colors.secondary500};
     font-size: 20px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const FriendWishCreatedDate = styled.div`   // 날짜
-    color: #A6A9AF;
+// 날짜
+const FriendWishCreatedDate = styled.div`   
+    color: ${Colors.secondary200};
     font-size: 14px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const FriendWishPurChased = styled.span`    // 구매 여부
+// 구매 여부
+const FriendWishPurChased = styled.span`    
     width: 89px;
     height: 29px;
     flex-shrink: 0;
-    border: 1px solid #B60000;
-    color :  #B60000;
+    border: 1px solid ${Colors.purchasedBox};
+    color :  ${Colors.purchasedBox};
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px; 
 `;
 
-const FriendWishSatisfaction = styled.span` // 만족 여부
+// 만족 여부
+const FriendWishSatisfaction = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
-    border: 1px solid #0341BE; 
-    color : #0341BE; 
+    border: 1px solid ${Colors.satisfactionBox}; 
+    color : ${Colors.satisfactionBox}; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -95,6 +108,7 @@ const FriendWishSatisfaction = styled.span` // 만족 여부
     gap: 13px; 
 `;
 
+// 만족 로고
 const FriendWishSatisfactionImage = styled.div`
   width: 20px;
   height: 20px;
@@ -105,42 +119,49 @@ const FriendWishSatisfactionImage = styled.div`
   background-repeat: no-repeat; 
 `;
 
-const FriendWishProductName = styled.div`   // 상품 이름
-    color: black;
+// 상품 이름
+const FriendWishProductName = styled.div`   
+    color: ${Colors.secondary500};
     font-size: 35px;
-    font-family: Inter;
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 40px;
 `;
 
-const FriendWishProductPrice = styled.div`  // 상품 가격
-    color: #6B6B6B;
+// 상품 가격
+const FriendWishProductPrice = styled.div`  
+    color: ${Colors.secondary300};
     font-size: 22px;
-    font-family: Inter;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 22px;
 `;
 
-const FriendWishProductImg = styled.span`   // 상품 이미지
+// 상품 이미지
+const FriendWishProductImg = styled.span`   
     display: inline-block;
     width: 245px;
     height: 245px;
-    background: #D9D9D9;
     border-radius: 20px;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    margin-top: 15px;
 `;
 
-const FriendWishButtonContainer = styled.div`    // 찬성 & 반대 & 댓글 버튼
+// 찬성 & 반대 & 댓글 버튼
+const FriendWishButtonContainer = styled.div`    
     display: flex;
     width: 100%;
     gap: 30px;
     padding-top : 50px;
 `;
 
-const FriendWishAgreeContainer = styled.span` // 찬성
+// 찬성
+const FriendWishAgreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -151,7 +172,8 @@ const FriendWishAgreeContainer = styled.span` // 찬성
     gap: 6px; 
 `;
 
-const FriendWishAgreeImage = styled.span` // 찬성 로고
+// 찬성 로고
+const FriendWishAgreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -160,19 +182,22 @@ const FriendWishAgreeImage = styled.span` // 찬성 로고
   background-repeat: no-repeat; 
 `;
 
-const FriendWishAgreeText = styled.span` // 찬성 글자
-    color: #7D817F;
+// 찬성 글자
+const FriendWishAgreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const FriendWishAgreeCntText = styled.span` // 찬성 개수
-    color: #7D817F;
+// 찬성 개수
+const FriendWishAgreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const FriendWishDisagreeContainer = styled.span` // 반대
+// 반대
+const FriendWishDisagreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -183,7 +208,8 @@ const FriendWishDisagreeContainer = styled.span` // 반대
     gap: 6px; 
 `;
 
-const FriendWishDisagreeImage = styled.span` // 반대 로고
+// 반대 로고
+const FriendWishDisagreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -192,19 +218,22 @@ const FriendWishDisagreeImage = styled.span` // 반대 로고
   background-repeat: no-repeat; 
 `;
 
-const FriendWishDisagreeText = styled.span` // 반대 글자
-    color: #7D817F;
+// 반대 글자
+const FriendWishDisagreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const FriendWishDisagreeCntText = styled.span` // 반대 개수
-    color: #7D817F;
+// 반대 개수
+const FriendWishDisagreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const FriendWishCommentContainer = styled.span` // 댓글
+// 댓글
+const FriendWishCommentContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -215,7 +244,8 @@ const FriendWishCommentContainer = styled.span` // 댓글
     gap: 6px; 
 `;
 
-const FriendWishCommentImage = styled.span` // 댓글 로고
+// 댓글 로고
+const FriendWishCommentImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -224,28 +254,28 @@ const FriendWishCommentImage = styled.span` // 댓글 로고
   background-repeat: no-repeat; 
 `;
 
-const FriendWishCommentText = styled.span` // 댓글 글자
-    color: #7D817F;
+// 댓글 글자
+const FriendWishCommentText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const FriendWishCommentCntText = styled.span` // 댓글 개수
-    color: #7D817F;
+// 댓글 개수
+const FriendWishCommentCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const FriendWishLine = styled.div`    // 구분선
-    width: 100%;
-    height: 100%;
-    outline: 0.5px solid #7D817F;
-    outline-offset: 0px;
+// 구분선
+const FriendWishLine = styled.div`    
+    border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
-    margin-bottom: 75px;
+    margin-bottom: 50px;
 `;
 
-const FriendWishPurchasedPreviewCard = () => {
+const FriendWishPurchasedCard = () => {
     const navigate = useNavigate();
 
     return (
@@ -254,7 +284,7 @@ const FriendWishPurchasedPreviewCard = () => {
             <FriendWishInfoContainer>
                 <FriendWishTopContainer>
                     <FriendWishLeftTopContainer>
-                        <FriendWishProfileImg/>
+                        <FriendWishProfileImg  imageUrl={ProfileImageUrl}/>
                         <FriendWishNickNDateContainer>
                             <FriendWishNickname>닉네임</FriendWishNickname>
                             <FriendWishCreatedDate>2025.04.04 11:30</FriendWishCreatedDate>
@@ -290,11 +320,11 @@ const FriendWishPurchasedPreviewCard = () => {
                     </FriendWishCommentContainer>
                 </FriendWishButtonContainer>
             </FriendWishInfoContainer>
-            <FriendWishProductImg/>
+            <FriendWishProductImg imageUrl={ProductImageUrl}/>
         </CardContainer>
         <FriendWishLine/>
         </>
     );
 };
 
-export default FriendWishPurchasedPreviewCard;
+export default FriendWishPurchasedCard;

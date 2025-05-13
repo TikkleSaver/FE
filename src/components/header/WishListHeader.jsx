@@ -60,7 +60,7 @@ function WishlistMenu() {
         <DropdownItem onClick={() => navigate('/products')}>
           상품 검색
         </DropdownItem>
-        <DropdownItem onClick={() => navigate('/my-wish')}>
+        <DropdownItem onClick={() => navigate('/wish/mine')}>
           위시 목록
         </DropdownItem>
       </Dropdown>
