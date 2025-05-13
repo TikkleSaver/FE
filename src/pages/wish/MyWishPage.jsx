@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MywishPlannedComponent from "../../components/wish/MywishPlannedComponent";
 import MywishPurchasedComponent from "../../components/wish/MywishPurchasedComponent";
+import Colors from "../../constanst/color.mjs";
 
 const MyWishPageContainer = styled.div`
     width:70%;
@@ -16,18 +17,19 @@ const MyWishContainer = styled.div`
     flex-direction: column;
 `;
 
-const MyWishTitleName = styled.div` // 제목
+// 제목
+const MyWishTitleName = styled.div` 
     margin: 70px 0px;
     color: black;
     font-size: 40px;
-    font-family: Inter;
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word
 `;
 
-const TabContainer = styled.div`    // 구매 예정 구매 완료 구분 탭
-    border-bottom: 2px solid #e0e0e0; 
+// 구매 예정 구매 완료 구분 탭
+const TabContainer = styled.div`    
+    border-bottom: 2px solid ${Colors.secondary100}; 
     padding-bottom: 10px;
     margin-bottom: 20px;
 `;
@@ -45,7 +47,7 @@ const TabName = styled.div`
     font-size: 18px;
     font-weight: 500;
 
-    color: ${(props) => (props.$active === "true" ? "#333333" : "#606060")};
+    color: ${(props) => (props.$active === "true" ? Colors.secondary500 : Colors.greyTab)};
     display: flex;
     align-items: center;
     padding-left: 40px;
@@ -58,7 +60,7 @@ const TabName = styled.div`
         width: 140%;
         height: 2.5px;
         background-color: ${(props) =>
-        props.$active === "true" ? "#FFB129" : "transparent"};
+        props.$active === "true" ? Colors.yellowTab : "transparent"};
         z-index: 1;
         transition: background-color 0.2s ease;
         text-align: center;
@@ -73,7 +75,7 @@ const TopMyWishInnerContainer = styled.div`
 
 `;
 
-function MeddlePage() {
+function MyWishPage() {
     const [selectedTab, setSelectedTab] = useState("구매 예정");
 
     const [plannedItems, setPlannedItems] = useState([1, 2, 3, 4, 5]);  // 더미 데이터
@@ -120,4 +122,4 @@ function MeddlePage() {
     );
 };
 
-export default MeddlePage;
+export default MyWishPage;

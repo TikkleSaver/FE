@@ -7,6 +7,8 @@ import disagreeImageUrl from "../../assets/wishDisagree.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import SubmitImageUrl from "./../../assets/arrowUp.svg";
 import etcImageUrl from "../../assets/wishEtc.svg";
+import ProfileImageUrl from "./../../assets/defaultProfile.svg";
+import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 
 const WishInfoPageContainer = styled.div`
@@ -21,76 +23,85 @@ const WishInfoBox = styled.div`
     width: 1141px;
     height: 650px;
     border-radius: 10px;
-    border: 1px #E5E5E5 solid;
+    border: 1px ${Colors.secondary50} solid;
 `;
 
-const WishInfoTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부 & 점 3개
+// 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부 & 점 3개
+const WishInfoTopContainer = styled.div`    
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 15px;
 `;
 
-const WishInfoLeftTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 생성 날짜
+ // 프로필 사진 & 닉네임 & 생성 날짜
+const WishInfoLeftTopContainer = styled.div`   
   display: flex;
   align-items: center;
 `;
 
-const WishInfoRightTopContainer = styled.div`   // 구매 완료 & 만족 & 점 3개
+// 구매 완료 & 만족 & 점 3개
+const WishInfoRightTopContainer = styled.div`   
   display: flex;
   gap: 10px;
 `;
 
-const WishInfoNickNDateContainer = styled.span` // 닉네임 & 날짜
+// 닉네임 & 날짜
+const WishInfoNickNDateContainer = styled.span` 
     display: inline-block;
     padding-left: 20px;
 `;
 
-
-const WishInfoProfileImg = styled.span`   // 사람 프로필
+// 사람 프로필
+const WishInfoProfileImg = styled.span`   
     display: inline-block;
     width: 50px;
     height: 50px;
     border-radius: 50%; 
-    background: #111111;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 `;
 
-const WishInfoNickname = styled.div`  // 닉네임
-    color: black;
+// 닉네임
+const WishInfoNickname = styled.div`  
+    color: ${Colors.secondary500};
     font-size: 20px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const WishInfoCreatedDate = styled.div`   // 날짜
-    color: #A6A9AF;
+// 날짜
+const WishInfoCreatedDate = styled.div`   
+    color: ${Colors.secondary200};
     font-size: 14px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const WishInfoPurChased = styled.span`    // 구매 여부
+// 구매 여부
+const WishInfoPurChased = styled.span`    
     width: 89px;
     height: 29px;
     flex-shrink: 0;
-    border: 1px solid #B60000;
-    color :  #B60000;
+    border: 1px solid ${Colors.purchasedBox};
+    color :  ${Colors.purchasedBox};
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px; 
 `;
 
-const WishInfoSatisfaction = styled.span` // 만족 여부
-    width: 89px;
+// 만족 여부
+const WishInfoSatisfaction = styled.span` 
+    width: 86px;
     height: 29px;
     flex-shrink: 0;
-    border: 1px solid #0341BE; 
-    color : #0341BE; 
+    border: 1px solid ${Colors.satisfactionBox}; 
+    color : ${Colors.satisfactionBox}; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -98,7 +109,8 @@ const WishInfoSatisfaction = styled.span` // 만족 여부
     gap: 13px; 
 `;
 
-const WishInfoSatisfactionImage = styled.div`   // 만족 임티
+// 만족 임티
+const WishInfoSatisfactionImage = styled.div`   
   width: 20px;
   height: 20px;
   border-radius: 20px;
@@ -108,7 +120,8 @@ const WishInfoSatisfactionImage = styled.div`   // 만족 임티
   background-repeat: no-repeat; 
 `;
 
-const WishInfoEtcImage = styled.span` // 점 3개
+// 점 3개
+const WishInfoEtcImage = styled.span` 
   width: 35px;
   height: 35px;
   margin-left: 10px;
@@ -118,38 +131,43 @@ const WishInfoEtcImage = styled.span` // 점 3개
   background-repeat: no-repeat; 
 `;
 
-const WishInfoTopLine = styled.div`    // 상위 구분선
+// 상위 구분선
+const WishInfoTopLine = styled.div`    
   width: 100%;
-  border-bottom: 1px solid #E5E5E5;
+  border-bottom: 1px solid ${Colors.secondary50};
 `;
 
-const WishInfoMiddleContainer = styled.div`    // 가운데 핵심 요소들
+// 가운데 핵심 요소들
+const WishInfoMiddleContainer = styled.div`    
     display: flex;
 `;
 
-const WishInfoLeftMiddleContainer = styled.div`    // 상품 사진 & 버튼
+// 상품 사진 & 버튼
+const WishInfoLeftMiddleContainer = styled.div`    
 `;
 
-const WishInfoProductImage = styled.span`  // 상품 이미지
+// 상품 이미지
+const WishInfoProductImage = styled.span`  
   display: inline-block;  
   flex-shrink: 0;
   width: 480px;
   height: 480px;
-  background-color: #C4C4C4;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 `;
 
-const WishInfoButtonContainer = styled.div`    // 찬성 & 반대 & 댓글 버튼
+ // 찬성 & 반대 & 댓글 버튼
+const WishInfoButtonContainer = styled.div`   
     display: flex;
     width: 100%;
     gap: 30px;
     margin : 25px 20px;
 `;
 
-const WishInfoAgreeContainer = styled.span` // 찬성
+// 찬성
+const WishInfoAgreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -160,7 +178,8 @@ const WishInfoAgreeContainer = styled.span` // 찬성
     gap: 6px; 
 `;
 
-const WishInfoAgreeImage = styled.span` // 찬성 로고
+// 찬성 로고
+const WishInfoAgreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -169,19 +188,22 @@ const WishInfoAgreeImage = styled.span` // 찬성 로고
   background-repeat: no-repeat; 
 `;
 
-const WishInfoAgreeText = styled.span` // 찬성 글자
-    color: #7D817F;
+// 찬성 글자
+const WishInfoAgreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const WishInfoAgreeCntText = styled.span` // 찬성 개수
-    color: #7D817F;
+// 찬성 개수
+const WishInfoAgreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const WishInfoDisagreeContainer = styled.span` // 반대
+// 반대
+const WishInfoDisagreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -192,7 +214,8 @@ const WishInfoDisagreeContainer = styled.span` // 반대
     gap: 6px; 
 `;
 
-const WishInfoDisagreeImage = styled.span` // 반대 로고
+// 반대 로고
+const WishInfoDisagreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -201,19 +224,22 @@ const WishInfoDisagreeImage = styled.span` // 반대 로고
   background-repeat: no-repeat; 
 `;
 
-const WishInfoDisagreeText = styled.span` // 반대 글자
-    color: #7D817F;
+// 반대 글자
+const WishInfoDisagreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const WishInfoDisagreeCntText = styled.span` // 반대 개수
-    color: #7D817F;
+// 반대 개수
+const WishInfoDisagreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const WishInfoCommentContainer = styled.span` // 댓글
+// 댓글
+const WishInfoCommentContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -224,7 +250,8 @@ const WishInfoCommentContainer = styled.span` // 댓글
     gap: 6px; 
 `;
 
-const WishInfoCommentImage = styled.span` // 댓글 로고
+// 댓글 로고
+const WishInfoCommentImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -233,74 +260,79 @@ const WishInfoCommentImage = styled.span` // 댓글 로고
   background-repeat: no-repeat; 
 `;
 
-const WishInfoCommentText = styled.span` // 댓글 글자
-    color: #7D817F;
+ // 댓글 글자
+const WishInfoCommentText = styled.span`
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const WishInfoCommentCntText = styled.span` // 댓글 개수
-    color: #7D817F;
+// 댓글 개수
+const WishInfoCommentCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const WishInfoRightMiddleContainer = styled.div`   // 상품 설명 & 댓글
+ // 상품 설명 & 댓글
+const WishInfoRightMiddleContainer = styled.div`  
 `;
 
-const WishInfoProductContainer = styled.div`    // 상품 카테고리, 상품명, 브랜드, 가격
+// 상품 카테고리, 상품명, 브랜드, 가격
+const WishInfoProductContainer = styled.div`    
     width: 625px;
     margin-left: 25px;
 `;
 
-const WishInfoProductCategory = styled.div`    // 상품 카테고리
+// 상품 카테고리
+const WishInfoProductCategory = styled.div`    
     margin-top: 5px;
     height: 37px;
-    color: #6B6B6B;
+    color: ${Colors.secondary200};
     font-size: 16px;
-    font-family: Inter;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const WishInfoProductName = styled.div`    // 상품 명
+// 상품 명
+const WishInfoProductName = styled.div`    
     width: 545px;
-    color: black;
+    color: ${Colors.secondary500};
     font-size: 20px;
-    font-family: Inter;
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const WishInfoProductBrand = styled.div`    // 브랜드
+// 브랜드
+const WishInfoProductBrand = styled.div`    
     margin-top: 35px;
-    color: black;
+    color: ${Colors.secondary500};
     font-size: 15px;
-    font-family: Inter;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const WishInfoProductPrice = styled.div`    // 가격
-    color: black;
+// 가격
+const WishInfoProductPrice = styled.div`    
+    color: ${Colors.secondary500};
     font-size: 15px;
-    font-family: Inter;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
     margin-bottom: 15px;
 `;
 
-const WishInfoLine = styled.div`    // 하위 구분선
+// 하위 구분선
+const WishInfoLine = styled.div`    
   width: 95%;
-  border-bottom: 1px solid #E5E5E5;
+  border-bottom: 1px solid ${Colors.secondary50};
 `;
 
-
-const WishInfoCommentListContainer = styled.div`    // 댓글 상자
+// 댓글 상자
+const WishInfoCommentListContainer = styled.div`    
   margin-top: 7px;
   margin-left: 9px;
   display: flex;
@@ -311,7 +343,8 @@ const WishInfoCommentListContainer = styled.div`    // 댓글 상자
   overflow: hidden;
 `;
 
-const WishInfoComments = styled.div`    // 댓글 목록
+// 댓글 목록
+const WishInfoComments = styled.div`    
   display: flex;
   flex-direction: column;
   width: 630px;
@@ -331,7 +364,8 @@ const WishInfoComments = styled.div`    // 댓글 목록
   }
 `;
 
-const CommentInputWrapper = styled.div` // 댓글 입력 상자
+// 댓글 입력 상자
+const CommentInputWrapper = styled.div` 
   right: 20px;
   position: relative;
   padding: 10px 20px;
@@ -339,7 +373,8 @@ const CommentInputWrapper = styled.div` // 댓글 입력 상자
   background-color: white;
 `;
 
-const CommentInput = styled.input`  // 댓글 입력
+// 댓글 입력
+const CommentInput = styled.input`  
   width: 630px;
   height: 57px;
   padding: 0 50px 0 15px; 
@@ -350,7 +385,8 @@ const CommentInput = styled.input`  // 댓글 입력
   box-sizing: border-box;
 `;
 
-const SubmitBtn = styled.button`    // 댓글 제출 버튼
+// 댓글 제출 버튼
+const SubmitBtn = styled.button`    
   weight: 33px;
   height: 33px;
   position: absolute;
@@ -379,7 +415,7 @@ function WishInfoPage() {
             <WishInfoBox>
                 <WishInfoTopContainer>
                     <WishInfoLeftTopContainer>
-                        <WishInfoProfileImg/>
+                        <WishInfoProfileImg imageUrl={ProfileImageUrl}/>
                         <WishInfoNickNDateContainer>
                             <WishInfoNickname>닉네임</WishInfoNickname>
                             <WishInfoCreatedDate>2025.04.04 11:30</WishInfoCreatedDate>
@@ -396,7 +432,7 @@ function WishInfoPage() {
                 <WishInfoTopLine/>
                 <WishInfoMiddleContainer>
                     <WishInfoLeftMiddleContainer>
-                        <WishInfoProductImage/>
+                        <WishInfoProductImage imageUrl={ProductImageUrl}/>
                         <WishInfoButtonContainer>
                             <WishInfoAgreeContainer>
                                 <WishInfoAgreeImage imageUrl={agreeImageUrl} />
@@ -434,7 +470,9 @@ function WishInfoPage() {
                             </WishInfoComments>{" "}
                             <CommentInputWrapper>
                                 <CommentInput
-                                value={newComment}
+                                type="text"
+                                value={newComment} placeholder="친구의 위시에 피드백을 남겨주세요!"
+                                onChange={(e) => setNewComment(e.target.value)}
                                 />
                                 <SubmitBtn>
                                 <img src={SubmitImageUrl} alt="Etc"/>
