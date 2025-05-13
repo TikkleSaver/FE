@@ -11,6 +11,7 @@ import SignUp from "./pages/login/SignUp";
 import Login from "./pages/login/Login";
 import Expense from "./pages/expense/Expense";
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
+import CreateChallengePage from './pages/challenge/CreateChallengePage';
 import GlobalStyle from './styles/GlobalStyle';
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
+        <Route path="/create-challenge" element={<CreateChallengePage />} />
+
       </Routes>
     </Router>
   );
