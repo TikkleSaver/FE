@@ -31,6 +31,7 @@ import FriendsPage from './pages/friend/FriendsPage';
 import ExpenseAnalysis from './pages/expense/ExpenseAnalysis';
 import MainPage from './pages/home/MainPage';
 import ChallengeSearchPage from './pages/challenge/ChallengeSearchPage';
+import ChallengeListPage from './pages/challenge/ChallengeListPage';
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
         <Route path="/friendprofile" element={<FriendProfile />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/challenges/search-result" element={<ChallengeSearchPage />} />
+        <Route path="/challenges/challenge-list" element={<ChallengeListPage />} />
       </Routes>
     </Router>
   );

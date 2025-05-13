@@ -159,12 +159,12 @@ const ButtonContainer = styled.div`
 
 const CateButton = styled.button`
   background-color: ${(props) =>
-    props.$active === "true" ? "#51B69E" : "white"};
+    props.$active === "true" ? Colors.primary300 : "white"};
   color: ${(props) =>
     props.$active === "true" ? "white" : Colors.secondary200};
   border: 1px solid
     ${(props) =>
-      props.$active === "true" ? "#51B69E" : Colors.secondary100};
+      props.$active === "true" ? Colors.primary300 : Colors.secondary100};
   padding: 5px 15px;
   border-radius: 10px;
   cursor: pointer;
