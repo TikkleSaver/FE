@@ -11,6 +11,7 @@ import SignUp from "./pages/login/SignUp";
 import Login from "./pages/login/Login";
 import Expense from "./pages/expense/Expense";
 import ChallengeDetailPage from "./pages/challenge/ChallengeDetailPage";
+import WishInfoPage from "./pages/wish/WishInfoPage";
 import MyWishPage from "./pages/wish/MyWishPage";
 import FriendWishPage from "./pages/wish/FriendWishPage";
 import AddWishExistPage from "./pages/wish/AddWishExistPage";
@@ -47,6 +48,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
+        <Route path="/wish-info" element={<WishInfoPage />} />
         <Route path="/my-wish" element={<MyWishPage />} />
         <Route path="/friend-wish" element={<FriendWishPage />} />
         <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
