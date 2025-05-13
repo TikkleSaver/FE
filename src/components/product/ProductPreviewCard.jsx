@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import ProductImageUrl from "./../../images/wishProductImg.png"    // 임시 사진
+import Colors from "../../constanst/color.mjs";
 
 const CardContainer = styled.div`
   border-radius: 8px;
@@ -8,10 +10,10 @@ const CardContainer = styled.div`
   width: 222px;
 `;
 
-const ProductImage = styled.div`  // 상품 이미지
+// 상품 이미지
+const ProductImage = styled.div`  
   width: 222px;
   height: 166px;
-  background-color: #C4C4C4;
   border-radius: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
   background-size: cover;
@@ -19,35 +21,37 @@ const ProductImage = styled.div`  // 상품 이미지
   background-repeat: no-repeat;
 `;
 
-const ProductName = styled.div`   // 상품명
-  color: black;
+// 상품명
+const ProductName = styled.div`   
+  color: ${Colors.secondary500};
   width : 198px;
   font-size: 20px;
-  font-family: Inter;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-left: 10px;
 `;
 
-const ProductInfoContainer = styled.div`  // 상품 가격 설명 상자
+// 상품 가격 설명 상자
+const ProductInfoContainer = styled.div`  
   display: flex;
   flex-direction: column;
 `;
 
-const BottomContainer = styled.div` // 버튼 상자
+// 버튼 상자
+const BottomContainer = styled.div` 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 5px 10px 0 0px;
+  margin: 5px 0;
 `;
 
-const ProductHighPrice = styled.div`  // 최고가
-  color: #6B6B6B;
+// 최고가
+const ProductHighPrice = styled.div`  
+  color: ${Colors.secondary300};
   width: 145px;
   font-size: 15px;
-  font-family: Inter;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
@@ -55,11 +59,11 @@ const ProductHighPrice = styled.div`  // 최고가
   margin-left: 10px;
 `;
 
-const ProductLowPrice = styled.div` // 최저가
-  color: #6B6B6B;
+// 최저가
+const ProductLowPrice = styled.div` 
+  color: ${Colors.secondary300};
   width: 145px;
   font-size: 15px;
-  font-family: Inter;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
@@ -67,16 +71,22 @@ const ProductLowPrice = styled.div` // 최저가
   margin-left: 10px;
 `;
 
-const ProductWishBtn = styled.button` // 담기 버튼
-  background-color: #2a6658;
+// 담기 버튼
+const ProductWishBtn = styled.button` 
+  width: 50px;
+  height: 25px;
+  background-color: ${Colors.primary500};
   color: white;
   border: none;
   border-radius: 10px;
   padding: 6px 12px;
   cursor: pointer;
-  font-size: 14px;
-  margin-top: 22px;
+  font-size: 12px;
+  margin-top: 36px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ProductPreviewCard = () => {
@@ -84,7 +94,7 @@ const ProductPreviewCard = () => {
   
     return (
       <CardContainer>
-        <ProductImage />
+        <ProductImage imageUrl={ProductImageUrl} />
         <ProductName>바닐라딜라이트</ProductName>
         <BottomContainer>
           <ProductInfoContainer>

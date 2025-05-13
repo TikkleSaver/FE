@@ -1,13 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import satisfactionImageUrl from "../../images/Meddling/satisfaction.png";
-import agreeImageUrl from "../../images/Meddling/Agree.png";
-import disagreeImageUrl from "../../images/Meddling/DisAgree.png";
-import commentImageUrl from "../../images/Meddling/comment.png";
+import satisfactionImageUrl from "../../assets/wishSatisfaction.svg";
+import agreeImageUrl from "../../assets/wishAgree.svg";
+import disagreeImageUrl from "../../assets/wishDisagree.svg";
+import commentImageUrl from "../../assets/wishComment.svg";
+import ProfileImageUrl from "./../../assets/defaultProfile.svg";
+import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
+import Colors from "../../constanst/color.mjs";
 
-
-const CardContainer = styled.div`   // 큰 상자
+// 큰 상자
+const CardContainer = styled.div`   
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -16,78 +19,88 @@ const CardContainer = styled.div`   // 큰 상자
   margin-top : 50px;
 `;
 
-const MeddlingInfoContainer = styled.span`    // 상품 이미지 제외 정보
+// 상품 이미지 제외 정보
+const MeddlingInfoContainer = styled.span`    
     display: inline-block;
     width: calc(100% - 272px);
 `;
 
-const MeddlingTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부
+// 프로필 사진 & 닉네임 & 날짜 & 구매 상태 & 만족 여부
+const MeddlingTopContainer = styled.div`    
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 `;
 
-const MeddlingLeftTopContainer = styled.div`    // 프로필 사진 & 닉네임 & 생성 날짜
+// 프로필 사진 & 닉네임 & 생성 날짜
+const MeddlingLeftTopContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const MeddlingRightTopContainer = styled.div`   // 구매 완료 & 만족
+// 구매 완료 & 만족
+const MeddlingRightTopContainer = styled.div`   
   display: flex;
   gap: 10px;
 `;
 
-const MeddlingNickNDateContainer = styled.span` // 닉네임 & 날짜
+// 닉네임 & 날짜
+const MeddlingNickNDateContainer = styled.span` 
     display: inline-block;
     padding-left: 20px;
 `;
 
-
-const MeddlingProfileImg = styled.span`   // 사람 프로필
+// 사람 프로필
+const MeddlingProfileImg = styled.span`   
     display: inline-block;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%; 
-    background: #111111;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 `;
 
-const MeddlingNickname = styled.div`  // 닉네임
-    color: black;
+// 닉네임
+const MeddlingNickname = styled.div`  
+    color: ${Colors.secondary500};
     font-size: 20px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const MeddlingCreatedDate = styled.div`   // 날짜
-    color: #A6A9AF;
+// 날짜
+const MeddlingCreatedDate = styled.div`   
+    color: ${Colors.secondary200};
     font-size: 14px;
-    font-family: Inter;
     font-weight: 800;
     line-height: 30px;
     word-wrap: break-word;
 `;
 
-const MeddlingPurChased = styled.span`    // 구매 여부
+// 구매 여부
+const MeddlingPurChased = styled.span`    
     width: 89px;
     height: 29px;
     flex-shrink: 0;
-    border: 1px solid #B60000;
-    color :  #B60000;
+    border: 1px solid ${Colors.purchasedBox};
+    color :  ${Colors.purchasedBox};
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px; 
 `;
 
-const MeddlingSatisfaction = styled.span` // 만족 여부
-    width: 89px;
+// 만족 여부
+const MeddlingSatisfaction = styled.span` 
+    width: 86px;
     height: 29px;
     flex-shrink: 0;
-    border: 1px solid #0341BE; 
-    color : #0341BE; 
+    border: 1px solid ${Colors.satisfactionBox}; 
+    color : ${Colors.satisfactionBox}; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -95,6 +108,7 @@ const MeddlingSatisfaction = styled.span` // 만족 여부
     gap: 13px; 
 `;
 
+// 만족 로고
 const MeddlingSatisfactionImage = styled.div`
   width: 20px;
   height: 20px;
@@ -105,42 +119,49 @@ const MeddlingSatisfactionImage = styled.div`
   background-repeat: no-repeat; 
 `;
 
-const MeddlingProductName = styled.div`   // 상품 이름
-    color: black;
+// 상품 이름
+const MeddlingProductName = styled.div`   
+    color: ${Colors.secondary500};
     font-size: 35px;
-    font-family: Inter;
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 40px;
 `;
 
-const MeddlingProductPrice = styled.div`  // 상품 가격
-    color: #6B6B6B;
+// 상품 가격
+const MeddlingProductPrice = styled.div`  
+    color: ${Colors.secondary300};
     font-size: 22px;
-    font-family: Inter;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 22px;
 `;
 
-const MeddlingProductImg = styled.span`   // 상품 이미지
+// 상품 이미지
+const MeddlingProductImg = styled.span`   
     display: inline-block;
-    width: 242px;
-    height: 242px;
-    background: #D9D9D9;
+    width: 245px;
+    height: 245px;
     border-radius: 20px;
+    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    margin-top: 15px;
 `;
 
-const MeddlingButtonContainer = styled.div`    // 찬성 & 반대 & 댓글 버튼
+ // 찬성 & 반대 & 댓글 버튼
+const MeddlingButtonContainer = styled.div`   
     display: flex;
     width: 100%;
     gap: 30px;
     padding-top : 50px;
 `;
 
-const MeddlingAgreeContainer = styled.span` // 찬성
+// 찬성
+const MeddlingAgreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -151,7 +172,8 @@ const MeddlingAgreeContainer = styled.span` // 찬성
     gap: 6px; 
 `;
 
-const MeddlingAgreeImage = styled.span` // 찬성 로고
+ // 찬성 로고
+const MeddlingAgreeImage = styled.span`
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -160,19 +182,22 @@ const MeddlingAgreeImage = styled.span` // 찬성 로고
   background-repeat: no-repeat; 
 `;
 
-const MeddlingAgreeText = styled.span` // 찬성 글자
-    color: #7D817F;
+// 찬성 글자
+const MeddlingAgreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MeddlingAgreeCntText = styled.span` // 찬성 개수
-    color: #7D817F;
+// 찬성 개수
+const MeddlingAgreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MeddlingDisagreeContainer = styled.span` // 반대
+// 반대
+const MeddlingDisagreeContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -183,7 +208,8 @@ const MeddlingDisagreeContainer = styled.span` // 반대
     gap: 6px; 
 `;
 
-const MeddlingDisagreeImage = styled.span` // 반대 로고
+// 반대 로고
+const MeddlingDisagreeImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -192,19 +218,22 @@ const MeddlingDisagreeImage = styled.span` // 반대 로고
   background-repeat: no-repeat; 
 `;
 
-const MeddlingDisagreeText = styled.span` // 반대 글자
-    color: #7D817F;
+// 반대 글자
+const MeddlingDisagreeText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MeddlingDisagreeCntText = styled.span` // 반대 개수
-    color: #7D817F;
+// 반대 개수
+const MeddlingDisagreeCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MeddlingCommentContainer = styled.span` // 댓글
+// 댓글
+const MeddlingCommentContainer = styled.span` 
     width: 89px;
     height: 29px;
     flex-shrink: 0;
@@ -215,7 +244,8 @@ const MeddlingCommentContainer = styled.span` // 댓글
     gap: 6px; 
 `;
 
-const MeddlingCommentImage = styled.span` // 댓글 로고
+// 댓글 로고
+const MeddlingCommentImage = styled.span` 
   width: 20px;
   height: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
@@ -224,23 +254,23 @@ const MeddlingCommentImage = styled.span` // 댓글 로고
   background-repeat: no-repeat; 
 `;
 
-const MeddlingCommentText = styled.span` // 댓글 글자
-    color: #7D817F;
+// 댓글 글자
+const MeddlingCommentText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MeddlingCommentCntText = styled.span` // 댓글 개수
-    color: #7D817F;
+// 댓글 개수
+const MeddlingCommentCntText = styled.span` 
+    color: ${Colors.secondary300};
     font-size: 15px;
     word-wrap: break-word;
 `;
 
-const MeddlingLine = styled.div`    // 구분선
-    width: 100%;
-    height: 100%;
-    outline: 0.5px solid #7D817F;
-    outline-offset: 0px;
+// 구분선
+const MeddlingLine = styled.div`    
+    border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
     margin-bottom: 50px;
 `;
@@ -254,7 +284,7 @@ const MeddlePreviewCard = () => {
             <MeddlingInfoContainer>
                 <MeddlingTopContainer>
                     <MeddlingLeftTopContainer>
-                        <MeddlingProfileImg/>
+                        <MeddlingProfileImg imageUrl={ProfileImageUrl}/>
                         <MeddlingNickNDateContainer>
                             <MeddlingNickname>닉네임</MeddlingNickname>
                             <MeddlingCreatedDate>2025.04.04 11:30</MeddlingCreatedDate>
@@ -290,7 +320,7 @@ const MeddlePreviewCard = () => {
                     </MeddlingCommentContainer>
                 </MeddlingButtonContainer>
             </MeddlingInfoContainer>
-            <MeddlingProductImg/>
+            <MeddlingProductImg imageUrl={ProductImageUrl}/>
         </CardContainer>
         <MeddlingLine/>
         </>

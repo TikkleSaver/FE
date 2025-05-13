@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import Profile from "./../../assets/defaultProfile.svg";
 import Etc from "./../../assets/etc-vertical.svg";
+import Colors from "../../constanst/color.mjs";
 
 const CommentCardContainer = styled.div`
   position: relative;
@@ -10,7 +11,7 @@ const CommentCardContainer = styled.div`
   width: 555px;
   margin: 15px 20px;
   gap: 12px;
-  color: #333;
+  color: ${Colors.secondary500};
 `;
 
 const UserName = styled.div`
@@ -45,7 +46,7 @@ const Dropdown = styled.div`
   top: 30px;
   right: 30px;
   background-color: white;
-  border: 1px solid #ddd;
+  border: 1px solid ${Colors.secondary50};
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 999;
@@ -55,16 +56,16 @@ const Dropdown = styled.div`
 const DropdownItem = styled.div`
   padding: 10px;
   font-size: 14px;
-  color: #333;
+  color: ${Colors.secondary500};
   cursor: pointer;
   text-align: center;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: ${Colors.secondary25};
   }
 
   &:not(:last-child) {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid ${Colors.secondary50};
   }
 `;
 

@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../images/logo.svg";
 import WishlistMenu from "./WishListHeader";
+import ProfileMenu from "./ProfileMenu";
+import ExpenseMenu from "./ExpenseMenu";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -14,7 +16,8 @@ const StyledHeader = styled.div`
 `;
 
 const Header = styled.div`
-  max-width: 1400px;
+  max-width: 1300px;
+  min-width: 840px; /* 헤더 뭉게지지 않게 하기 위함 */
   margin: 0 auto;
   padding: 0 10px;
   display: flex;
@@ -64,8 +67,16 @@ function MainHeader() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 실제 로그인 여부 판단 로직에 맞게 대체할 것
+  const isLoggedIn = true;
+
   // 로그인 페이지에서는 헤더를 보여주지 않음
-  if (location.pathname === "/login" || location.pathname === "/signup") {
+  if (
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/onboarding/category" ||
+    location.pathname === "/onboarding/goal"
+  ) {
     return null;
   }
 
@@ -92,22 +103,16 @@ function MainHeader() {
           >
             챌린지
           </li>
-          <li
-            className={
-              location.pathname.startsWith("/expenseCalendar") ||
-              location.pathname.startsWith("/expense")
-                ? "active"
-                : ""
-            }
-            onClick={() => navigate("/expenseCalendar")}
-          >
-            소비 일기
-          </li>
+          <ExpenseMenu />
           <WishlistMenu />
 
-          <button className="apply" onClick={() => navigate("/login")}>
-            로그인
-          </button>
+          {isLoggedIn ? (
+            <ProfileMenu />
+          ) : (
+            <button className="apply" onClick={() => navigate("/login")}>
+              로그인
+            </button>
+          )}
         </ul>
       </Header>
     </StyledHeader>

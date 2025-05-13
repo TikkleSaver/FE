@@ -2,22 +2,25 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ProductPreviewCard from "../../components/product/ProductPreviewCard";
 import SearchIcon from "../../assets/search.svg"
+import Colors from "../../constanst/color.mjs";
 
-const ProductPageContainer = styled.div`    // 전체 상자
+// 전체 상자
+const ProductPageContainer = styled.div`    
   width:80%;
   max-width: 100%;
   margin: 120px auto;
 `;
 
-const SearchContainer = styled.div` // 검색 상자
+// 검색 상자
+const SearchContainer = styled.div` 
   position: relative;
   display: flex;
   align-items: center;
   width:80%;
   margin: 0 auto;
-  
 `;
 
+// 검색 입력
 const SearchInput = styled.input`   
   width: 100%;
   padding: 18px 18px 18px 55px; 
@@ -28,6 +31,7 @@ const SearchInput = styled.input`
   outline: none;
 `;
 
+// 검색 아이콘 와퍼
 const SearchIconWrapper = styled.div`
   position: absolute;
   left: 20px;
@@ -38,32 +42,38 @@ const SearchIconWrapper = styled.div`
   height: 24px;
 `;
 
-const ProductContainer = styled.div`    // 상품 상자
+// 상품 상자
+const ProductContainer = styled.div`  
   margin: 30px auto;
   width:100%;
 `;
 
-const ButtonWrapper = styled.div`   // 버튼 상자
+// 버튼 상자
+const ButtonWrapper = styled.div`   
   display: flex;
   justify-content: flex-end;
   padding: 0 55px; 
   margin-bottom: 40px; 
 `;
 
-const ProductCreateBtn = styled.button` // 직접 추가 버튼
+// 직접 추가 버튼
+const ProductCreateBtn = styled.button` 
   width : 140px;
-  height: 40px;
-  background-color: #51B69E;
+  height: 45px;
+  background-color: ${Colors.primary300};
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   font-size: 20px;
   margin-top: 22px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
   justify-content: center;
 `;
 
-const ProductInnerContainer = styled.div`   // 상품 목록 상자
+// 상품 목록 상자
+const ProductInnerContainer = styled.div`   
   width: 90%; 
   max-width: 1200px; 
   margin: 5px auto;
@@ -72,7 +82,6 @@ const ProductInnerContainer = styled.div`   // 상품 목록 상자
   grid-template-columns: repeat(4, minmax(200px, 1fr)); 
   gap: 50px;
   justify-content: center;
-
 `;
 
 function ProductPage() {

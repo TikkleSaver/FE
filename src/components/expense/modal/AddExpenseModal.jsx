@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Camera from "./../../../assets/camera.svg";
+import Colors from "../../../constanst/color.mjs";
 
 const Overlay = styled.div`
   position: fixed;
@@ -48,7 +49,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #333;
+  color: ${Colors.secondary500};
 `;
 
 const Row = styled.div`
@@ -66,14 +67,14 @@ const Column = styled.div`
 const Label = styled.h5`
   margin: 10px 0 6px;
   font-size: 14px;
-  color: #333;
+  color: ${Colors.secondary500};
 `;
 
 const Input = styled.input`
   width: 95%;
   padding: 12px;
   margin-bottom: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid ${Colors.secondary100};
   border-radius: 8px;
   font-size: 14px;
 `;
@@ -88,9 +89,9 @@ const CategoryWrap = styled.div`
 const CategoryButton = styled.button`
   padding: 6px 12px;
   border-radius: 8px;
-  border: ${({ selected }) => (selected ? "none" : "0.5px solid #999")};
-  background-color: ${({ selected }) => (selected ? "#51b69e" : "#fff")};
-  color: ${({ selected }) => (selected ? "white" : "#999")};
+  border: ${({ selected }) => (selected ? "none" : "0.5px solid #CCCCCC")};
+  background-color: ${({ selected }) => (selected ? "#51b69e" : "white")};
+  color: ${({ selected }) => (selected ? "white" : "#999999")};
   cursor: pointer;
   font-size: 14px;
 `;
@@ -99,7 +100,7 @@ const SubmitButton = styled.button`
   align-self: flex-end;
   margin-top: 12px;
   padding: 10px 35px;
-  background-color: #3d8d7a;
+  background-color: ${Colors.primary};
   color: white;
   border: none;
   border-radius: 10px;
@@ -110,7 +111,7 @@ const SubmitButton = styled.button`
 const ImageUpload = styled.div`
   width: 170px;
   height: 170px;
-  background-color: #d9d9d9;
+  background-color: ${Colors.secondary100};
   border-radius: 20px;
   display: flex;
   align-items: center;

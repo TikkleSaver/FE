@@ -1,21 +1,18 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import imageUrl from "../../images/challengeImg.png";
-
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import imageUrl from '../../images/challengeImg.png';
 
 const CardContainer = styled.div`
   border-radius: 8px;
   cursor: pointer;
   width: 250px;
- 
 `;
 
 const ChallengeInfo = styled.div`
-   display: flex;
-   justify-content: space-between;
-   padding: 5px 10px;
-
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
 `;
 
 const ChallengeImage = styled.div`
@@ -38,7 +35,7 @@ const Title = styled.span`
 
 const Category = styled.span`
   font-size: 14px;
-  color: #6B6B6B;
+  color: #6b6b6b;
   font-weight: 600;
 `;
 
@@ -47,13 +44,13 @@ const ChallengePreviewCard = () => {
 
   return (
     <>
-    <CardContainer onClick={() => navigate("/challenges/signup-challenge")}>
-          <ChallengeImage imageUrl={imageUrl} />
-          <ChallengeInfo>
+      <CardContainer onClick={() => navigate('/challenges/signup-challenge')}>
+        <ChallengeImage imageUrl={imageUrl} />
+        <ChallengeInfo>
           <Title>커피값 세이브</Title>
           <Category>카페/간식</Category>
-          </ChallengeInfo>
-    </CardContainer>
+        </ChallengeInfo>
+      </CardContainer>
     </>
   );
 };
