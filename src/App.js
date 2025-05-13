@@ -30,6 +30,7 @@ import FriendProfile from './pages/friend/FriendProfile';
 import FriendsPage from './pages/friend/FriendsPage';
 import ExpenseAnalysis from './pages/expense/ExpenseAnalysis';
 import MainPage from './pages/home/MainPage';
+import ChallengeSearchPage from './pages/challenge/ChallengeSearchPage';
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
         <Route path="/searchFreind" element={<SearchFreindPage />} />
         <Route path="/friendprofile" element={<FriendProfile />} />
         <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/challenges/search-result" element={<ChallengeSearchPage />} />
       </Routes>
     </Router>
   );
