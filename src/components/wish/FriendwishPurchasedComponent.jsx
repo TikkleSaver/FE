@@ -67,7 +67,7 @@ const FriendWishProfileImg = styled.span`
 const FriendWishNickname = styled.div`  
     color: ${Colors.secondary500};
     font-size: 20px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -76,7 +76,7 @@ const FriendWishNickname = styled.div`
 const FriendWishCreatedDate = styled.div`   
     color: ${Colors.secondary200};
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -122,11 +122,11 @@ const FriendWishSatisfactionImage = styled.div`
 // 상품 이름
 const FriendWishProductName = styled.div`   
     color: ${Colors.secondary500};
-    font-size: 35px;
-    font-weight: 700;
+    font-size: 27px;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
-    padding-top: 40px;
+    padding-top: 30px;
 `;
 
 // 상품 가격
@@ -272,7 +272,7 @@ const FriendWishCommentCntText = styled.span`
 const FriendWishLine = styled.div`    
     border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 `;
 
 const FriendWishPurchasedCard = () => {

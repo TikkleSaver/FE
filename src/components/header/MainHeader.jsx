@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../images/logo.svg";
-import WishlistMenu from "./WishListHeader";
+import WishlistMenu from "./WishListMenu";
 import ProfileMenu from "./ProfileMenu";
 import ExpenseMenu from "./ExpenseMenu";
 import ChallengeMenu from "./ChallengeMenu";

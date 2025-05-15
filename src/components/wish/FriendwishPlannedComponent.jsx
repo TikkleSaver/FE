@@ -60,7 +60,7 @@ const FriendWishProfileImg = styled.span`
 const FriendWishNickname = styled.div`  
     color: ${Colors.secondary500};
     font-size: 20px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -69,7 +69,7 @@ const FriendWishNickname = styled.div`
 const FriendWishCreatedDate = styled.div`   
     color: ${Colors.secondary200};
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -77,17 +77,17 @@ const FriendWishCreatedDate = styled.div`
 // 상품 이름
 const FriendWishProductName = styled.div`   
     color: ${Colors.secondary500};
-    font-size: 35px;
-    font-weight: 700;
+    font-size: 27px;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
-    padding-top: 40px;
+    padding-top: 30px;
 `;
 
 // 상품 가격
 const FriendWishProductPrice = styled.div`  
     color: ${Colors.secondary300};
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
@@ -227,7 +227,7 @@ const FriendWishCommentCntText = styled.span`
 const FriendWishLine = styled.div`    
     border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 `;
 
 const FriendWishPlannedCard = () => {
@@ -246,7 +246,7 @@ const FriendWishPlannedCard = () => {
                         </FriendWishNickNDateContainer> 
                     </FriendWishLeftTopContainer>  
                 </FriendWishTopContainer>
-                <FriendWishProductName>명칭</FriendWishProductName>
+                <FriendWishProductName>감성 투명 아이패드 케이스 에어</FriendWishProductName>
                 <FriendWishProductPrice>가격</FriendWishProductPrice>
                 <FriendWishButtonContainer>
                     <FriendWishAgreeContainer>
