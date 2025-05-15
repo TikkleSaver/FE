@@ -68,7 +68,7 @@ const MyWishProfileImg = styled.span`
 const MyWishNickname = styled.div`  
     color: ${Colors.secondary500};
     font-size: 20px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -77,7 +77,7 @@ const MyWishNickname = styled.div`
 const MyWishCreatedDate = styled.div`   
     color: ${Colors.secondary200};
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -112,7 +112,6 @@ const MyWishEtcImage = styled.span`
 const MyWishPublicImage = styled.div`
   width: 20px;
   height: 20px;
-  border-radius: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
   background-size: cover;
   background-position: center;
@@ -122,11 +121,11 @@ const MyWishPublicImage = styled.div`
 // 상품 이름
 const MyWishProductName = styled.div`   
     color: ${Colors.secondary500};
-    font-size: 35px;
-    font-weight: 700;
+    font-size: 27px;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
-    padding-top: 40px;
+    padding-top: 30px;
 `;
 
 // 상품 가격
@@ -280,7 +279,7 @@ const MyWishCommentCntText = styled.span`
 const MyWishLine = styled.div`    
     border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 `;
 
 // 만족 불만족 와퍼

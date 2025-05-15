@@ -67,7 +67,7 @@ const MeddlingProfileImg = styled.span`
 const MeddlingNickname = styled.div`  
     color: ${Colors.secondary500};
     font-size: 20px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -76,7 +76,7 @@ const MeddlingNickname = styled.div`
 const MeddlingCreatedDate = styled.div`   
     color: ${Colors.secondary200};
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
 `;
@@ -122,17 +122,17 @@ const MeddlingSatisfactionImage = styled.div`
 // 상품 이름
 const MeddlingProductName = styled.div`   
     color: ${Colors.secondary500};
-    font-size: 35px;
-    font-weight: 700;
+    font-size: 27px;
+    font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
-    padding-top: 40px;
+    padding-top: 30px;
 `;
 
 // 상품 가격
 const MeddlingProductPrice = styled.div`  
     color: ${Colors.secondary300};
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 500;
     line-height: 30px;
     word-wrap: break-word;
@@ -272,7 +272,7 @@ const MeddlingCommentCntText = styled.span`
 const MeddlingLine = styled.div`    
     border-bottom: 1px solid ${Colors.secondary300};
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: c;
 `;
 
 const MeddlePreviewCard = () => {
@@ -297,7 +297,7 @@ const MeddlePreviewCard = () => {
                             만족</MeddlingSatisfaction>
                     </MeddlingRightTopContainer>
                 </MeddlingTopContainer>
-                <MeddlingProductName>명칭</MeddlingProductName>
+                <MeddlingProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치</MeddlingProductName>
                 <MeddlingProductPrice>가격</MeddlingProductPrice>
                 <MeddlingButtonContainer>
                     <MeddlingAgreeContainer>
