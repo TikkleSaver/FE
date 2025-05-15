@@ -88,8 +88,8 @@ const ChallengeMenu = () => {
           챌린지 탐색
         </DropdownItem>
         <DropdownItem
-          onClick={() => navigate("/create-challenge")}
-          $active={location.pathname === "/create-challenge"}
+          onClick={() => navigate("/challenges/create-challenge")}
+          $active={location.pathname === "/challenges/create-challenge"}
         >
           챌린지 생성
         </DropdownItem>
