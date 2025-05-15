@@ -1,13 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import ProductImageUrl from "./../../images/wishProductImg.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 
 const CardContainer = styled.div`
   border-radius: 8px;
   cursor: pointer;
   width: 222px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 // 상품 이미지
@@ -25,12 +28,16 @@ const ProductImage = styled.div`
 const ProductName = styled.div`   
   color: ${Colors.secondary500};
   width : 198px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
   margin-top: 15px;
   margin-left: 10px;
+
+  b {
+    font-weight: 700; 
+  }
 `;
 
 // 상품 가격 설명 상자
@@ -44,7 +51,6 @@ const BottomContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 5px 0;
 `;
 
 // 최고가
@@ -82,24 +88,24 @@ const ProductWishBtn = styled.button`
   padding: 6px 12px;
   cursor: pointer;
   font-size: 12px;
-  margin-top: 36px;
+  margin-top: 40px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const ProductPreviewCard = () => {
+const ProductPreviewCard = ({ key, image, title, hprice, lprice }) => {
     const navigate = useNavigate();
   
     return (
       <CardContainer>
-        <ProductImage imageUrl={ProductImageUrl} />
-        <ProductName>바닐라딜라이트</ProductName>
+        <ProductImage imageUrl={image} />
+        <ProductName dangerouslySetInnerHTML={{ __html: title }} />
         <BottomContainer>
           <ProductInfoContainer>
-            <ProductHighPrice>최고가 : 40000원</ProductHighPrice>
-            <ProductLowPrice>최저가 : 10000원</ProductLowPrice>
+            <ProductHighPrice>최고가 :{hprice}</ProductHighPrice>
+            <ProductLowPrice>최저가 : {lprice}</ProductLowPrice>
           </ProductInfoContainer>
           <ProductWishBtn>담기</ProductWishBtn>
         </BottomContainer>

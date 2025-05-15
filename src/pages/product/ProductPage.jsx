@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ProductPreviewCard from "../../components/product/ProductPreviewCard";
 import SearchIcon from "../../assets/search.svg"
 import Colors from "../../constanst/color.mjs";
+import { fetchShoppingData } from "../../api/naver"
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
@@ -58,13 +59,13 @@ const ButtonWrapper = styled.div`
 
 // 직접 추가 버튼
 const ProductCreateBtn = styled.button` 
-  width : 140px;
-  height: 45px;
+  width : 120px;
+  height: 35px;
   background-color: ${Colors.primary300};
   color: white;
   border: none;
-  border-radius: 15px;
-  font-size: 20px;
+  border-radius: 10px;
+  font-size: 18px;
   margin-top: 22px;
   font-weight: 600;
   display: flex;
@@ -84,8 +85,72 @@ const ProductInnerContainer = styled.div`
   justify-content: center;
 `;
 
+// 더보기 상자
+const LookMoreBtnWrapper = styled.div`   
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+`;
+
+// 더보기 버튼
+const LookMoreBtn = styled.button` 
+  width : 80px;
+  height: 35px;
+  background-color: transparent;
+  color: ${Colors.primary500};
+  border: 2px solid ${Colors.primary500};
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 function ProductPage() {
-    const [searchTerm, setSearchTerm] = useState("");
+
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1); 
+  const [hasMore, setHasMore] = useState(true); 
+
+  // searchTerm(검색어) 바뀌면 page 1로 초기화
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
+  // page 또는 searchTerm(검색어) 바뀔 때 데이터 불러오기
+  useEffect(() => {
+    const shoppingData = async () => {
+      try {
+        const result = await fetchShoppingData({ query: searchTerm || "가구", page });
+        const newItems = result.items;
+
+        if (page === 1) {
+          setData(newItems); // 새로 검색할 때 데이터 초기화
+        } else {
+          setData((prevData) => [...prevData, ...newItems]); // 페이지 증가 시 데이터 추가
+        }
+
+        setHasMore(newItems.length === 12);
+      } catch (e) {
+        console.error("Error fetching data", e);
+      }
+    };
+
+    shoppingData();
+  }, [page, searchTerm]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // 더 보기 버튼 클릭 시 페이지 증가
+  const loadMore = () => {
+    if (hasMore) {
+      setPage(page + 1); // 페이지 번호 증가
+    }
+  };
 
     return (
         <ProductPageContainer>
@@ -97,7 +162,7 @@ function ProductPage() {
                     type="text"
                     placeholder="원하는 상품을 검색하세요."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={handleSearchChange}
                 />
             </SearchContainer>
             <ProductContainer>
@@ -105,19 +170,21 @@ function ProductPage() {
                     <ProductCreateBtn>직접 추가</ProductCreateBtn>
                 </ButtonWrapper>
                 <ProductInnerContainer>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
-                    <ProductPreviewCard/>
+                  {data.map((item, idx) => (
+                    <ProductPreviewCard
+                      key={idx}
+                      image={item.image}
+                      title={item.title}
+                      hprice={item.hprice}
+                      lprice={item.lprice}
+                    />
+                  ))}
                </ProductInnerContainer>
+                       {hasMore && (
+                <LookMoreBtnWrapper>
+                  <LookMoreBtn onClick={loadMore}>더 보기</LookMoreBtn>
+                </LookMoreBtnWrapper>
+              )}
             </ProductContainer>
         </ProductPageContainer>
     );
