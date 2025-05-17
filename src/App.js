@@ -53,7 +53,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
-        <Route path="/create-challenge" element={<CreateChallengePage />} />
+        <Route path="/challenges/create-challenge" element={<CreateChallengePage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/wish-info" element={<WishInfoPage />} />
         <Route path="/wish/mine" element={<MyWishPage />} />

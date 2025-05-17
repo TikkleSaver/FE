@@ -39,19 +39,17 @@ const Category = styled.span`
   font-weight: 600;
 `;
 
-const ChallengePreviewCard = () => {
+const ChallengePreviewCard = ({ title, category, imgUrl }) => {
   const navigate = useNavigate();
 
   return (
-    <>
-      <CardContainer onClick={() => navigate('/challenges/signup-challenge')}>
-        <ChallengeImage imageUrl={imageUrl} />
-        <ChallengeInfo>
-          <Title>커피값 세이브</Title>
-          <Category>카페/간식</Category>
-        </ChallengeInfo>
-      </CardContainer>
-    </>
+    <CardContainer onClick={() => navigate('/challenges/signup-challenge')}>
+      <ChallengeImage imageUrl={imgUrl} />
+      <ChallengeInfo>
+        <Title>{title}</Title>
+        <Category>{category}</Category>
+      </ChallengeInfo>
+    </CardContainer>
   );
 };
 
