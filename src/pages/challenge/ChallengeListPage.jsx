@@ -114,26 +114,6 @@ const NoResultSubText = styled.div`
   color: ${Colors.secondary100};
 `;
 
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  gap: 8px;
-`;
-
-const PageButton = styled.button`
-  padding: 8px 12px;
-  border: none;
-  background-color: ${({ $active }) => ($active ? '#2E7D32' : '#e0e0e0')};
-  color: ${({ $active }) => ($active ? 'white' : 'black')};
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: ${({ $active }) => ($active ? 'bold' : 'normal')};
-
-  &:hover {
-    background-color: #81c784;
-  }
-`;
 
 function ChallengeListPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -173,7 +153,7 @@ function ChallengeListPage() {
         setPageGroup(newGroup);
       }
 
-      axios.get(`${baseUrl}/challenge/lists`, {
+      axios.get(`${baseUrl}/challenges/lists`, {
         params: {
           category: category,
           page: page,
@@ -228,7 +208,7 @@ function ChallengeListPage() {
             <ChallengeInnerContainer>
               {filteredChallenges.map((challenge) => (
                 <ChallengePreviewCard 
-                  key={challenge.challengeId} 
+                  challengeId={challenge.challengeId} 
                   title={challenge.title} 
                   category={reverseCategoryMap[challenge.categoryId]} 
                   imgUrl={challenge.imgUrl} 

@@ -31,19 +31,25 @@ const Title = styled.span`
   font-size: 18px;
   font-weight: 700;
   color: #333333;
+  
 `;
 
 const Category = styled.span`
   font-size: 14px;
   color: #6b6b6b;
   font-weight: 600;
+  white-space: nowrap;
+ 
+  
+
+
 `;
 
-const ChallengePreviewCard = ({ title, category, imgUrl }) => {
+const ChallengePreviewCard = ({ challengeId, title, category, imgUrl }) => {
   const navigate = useNavigate();
 
   return (
-    <CardContainer onClick={() => navigate('/challenges/signup-challenge')}>
+    <CardContainer onClick={() => navigate(`/challenges/signup-challenge/${challengeId}`)}>
       <ChallengeImage imageUrl={imgUrl} />
       <ChallengeInfo>
         <Title>{title}</Title>

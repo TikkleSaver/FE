@@ -43,7 +43,7 @@ function App() {
         <Route path="/meddling" element={<MeddlePage />} />
         <Route path="/challenges" element={<ChallengePage />} />
         <Route
-          path="/challenges/signup-challenge"
+          path="/challenges/signup-challenge/:challengeId"
           element={<SignUpPageChallengePage />}
         />
         <Route path="/expense-calendar" element={<ExpenseCalendar />} />
