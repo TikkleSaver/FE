@@ -294,7 +294,7 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
     <InfoContainer>
       <ChallengeInfo>
         <Title>{title}</Title>
-        {isPublic=== 'PRIVATE' && <PrivateIcon src={privateLockIcon} />}
+        {isPublic === 'PRIVATE' && <PrivateIcon src={privateLockIcon} />}
         <Category>{category}</Category>
 
         <ParticipantsContainer>
@@ -306,8 +306,14 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
           </ParticipantsNumContainer>
 
           <ParticipantsImgContainer>
-            <Participants3Img />
-            <ParticipantsEtc />
+            <Participants3Img>
+              <img src={person1} alt="person1" />
+              <img src={person2} alt="person2" />
+              <img src={person3} alt="person3" />
+            </Participants3Img>
+            <ParticipantsEtc>
+              <img src={etcIcon} alt="etc" />
+            </ParticipantsEtc>
           </ParticipantsImgContainer>
         </ParticipantsContainer>
 
@@ -326,7 +332,7 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
 
           <IconsContainer>
             <ScrapContainer>
-              {scrapped ? (<img src={scraped} alt="스크랩" />):(<img src={unscrapped} alt="스크랩" />)}
+              {scrapped ? (<img src={scraped} alt="스크랩" />) : (<img src={unscrapped} alt="스크랩" />)}
             </ScrapContainer>
             <CopyContainer>
               <img src={copyIcon} alt="복사" />
@@ -339,17 +345,17 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
 };
 
 function SignUpPageChallengePage() {
-  const { challengeId } = useParams(); 
+  const { challengeId } = useParams();
   const [challengeData, setChallengeData] = useState(null);
-  const [status, setStatus] = useState(null); 
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
         const res = await axios.get(`${baseUrl}/challenges/join-challenge/${challengeId}`);
         setChallengeData(res.data.result);
-        setStatus(res.data.result.status); 
-        
+        setStatus(res.data.result.status);
+
       } catch (error) {
         console.error('챌린지 정보 불러오기 실패:', error);
       }
@@ -381,9 +387,9 @@ function SignUpPageChallengePage() {
           description={description}
           status={status}
           isPublic={isPublic}
-          scrapped ={scrapped}
+          scrapped={scrapped}
           challengerCount={challengerCount}
-          onJoin={setStatus} 
+          onJoin={setStatus}
         />
       </ChallengeInfoContainer>
 
