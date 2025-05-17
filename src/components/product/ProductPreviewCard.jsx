@@ -95,22 +95,27 @@ const ProductWishBtn = styled.button`
   justify-content: center;
 `;
 
-const ProductPreviewCard = ({ key, image, title, hprice, lprice }) => {
-    const navigate = useNavigate();
-  
-    return (
-      <CardContainer>
-        <ProductImage imageUrl={image} />
-        <ProductName dangerouslySetInnerHTML={{ __html: title }} />
-        <BottomContainer>
-          <ProductInfoContainer>
-            <ProductHighPrice>최고가 :{hprice}</ProductHighPrice>
-            <ProductLowPrice>최저가 : {lprice}</ProductLowPrice>
-          </ProductInfoContainer>
-          <ProductWishBtn>담기</ProductWishBtn>
-        </BottomContainer>
-      </CardContainer>
-    );
+const ProductPreviewCard = ({ item }) => {
+  const navigate = useNavigate();
+
+  const handleAddWishExistClick = (e) => {
+    e.stopPropagation(); 
+    navigate("/wish/add/exist", { state: { product: item } }); 
   };
+
+  return (
+    <CardContainer>
+      <ProductImage imageUrl={item.image} />
+      <ProductName dangerouslySetInnerHTML={{ __html: item.title }} />
+      <BottomContainer>
+        <ProductInfoContainer>
+          <ProductHighPrice>브랜드 : {item.brand}</ProductHighPrice>
+          <ProductLowPrice>가격 : {item.lprice} 원</ProductLowPrice>
+        </ProductInfoContainer>
+        <ProductWishBtn onClick={handleAddWishExistClick}>담기</ProductWishBtn>
+      </BottomContainer>
+    </CardContainer>
+  );
+};
   
-  export default ProductPreviewCard;
+export default ProductPreviewCard;
