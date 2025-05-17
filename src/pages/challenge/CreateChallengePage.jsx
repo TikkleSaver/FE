@@ -1,4 +1,5 @@
-import React, { useRef,useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import Colors from "../../constanst/color.mjs";
 import cameraIcon from "../../assets/camera.svg";
@@ -6,7 +7,9 @@ import publicLockIcon from "../../assets/publicLockIcon.svg";
 import privateLockIcon from "../../assets/privateLockIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import plusIcon from "../../assets/plusIcon.svg";
+import axios from 'axios';
 
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CreateChallengeWrapper = styled.div`
   width:50%;
@@ -415,7 +418,7 @@ function CreateChallengePage() {
    const [isPublic, setIsPublic] = useState(false);
 
    const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
-
+   const navigate = useNavigate();
     
       const nameHandleChange = (e) => {
         const value = e.target.value;
@@ -449,6 +452,40 @@ const handleDeleteCertify = (id) => {
   setCertifyInputs((prev) => prev.filter((item) => item.id !== id));
 };
     
+const categoryMap = {
+  "식비": 1,
+  "카페": 2,
+  "쇼핑": 3,
+  "건강": 4,
+  "취미": 5,
+  "교통비": 6,
+  "기타 생활비": 7,
+};
+
+const handleSubmit = async () => {
+  if (!nameText || !infoText || !selectedCategory || certifyInputs.length === 0) {
+    alert("모든 항목을 입력해주세요.");
+    return;
+  }
+
+  const requestBody = {
+    title: nameText,
+    description: infoText,
+    categoryId: categoryMap[selectedCategory],
+    publicStatus: isPublic ? "PRIVATE": "PUBLIC", 
+    missionMethods: certifyInputs.map((item) => item.value).filter(Boolean),
+  };
+
+  try {
+    const response = await axios.post(`${baseUrl}/challenge`, requestBody);
+    console.log("챌린지 생성 성공:", response.data);
+    alert("챌린지가 성공적으로 생성되었습니다.");
+    navigate('/challenges')
+  } catch (error) {
+    console.error("챌린지 생성 실패:", error);
+    alert("챌린지 생성에 실패했습니다.");
+  }
+};
 
   return (
     <CreateChallengeWrapper>
@@ -492,15 +529,16 @@ const handleDeleteCertify = (id) => {
         <ChallengeIsPublicText>공개 설정</ChallengeIsPublicText>
         <ChallengeIsPublicSubTextContainer>
     {isPublic ? (
-      <PublicSubTextContainer>
-        <PublicSubText>모든 유저에게 해당 챌린지를 공개합니다.</PublicSubText>
-        <PublicSubIcon src={publicLockIcon} />
-      </PublicSubTextContainer>
-    ) : (
       <PrivateSubTextContainer>
-        <PrivateSubText>요청이 수락된 유저에게만 해당 챌린지를 공개합니다.</PrivateSubText>
-        <PrivateSubIcon src={privateLockIcon} />
-      </PrivateSubTextContainer>
+      <PrivateSubText>요청이 수락된 유저에게만 해당 챌린지를 공개합니다.</PrivateSubText>
+      <PrivateSubIcon src={privateLockIcon} />
+    </PrivateSubTextContainer>
+    ) : (
+      <PublicSubTextContainer>
+      <PublicSubText>모든 유저에게 해당 챌린지를 공개합니다.</PublicSubText>
+      <PublicSubIcon src={publicLockIcon} />
+    </PublicSubTextContainer>
+     
     )}
   </ChallengeIsPublicSubTextContainer>
     <ToggleContainer>
@@ -538,7 +576,7 @@ const handleDeleteCertify = (id) => {
       </PublicCertifyBtn>
     </ChallengeCertifyListContainer>
      
-     <CreateChallengeBtn>등록하기</CreateChallengeBtn>
+     <CreateChallengeBtn onClick={handleSubmit}>등록하기</CreateChallengeBtn>
     </CreateChallengeWrapper>
   );
 }
