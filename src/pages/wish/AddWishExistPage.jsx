@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import addImageURL from "../../assets/productAdd.svg";
 import lockImageURL from "../../assets/wishLockGrey.svg";
@@ -300,14 +301,30 @@ function AddWishExistPage() {
     const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
     const [isPublic, setIsPublic] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const location = useLocation();
+    const product = location.state?.product;
+
+    // 상품 존재X 예외 처리
+    if (!product) {
+      return;
+    } 
 
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
-            <ProductImage imageUrl={ProductImageUrl}/>
+            <ProductImage imageUrl={product.image}/>
             <ProductTextInfoContainer>
-              <ProductCategory>문구 {" > "} 필기류 {" > "} 색연필</ProductCategory>
-              <ProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치 5세대 4세대 10.9인치 오드밤</ProductName>
+              <ProductCategory>
+                {[
+                  product.category1,
+                  product.category2,
+                  product.category3,
+                  product.category4
+                ]
+                .filter(Boolean)
+                .join(" > ")}
+              </ProductCategory>
+              <ProductName>{product.title}</ProductName>
               <ProductInputInfoContainer>
                 <ProductCategoryContainer>
                   <ProductCategoryText>카테고리</ProductCategoryText>

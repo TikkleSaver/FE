@@ -11,7 +11,7 @@ const api = axios.create({
   },
 });
 
-export const fetchShoppingData = async ({ query = "옷", page = 1, display = 12 }) => {
+export const fetchShoppingData = async ({ query, page = 1, display = 12 }) => {
   const start = (page - 1) * display + 1;
 
   const response = await api.get("/search/shop.json", {

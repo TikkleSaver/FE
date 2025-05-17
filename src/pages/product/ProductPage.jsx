@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ProductPreviewCard from "../../components/product/ProductPreviewCard";
 import SearchIcon from "../../assets/search.svg"
@@ -109,10 +110,12 @@ const LookMoreBtn = styled.button`
 
 function ProductPage() {
 
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1); 
   const [hasMore, setHasMore] = useState(true); 
+  const latestSearch = useRef("");
 
   // searchTerm(검색어) 바뀌면 page 1로 초기화
   useEffect(() => {
@@ -123,7 +126,9 @@ function ProductPage() {
   useEffect(() => {
     const shoppingData = async () => {
       try {
+        latestSearch.current = searchTerm;
         const result = await fetchShoppingData({ query: searchTerm || "가구", page });
+        if (latestSearch.current !== searchTerm) return;
         const newItems = result.items;
 
         if (page === 1) {
@@ -152,6 +157,11 @@ function ProductPage() {
     }
   };
 
+  // 상품 상세 보기로 이동동
+  const handleCardClick = (item) => {
+    navigate("/product-info", { state: { product: item } });
+  };
+
     return (
         <ProductPageContainer>
             <SearchContainer>
@@ -171,15 +181,11 @@ function ProductPage() {
                 </ButtonWrapper>
                 <ProductInnerContainer>
                   {data.map((item, idx) => (
-                    <ProductPreviewCard
-                      key={idx}
-                      image={item.image}
-                      title={item.title}
-                      hprice={item.hprice}
-                      lprice={item.lprice}
-                    />
+                    <div key={idx} onClick={() => handleCardClick(item)} style={{ cursor: "pointer" }}>
+                      <ProductPreviewCard item={item} />
+                    </div>
                   ))}
-               </ProductInnerContainer>
+                </ProductInnerContainer>
                        {hasMore && (
                 <LookMoreBtnWrapper>
                   <LookMoreBtn onClick={loadMore}>더 보기</LookMoreBtn>

@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import addImageURL from "../../assets/productAdd.svg";
-import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
   display: flex;
   justify-content: center;
-  width:70%;
+  width:80%;
   max-width: 100%;
   margin: 240px auto;
 `;
 
 // 상품 정보 상자
 const ProductInfoContainer = styled.span`   
-    display: flex;
+  display: flex;
 `;
 
 // 상품 이미지
@@ -34,6 +35,10 @@ const ProductImage = styled.span`
 // 상품 이미지 제외 정보
 const ProductTextInfoContainer = styled.div`  
   margin-left: 30px;
+  display: flex;     
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 `;
 
 // 상품 카테고리
@@ -65,9 +70,9 @@ const ProductBrand = styled.div`
   word-wrap: break-word;
 `;
 
-// 최고가
-const ProductHighPrice = styled.div`  
-  margin-top: 15px;
+// 쇼핑몰
+const ProductMallName = styled.div`  
+  margin-top: 10px;
   color: ${Colors.secondary400};
   font-size: 20px;
   font-weight: 500;
@@ -77,7 +82,17 @@ const ProductHighPrice = styled.div`
 
 // 최저가
 const ProductLowPrice = styled.div` 
-  margin-top: 15px;
+  margin-top: 10px;
+  color: ${Colors.secondary400};
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  word-wrap: break-word;
+`;
+
+// 상품 정보 URL
+const ProductURL = styled.div` 
+  margin-top: 10px;
   color: ${Colors.secondary400};
   font-size: 20px;
   font-weight: 500;
@@ -91,15 +106,15 @@ const ProductAddBtn = styled.button`
   align-items: center;         
   gap: 8px;    
   background-color: ${Colors.primary400};
-  width: 177px;
-  height: 50px;
+  width: 160px;
+  height: 45px;
   color: white;
   border: none;
   border-radius: 15px;
   padding: 12px 15px;
   cursor: pointer;
-  font-size: 18px;
-  margin-top: 115px;
+  font-size: 15px;
+  margin-top: auto;
   font-weight: 700;
   word-wrap: break-word;
 `;
@@ -115,19 +130,52 @@ const  ProductAddImage = styled.span`
   background-repeat: no-repeat; 
 `;
 
+// 링크 디자인
+const StyledLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+  font-size: 17px;
+
+  &:hover {
+    color: inherit;
+  }
+`;
+
 function ProductDetailPage() {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const product = location.state?.product;
+
+  // 위시 추가 페이지로 이동
+  const handleAddWishExistClick = () => {
+    navigate("/wish/add/exist", { state: { product } });
+  };
+
+  // 상품 존재X 예외 처리
+  if (!product) return;
 
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
-            <ProductImage imageUrl={ProductImageUrl}/>
+            <ProductImage imageUrl={product.image} />
             <ProductTextInfoContainer>
-              <ProductCategory>문구{">"}필기류{">"}색연필</ProductCategory>
-              <ProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치 5세대 4세대 10.9인치 오드밤</ProductName>
-              <ProductBrand>브랜드 | 스타벅스</ProductBrand>
-              <ProductHighPrice>최고가 | 9000원</ProductHighPrice>
-              <ProductLowPrice>최저가 | 2500원</ProductLowPrice>
-              <ProductAddBtn>
+              <ProductCategory>
+                  {[
+                    product.category1,
+                    product.category2,
+                    product.category3,
+                    product.category4
+                  ]
+                    .filter(Boolean)
+                    .join(" > ")}
+              </ProductCategory>
+              <ProductName>{product.title}</ProductName>
+              <ProductBrand>브랜드 | {product.brand}</ProductBrand>
+              <ProductMallName>쇼핑몰 | {product.mallName}</ProductMallName>
+              <ProductLowPrice>가격 | {product.lprice}원</ProductLowPrice>
+              <ProductURL>URL | <StyledLink href={product.link} target="_blank" rel="noopener noreferrer">{product.link}</StyledLink></ProductURL>
+              <ProductAddBtn onClick={handleAddWishExistClick}>
                 <ProductAddImage imageUrl={addImageURL}/>
                 위시 추가하기</ProductAddBtn>
             </ProductTextInfoContainer>
