@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import imageUrl from "../../images/challengeImg.png";
 import participantsIcon from "../../assets/participants.svg"
-import person1 from "../../images/person1.jpg"
-import person2 from "../../images/person2.jpg"
-import person3 from "../../images/person3.jpg"
-import etcIcon from "../../assets/etc.svg"
-import unscrapped from "../../assets/unscrapped.svg"
-import scrapped from "../../assets/scrapped.svg"
-import copyIcon from "../../assets/copy.svg"
+import person1 from "../../images/person1.jpg";
+import person2 from "../../images/person2.jpg";
+import person3 from "../../images/person3.jpg";
+import etcIcon from "../../assets/etc.svg";
+import unscrapped from "../../assets/unscrapped.svg";
+import scraped from "../../assets/scraped.svg";
+import copyIcon from "../../assets/copy.svg";
+import { useParams } from 'react-router-dom';
+import axios from "axios";
+import Colors from "../../constanst/color.mjs";
+import privateLockIcon from "../../assets/privateChallenge.svg";
+
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const SignUpPageContainer = styled.div`
   width:70%;
@@ -20,7 +26,6 @@ const SignUpPageContainer = styled.div`
 
 const ChallengeInfoContainer = styled.div`
   display: flex;
-  justify-content: center;  
 
 `;
 
@@ -59,6 +64,14 @@ const Title = styled.span`
   color: #333333;
 `;
 
+const PrivateIcon = styled.img`
+width: 25px;
+position: relative;
+top: 3px;
+left: 3px;
+
+`;
+
 const Category = styled.span`
   font-size: 18px;
   color: #6B6B6B;
@@ -91,6 +104,7 @@ const ParticipantsNum = styled.span`
   font-size: 20px;
   color: #6B6B6B;
   font-weight: 600;
+  margin-left: 8px;
 
 `;
 
@@ -131,21 +145,11 @@ const ChallengeDescription = styled.div`
   font-weight: 400;
   margin-top:5px;
   line-height: 1.2;
+  word-break: keep-all;     
+  white-space: normal;    
+  overflow-wrap: break-word; 
 
 `;
-
-const SingUpBtn = styled.button`
-
-font-size: 18px;
-width: 180px;
-color: white;
-background-color: #3D8D7A;
-border: 1px solid #2A6658;
-padding: 10px 10px;
-border-radius: 10px;
-
-`;
-
 
 const ButtonContainer = styled.div`
 
@@ -156,7 +160,7 @@ display:flex;
 `;
 
 const IconsContainer = styled.div`
-margin-left: 60px;
+margin-left: 40px;
 display:flex;
 gap:10px;
 `;
@@ -174,6 +178,7 @@ border: 1px solid #E5E5E5;
 
 img{
 width:30px;
+cursor: pointer;
 }
 
 `;
@@ -228,85 +233,171 @@ li{
 font-size: 18px;
 font-weight:500;
 color:#333333
+word-break: keep-all;     
+white-space: normal;    
+overflow-wrap: break-word; 
 }
 
 `;
 
+const PublicSingUpBtn = styled.button`
+
+font-size: 18px;
+width: 180px;
+color: white;
+background-color: ${Colors.primary};
+border: 1px solid ${Colors.primary500};
+padding: 10px 10px;
+border-radius: 10px;
+cursor: pointer;
+
+`;
+
+const PrivateSingUpBtn = styled.button`
+
+font-size: 18px;
+width: 180px;
+color: white;
+background-color: ${Colors.primary};
+border: 1px solid #2A6658;
+padding: 10px 10px;
+border-radius: 10px;
+cursor: pointer;
+
+`;
+const PendingBtn = styled.button`
+
+font-size: 18px;
+width: 180px;
+color:  ${Colors.secondary400};
+background-color: ${Colors.secondary100};
+border: 1px solid ${Colors.secondary200};
+padding: 10px 10px;
+border-radius: 10px;
 
 
-const ChallengeInnerContainer =()=>{
-    return (
+`;
+const JoinedBtn = styled.button`
+
+font-size: 18px;
+width: 180px;
+color:  ${Colors.secondary400};
+background-color: ${Colors.secondary100};
+border: 1px solid ${Colors.secondary200};
+padding: 10px 10px;
+border-radius: 10px;
+
+`;
+
+const ChallengeInnerContainer = ({ title, category, description, status, isPublic, scrapped, challengerCount, onJoin }) => {
+  return (
     <InfoContainer>
+      <ChallengeInfo>
+        <Title>{title}</Title>
+        {isPublic=== 'PRIVATE' && <PrivateIcon src={privateLockIcon} />}
+        <Category>{category}</Category>
 
-    <ChallengeInfo>
-    <Title>커피값 세이브커피값 세이브커피값 세이브</Title>
-    <Category>기타 생활비</Category>
+        <ParticipantsContainer>
+          <ParticipantsNumContainer>
+            <ParticipantsIcon>
+              <img src={participantsIcon} alt="참여 아이콘" />
+            </ParticipantsIcon>
+            <ParticipantsNum>{challengerCount}명</ParticipantsNum>
+          </ParticipantsNumContainer>
 
-    <ParticipantsContainer>
-    <ParticipantsNumContainer>
-      <ParticipantsIcon > <img src={participantsIcon}/></ParticipantsIcon>
-      <ParticipantsNum>10명</ParticipantsNum>
-    </ParticipantsNumContainer>
+          <ParticipantsImgContainer>
+            <Participants3Img />
+            <ParticipantsEtc />
+          </ParticipantsImgContainer>
+        </ParticipantsContainer>
 
+        <ChallengeDescription>{description}</ChallengeDescription>
 
-    <ParticipantsImgContainer>
-        <Participants3Img>
-        <img src={person1} alt="person1"/>
-        <img src={person2} alt="person2"/>
-        <img src={person3} alt="person3"/>
-        </Participants3Img>
-        <ParticipantsEtc>
-        <img src={etcIcon} alt="etc"/>
-        </ParticipantsEtc>
-    </ParticipantsImgContainer>
-    
-    </ParticipantsContainer>
-    <ChallengeDescription>
-    1일 1커피 사먹는 사람들 모여! 3000원씩 한 달이면 9만원 일 년이면 100만원?! 집에서 커피 타오기 인증하는 방. 탕비실 터는 것도 가능^^ 1일 1커피 사먹는 사람들 모여! 3000원씩 한 달이면 9만원 일 년이면 100만원?! 집에서 커피 타오기 인증하는 방. 탕비실 터는 것도 가능^^ 1일 1커피 사먹는 사람들 모여! 3000원씩 한 달이면 9만원 일 년이면 100만원?! 집에서 커피 타오기 인증하는 방. 탕비실 터는 것도 가능^^ 탕비실 터는 것도 가능^^ 탕비실 터는 것도 가능^^ 탕비실 터는 것도 가능^^ 가능^^
-    </ChallengeDescription>
+        <ButtonContainer>
+          {status === 'JOINED' ? (
+            <JoinedBtn>챌린지 가입 완료</JoinedBtn>
+          ) : status === 'PENDING' ? (
+            <PendingBtn>가입 요청 중...</PendingBtn>
+          ) : isPublic === 'PUBLIC' ? (
+            <PublicSingUpBtn onClick={() => onJoin('JOINED')}>챌린지 가입하기</PublicSingUpBtn>
+          ) : (
+            <PrivateSingUpBtn onClick={() => onJoin('PENDING')}>챌린지 가입하기</PrivateSingUpBtn>
+          )}
 
-    <ButtonContainer>
-     <SingUpBtn>챌린지 가입하기</SingUpBtn>
-     <IconsContainer>
-        <ScrapContainer>
-            <img src={unscrapped} alt="스크랩"/>
-        </ScrapContainer>
-        <CopyContainer>
-        <img src={copyIcon} alt="복사"/>
-        </CopyContainer>
-     </IconsContainer>
-    </ButtonContainer>
-    </ChallengeInfo>
-  </InfoContainer>
-    );
-}
-
+          <IconsContainer>
+            <ScrapContainer>
+              {scrapped ? (<img src={scraped} alt="스크랩" />):(<img src={unscrapped} alt="스크랩" />)}
+            </ScrapContainer>
+            <CopyContainer>
+              <img src={copyIcon} alt="복사" />
+            </CopyContainer>
+          </IconsContainer>
+        </ButtonContainer>
+      </ChallengeInfo>
+    </InfoContainer>
+  );
+};
 
 function SignUpPageChallengePage() {
+  const { challengeId } = useParams(); 
+  const [challengeData, setChallengeData] = useState(null);
+  const [status, setStatus] = useState(null); 
+
+  useEffect(() => {
+    const fetchChallenge = async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/challenges/join-challenge/${challengeId}`);
+        setChallengeData(res.data.result);
+        setStatus(res.data.result.status); 
+        
+      } catch (error) {
+        console.error('챌린지 정보 불러오기 실패:', error);
+      }
+    };
+
+    fetchChallenge();
+  }, [challengeId]);
+
+  if (!challengeData) return <div>로딩 중...</div>;
+
+  const {
+    title,
+    category,
+    description,
+    imgUrl,
+    missionMethods,
+    isPublic,
+    scrapped,
+    challengerCount
+  } = challengeData;
 
   return (
     <SignUpPageContainer>
-        <ChallengeInfoContainer>
-         <ChallengeImage imageUrl={imageUrl} />
-         <ChallengeInnerContainer/>
-         </ChallengeInfoContainer>
-         <CheckListContainer>
-            <CheckListText>인증 방식</CheckListText>
-            <CheckListInnerContainer>
-                <ul>
-                    <li>
-                    커피를 타는 사진 매일매일 인증하기 ( 커피믹스, 캡슐커피, 차 모두 가능 ) 커피를 타는 사진 매일매일 인증하기 ( 커피믹스, 캡슐커피, 차 모두 가능 ) 커피를 타는 사진 매일매일 인증하기 ( 커피믹스, 캡슐커피, 차 모두 가능 )
-                    </li>
-                    <li>
-                    커피를 타는 사진 매일매일 인증하기 ( 커피믹스, 캡슐커피, 차 모두 가능 )
-                    </li>
-                </ul>
-            </CheckListInnerContainer>
-         </CheckListContainer>
-      
-     
+      <ChallengeInfoContainer>
+        <ChallengeImage imageUrl={imgUrl} />
+        <ChallengeInnerContainer
+          title={title}
+          category={category}
+          description={description}
+          status={status}
+          isPublic={isPublic}
+          scrapped ={scrapped}
+          challengerCount={challengerCount}
+          onJoin={setStatus} 
+        />
+      </ChallengeInfoContainer>
+
+      <CheckListContainer>
+        <CheckListText>인증 방식</CheckListText>
+        <CheckListInnerContainer>
+          <ul>
+            {missionMethods.map((method, index) => (
+              <li key={index}>{method}</li>
+            ))}
+          </ul>
+        </CheckListInnerContainer>
+      </CheckListContainer>
     </SignUpPageContainer>
   );
 }
-
 export default SignUpPageChallengePage;

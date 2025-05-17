@@ -477,7 +477,7 @@ const handleSubmit = async () => {
   };
 
   try {
-    const response = await axios.post(`${baseUrl}/challenge`, requestBody);
+    const response = await axios.post(`${baseUrl}/challenges`, requestBody);
     console.log("챌린지 생성 성공:", response.data);
     alert("챌린지가 성공적으로 생성되었습니다.");
     navigate('/challenges')
