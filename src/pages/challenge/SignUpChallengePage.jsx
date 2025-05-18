@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import imageUrl from "../../images/challengeImg.png";
 import participantsIcon from "../../assets/participants.svg"
 import person1 from "../../images/person1.jpg";
 import person2 from "../../images/person2.jpg";
@@ -160,7 +159,7 @@ display:flex;
 `;
 
 const IconsContainer = styled.div`
-margin-left: 40px;
+margin-left: 30px;
 display:flex;
 gap:10px;
 `;
@@ -289,14 +288,34 @@ border-radius: 10px;
 
 `;
 
-const ChallengeInnerContainer = ({ title, category, description, status, isPublic, scrapped, challengerCount, onJoin }) => {
+const ChallengeInnerContainer = ({ challengeId, title, category, description, status, isPublic, scrapped: initialScrapped, challengerCount, onJoin }) => {
+const [scrapped, setScrapped] = useState(initialScrapped);
+
+  const toggleScrap = async () => {
+    try {
+      const res = await axios.patch(`${baseUrl}/challenges-scrap/${challengeId}/scrap`, {
+        scrapped: !scrapped,
+      });
+
+      console.log(res.status);
+      if (res.data.isSuccess) {
+        const updatedScrap = res.data.result.scrapped;
+        setScrapped(updatedScrap);
+        console.log(res.data.result.message);
+      } else {
+        console.error('스크랩 상태 변경 실패:', res.data.message);
+      }
+    } catch (error) {
+      console.error('스크랩 상태 변경 실패:', error);
+    }
+  };
+
   return (
     <InfoContainer>
       <ChallengeInfo>
         <Title>{title}</Title>
         {isPublic === 'PRIVATE' && <PrivateIcon src={privateLockIcon} />}
         <Category>{category}</Category>
-
         <ParticipantsContainer>
           <ParticipantsNumContainer>
             <ParticipantsIcon>
@@ -304,7 +323,6 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
             </ParticipantsIcon>
             <ParticipantsNum>{challengerCount}명</ParticipantsNum>
           </ParticipantsNumContainer>
-
           <ParticipantsImgContainer>
             <Participants3Img>
               <img src={person1} alt="person1" />
@@ -316,9 +334,7 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
             </ParticipantsEtc>
           </ParticipantsImgContainer>
         </ParticipantsContainer>
-
         <ChallengeDescription>{description}</ChallengeDescription>
-
         <ButtonContainer>
           {status === 'JOINED' ? (
             <JoinedBtn>챌린지 가입 완료</JoinedBtn>
@@ -329,11 +345,14 @@ const ChallengeInnerContainer = ({ title, category, description, status, isPubli
           ) : (
             <PrivateSingUpBtn onClick={() => onJoin('PENDING')}>챌린지 가입하기</PrivateSingUpBtn>
           )}
-
           <IconsContainer>
-            <ScrapContainer>
-              {scrapped ? (<img src={scraped} alt="스크랩" />) : (<img src={unscrapped} alt="스크랩" />)}
-            </ScrapContainer>
+          <ScrapContainer onClick={toggleScrap}>
+        {scrapped ? (
+          <img src={scraped} alt="스크랩됨" />
+        ) : (
+          <img src={unscrapped} alt="스크랩 안됨" />
+        )}
+      </ScrapContainer>
             <CopyContainer>
               <img src={copyIcon} alt="복사" />
             </CopyContainer>
@@ -382,6 +401,7 @@ function SignUpPageChallengePage() {
       <ChallengeInfoContainer>
         <ChallengeImage imageUrl={imgUrl} />
         <ChallengeInnerContainer
+          challengeId={challengeId}
           title={title}
           category={category}
           description={description}
@@ -392,7 +412,6 @@ function SignUpPageChallengePage() {
           onJoin={setStatus}
         />
       </ChallengeInfoContainer>
-
       <CheckListContainer>
         <CheckListText>인증 방식</CheckListText>
         <CheckListInnerContainer>
