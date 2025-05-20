@@ -24,3 +24,5 @@ export const fetchShoppingData = async ({ query, page = 1, display = 12 }) => {
 
   return response.data;
 };
+
+
