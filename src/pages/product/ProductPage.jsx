@@ -59,7 +59,7 @@ const ButtonWrapper = styled.div`
 `;
 
 // 직접 추가 버튼
-const ProductCreateBtn = styled.button` 
+const ProductCreateBtn = styled.button`   // 잊지 말자 좌우 간격 줄이기
   width : 120px;
   height: 35px;
   background-color: ${Colors.primary300};
