@@ -49,3 +49,33 @@ export const getExpense = async (data) => {
     console.error("Error fetching data:", error.response);
   }
 };
+
+export const updateExpense = async (formValues, file) => {
+  try {
+    const formData = new FormData();
+
+    const requestBody = {
+      memberId: formValues.memberId,
+      expenseId: formValues.expenseId,
+      expenseName: formValues.expenseName,
+      expensePlace: formValues.expensePlace,
+      cost: formValues.cost,
+      expenseDate: formValues.expenseDate,
+      categoryId: formValues.categoryId,
+    };
+
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(requestBody)], { type: "application/json" })
+    );
+
+    if (file) {
+      formData.append("file", file);
+    }
+
+    const response = await axios.patch(`${BASE_URL}/expense`, formData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

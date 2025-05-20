@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Camera from "./../../../images/emptyImg.svg";
 import Colors from "../../../constanst/color.mjs";
 import { getExpense } from "../../../api/expense/expenseApi";
+import { updateExpense } from "../../../api/expense/expenseApi";
 
 const Overlay = styled.div`
   position: fixed;
@@ -158,6 +159,7 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose }) => {
   const [cost, setCost] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [file, setFile] = useState(null);
   const fileInputRef = useRef();
 
   // ✅ API로 데이터 받아오기
@@ -183,7 +185,7 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose }) => {
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      setPreviewImage(selectedFile);
+      setFile(selectedFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -192,17 +194,28 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose }) => {
     }
   };
 
-  const handleSubmit = () => {
-    const updated = {
+  const handleSubmit = async () => {
+    const formValues = {
       memberId,
       expenseId,
       expenseName,
       expensePlace,
       cost,
       expenseDate: date || new Date(),
-      category: selectedCategory.id,
     };
-    //onSubmit(updated); -> 나중에 api 연결 수정
+
+    try {
+      const result = await updateExpense(
+        { ...formValues, categoryId: selectedCategory.id },
+        file
+      );
+      console.log("✅ 서버 응답:", result.data);
+      alert("지출이 등록되었습니다!");
+      onClose();
+    } catch (err) {
+      console.error("등록 실패:", err.response?.data || err.message);
+      alert("등록 실패 😥");
+    }
     onClose();
   };
 
