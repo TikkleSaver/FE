@@ -75,7 +75,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const MyExpenseCard = ({ item }) => {
+const MyExpenseCard = ({ item, date }) => {
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const imageSrc = require(`./../../assets/${item.image}`);
 
@@ -101,7 +101,12 @@ const MyExpenseCard = ({ item }) => {
         </ButtonContainer>
       </ExpenseItem>
       {isEditOpen && (
-        <UpdateExpenseModal item={item} onClose={() => setIsEditOpen(false)} />
+        <UpdateExpenseModal
+          expenseId={1}
+          memberId={1}
+          date={date}
+          onClose={() => setIsEditOpen(false)}
+        />
       )}
     </>
   );

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import Camera from "./../../../assets/camera.svg";
+import Camera from "./../../../images/emptyImg.svg";
 import Colors from "../../../constanst/color.mjs";
+import { getExpense } from "../../../api/expense/expenseApi";
 
 const Overlay = styled.div`
   position: fixed;
@@ -125,32 +126,87 @@ const ImageUpload = styled.div`
   cursor: pointer;
 `;
 
-const UpdateExpenseModal = ({ onClose, item }) => {
+const UploadImage = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+  background-size: ${({ hasPreview }) => (hasPreview ? "cover" : "contain")};
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const UpdateExpenseModal = ({ expenseId, memberId, date, onClose }) => {
   const categories = [
-    "식비",
-    "카페",
-    "쇼핑",
-    "건강",
-    "취미",
-    "교통비",
-    "기타 생활비",
+    { id: 1, label: "식비" },
+    { id: 2, label: "카페" },
+    { id: 3, label: "쇼핑" },
+    { id: 4, label: "건강" },
+    { id: 5, label: "취미" },
+    { id: 6, label: "교통비" },
+    { id: 7, label: "기타 생활비" },
   ];
-  const [selectedCategory, setSelectedCategory] = React.useState(item.category);
-  const [expenseName, setExpenseName] = React.useState(item.expenseName);
-  const [expensePlace, setExpensePlace] = React.useState(item.expensePlace);
-  const [cost, setCost] = React.useState(item.cost);
+  const [loading, setLoading] = useState(true);
+
+  const [expenseName, setExpenseName] = useState("");
+  const [expensePlace, setExpensePlace] = useState("");
+  const [cost, setCost] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const fileInputRef = useRef();
+
+  // ✅ API로 데이터 받아오기
+  useEffect(() => {
+    const fetchExpense = async () => {
+      const data = await getExpense({ expenseId, memberId });
+      console.log(data);
+      setExpenseName(data.expenseName);
+      setExpensePlace(data.expensePlace);
+      setCost(data.cost);
+      setSelectedCategory({ id: data.categoryId, label: data.categoryName });
+      setPreviewImage(data.image || null); // 이미지 URL 설정
+      setLoading(false);
+    };
+
+    fetchExpense();
+  }, [expenseId, memberId]);
+
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setPreviewImage(selectedFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
 
   const handleSubmit = () => {
     const updated = {
-      ...item,
-      category: selectedCategory,
+      memberId,
+      expenseId,
       expenseName,
       expensePlace,
       cost,
+      expenseDate: date || new Date(),
+      category: selectedCategory.id,
     };
     //onSubmit(updated); -> 나중에 api 연결 수정
     onClose();
   };
+
+  if (loading) return null;
 
   return (
     <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -160,8 +216,17 @@ const UpdateExpenseModal = ({ onClose, item }) => {
           <CloseButton onClick={onClose}>X</CloseButton>
         </HeaderRow>
         <Row>
-          <ImageUpload>
-            <img src={Camera} alt="사진" width="40" height="40" />
+          <ImageUpload onClick={handleImageClick}>
+            <UploadImage
+              hasPreview={!!previewImage}
+              imageUrl={previewImage || Camera}
+            />
+            <HiddenFileInput
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
           </ImageUpload>
           <Column>
             <Label>지출명</Label>
@@ -183,11 +248,11 @@ const UpdateExpenseModal = ({ onClose, item }) => {
           <CategoryWrap>
             {categories.map((cat) => (
               <CategoryButton
-                key={cat}
-                selected={selectedCategory === cat}
+                key={cat.id}
+                selected={selectedCategory?.id === cat.id}
                 onClick={() => setSelectedCategory(cat)}
               >
-                {cat}
+                {cat.label}
               </CategoryButton>
             ))}
           </CategoryWrap>

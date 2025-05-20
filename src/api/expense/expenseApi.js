@@ -30,3 +30,22 @@ export const createExpense = async (formValues, file) => {
     throw error;
   }
 };
+
+export const getExpense = async (data) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/expense/${data.expenseId}/${data.memberId}`,
+      {
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+
+    console.log(response);
+
+    return response.data.result;
+  } catch (error) {
+    console.error("Error fetching data:", error.response);
+  }
+};

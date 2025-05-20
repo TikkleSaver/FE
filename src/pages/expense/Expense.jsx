@@ -225,7 +225,7 @@ const Expense = () => {
         <ExpenseItems>
           {items.map((item, index) =>
             isMyExpense ? (
-              <MyExpenseCard key={index} item={item} />
+              <MyExpenseCard key={index} item={item} date={date} />
             ) : (
               <FriendExpenseCard key={index} item={item} />
             )
