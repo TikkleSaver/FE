@@ -372,7 +372,7 @@ const CreateChallengeBtn = styled.div`
 `;
 
 
-const ChallengeImageUpload = () => {
+const ChallengeImageUpload = ({ onFileSelect }) => {
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -387,6 +387,7 @@ const ChallengeImageUpload = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPreview(imageUrl);
+      onFileSelect(file); 
     }
   };
 
@@ -416,6 +417,7 @@ function CreateChallengePage() {
    const [certifyInputs, setCertifyInputs] = useState([{ id: Date.now(), value: '' }]);
    const [selectedCategory, setSelectedCategory] = useState("");
    const [isPublic, setIsPublic] = useState(false);
+   const [imageFile, setImageFile] = useState(null);
 
    const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
    const navigate = useNavigate();
@@ -462,37 +464,52 @@ const categoryMap = {
   "기타 생활비": 7,
 };
 
+
 const handleSubmit = async () => {
   if (!nameText || !infoText || !selectedCategory || certifyInputs.length === 0) {
     alert("모든 항목을 입력해주세요.");
     return;
   }
 
-  const requestBody = {
+  const missionMethods = certifyInputs.map((item) => item.value).filter(Boolean);
+
+  const requestData = {
     title: nameText,
     description: infoText,
     categoryId: categoryMap[selectedCategory],
-    publicStatus: isPublic ? "PRIVATE": "PUBLIC", 
-    missionMethods: certifyInputs.map((item) => item.value).filter(Boolean),
+    publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
+    missionMethods: missionMethods,
   };
 
+  const formData = new FormData();
+  formData.append("request", new Blob([JSON.stringify(requestData)], { type: "application/json" }));
+
+  if (imageFile) {
+    formData.append("file", imageFile); // 'file' 이름으로 이미지 첨부
+  }
+
   try {
-    const response = await axios.post(`${baseUrl}/challenges`, requestBody);
+    const response = await axios.post(`${baseUrl}/challenges`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     console.log("챌린지 생성 성공:", response.data);
     alert("챌린지가 성공적으로 생성되었습니다.");
-    navigate('/challenges')
+    navigate("/challenges");
   } catch (error) {
     console.error("챌린지 생성 실패:", error);
     alert("챌린지 생성에 실패했습니다.");
   }
 };
 
+
   return (
     <CreateChallengeWrapper>
       <CreateChallengeText>
         챌린지 생성하기
       </CreateChallengeText>
-      <ChallengeImageUpload/>
+      <ChallengeImageUpload onFileSelect={setImageFile} />
       <ChallengeNameContainer>
         <ChallengeNameText>챌린지 이름</ChallengeNameText>
         <ChallengeNameInput

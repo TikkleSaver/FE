@@ -39,8 +39,6 @@ const Category = styled.span`
   color: #6b6b6b;
   font-weight: 600;
   white-space: nowrap;
- 
-  
 
 
 `;

@@ -310,6 +310,21 @@ const [scrapped, setScrapped] = useState(initialScrapped);
     }
   };
 
+
+  const handleJoinClick = async (newStatus) => {
+    try {
+      const res = await axios.post(`${baseUrl}/join-challenges/${challengeId}`);
+      console.log(res.status);
+      if (res.data.isSuccess) {
+        onJoin(newStatus); 
+      } else {
+        console.error('챌린지 가입 실패:', res.data.message);
+      }
+    } catch (error) {
+      console.error('챌린지 가입 실패:', error);
+    }
+  };
+
   return (
     <InfoContainer>
       <ChallengeInfo>
@@ -336,14 +351,14 @@ const [scrapped, setScrapped] = useState(initialScrapped);
         </ParticipantsContainer>
         <ChallengeDescription>{description}</ChallengeDescription>
         <ButtonContainer>
-          {status === 'JOINED' ? (
-            <JoinedBtn>챌린지 가입 완료</JoinedBtn>
+        {status === 'JOINED' ? (
+        <JoinedBtn>챌린지 가입 완료</JoinedBtn>
           ) : status === 'PENDING' ? (
-            <PendingBtn>가입 요청 중...</PendingBtn>
+           <PendingBtn>가입 요청 중...</PendingBtn>
           ) : isPublic === 'PUBLIC' ? (
-            <PublicSingUpBtn onClick={() => onJoin('JOINED')}>챌린지 가입하기</PublicSingUpBtn>
+         <PublicSingUpBtn onClick={() => handleJoinClick('JOINED')}>챌린지 가입하기</PublicSingUpBtn>
           ) : (
-            <PrivateSingUpBtn onClick={() => onJoin('PENDING')}>챌린지 가입하기</PrivateSingUpBtn>
+         <PrivateSingUpBtn onClick={() => handleJoinClick('PENDING')}>챌린지 가입하기</PrivateSingUpBtn>
           )}
           <IconsContainer>
           <ScrapContainer onClick={toggleScrap}>
@@ -371,7 +386,7 @@ function SignUpPageChallengePage() {
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const res = await axios.get(`${baseUrl}/challenges/join-challenge/${challengeId}`);
+        const res = await axios.get(`${baseUrl}/join-challenges/${challengeId}`);
         setChallengeData(res.data.result);
         setStatus(res.data.result.status);
 
