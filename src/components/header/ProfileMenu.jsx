@@ -6,15 +6,16 @@ import icon1 from '../../images/header/profile_icon1.svg';
 import icon2 from '../../images/header/profile_icon2.svg';
 import icon3 from '../../images/header/logout_icon.svg';
 
-export default function ProfileMenu() {
+export default function ProfileMenu({ setIsLoggedIn }) {
   const navigate = useNavigate();
-
+  const handleLogout = () => {
+    // 실제 로그아웃 처리 로직 추가 가능 (ex. localStorage.clear())
+    setIsLoggedIn(false);
+    navigate('/');
+  };
   return (
     <WishlistWrapper as="li">
-      <ProfileButton
-        className="profile-button"
-        onClick={() => navigate('/myPage')}
-      >
+      <ProfileButton className="profile-button">
         <img src={profileImage} alt="My Page" />
       </ProfileButton>
 
@@ -22,13 +23,13 @@ export default function ProfileMenu() {
         <DropdownItem onClick={() => navigate('/myprofile')}>
           <img src={icon1} alt="My Page" />내 프로필
         </DropdownItem>
-        <DropdownItem onClick={() => navigate('/')}>
+        <DropdownItem onClick={() => navigate('/friends')}>
           <img src={icon2} alt="My Page" />
           친구 목록
         </DropdownItem>
         <DropdownItem
           style={{ borderTop: '1px solid #CAD6D2' }}
-          onClick={() => navigate('/')}
+          onClick={handleLogout}
         >
           <img src={icon3} alt="My Page" />
           로그아웃

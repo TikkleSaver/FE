@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Colors from '../../constanst/color.mjs';
 import alarm from '../../images/myprofile/alarm_icon.svg';
@@ -105,7 +105,15 @@ const items = Array(6).fill({
 });
 
 const RequestListModal = ({ onClose }) => {
-  // 배경 클릭 시 모달 닫기
+  const [requests, setRequests] = useState(
+    Array(6).fill({ name: '티모시', image: 'food.jpg' })
+  );
+
+  // 삭제 함수
+  const handleRemove = (indexToRemove) => {
+    setRequests((prev) => prev.filter((_, i) => i !== indexToRemove));
+  };
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -124,8 +132,12 @@ const RequestListModal = ({ onClose }) => {
           <CloseButton onClick={onClose} src={close} alt="close" />
         </Top>
         <Items>
-          {items.map((item, index) => (
-            <RequestCard key={index} item={item} />
+          {requests.map((item, index) => (
+            <RequestCard
+              key={index}
+              item={item}
+              onRemove={() => handleRemove(index)} // 삭제 콜백 전달
+            />
           ))}
         </Items>
       </ModalBox>

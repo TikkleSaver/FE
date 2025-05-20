@@ -69,11 +69,21 @@ const Right = styled.div`
   flex-direction: column;
   width: 100%;
 `;
-const RequestCard = ({ item }) => {
+const RequestCard = ({ item, onRemove }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/friendprofile');
+  };
+
+  const handleAccept = (e) => {
+    e.stopPropagation(); // 상위 onClick 방지
+    onRemove(); // 삭제
+  };
+
+  const handleReject = (e) => {
+    e.stopPropagation();
+    onRemove(); // 삭제
   };
 
   return (
@@ -82,8 +92,8 @@ const RequestCard = ({ item }) => {
       <Right>
         <ItemName>{item.name}님이 친구 요청을 보냈어요</ItemName>
         <BtnGroup>
-          <AcceptedBtn>수락</AcceptedBtn>
-          <UpdateBtn2>거절</UpdateBtn2>
+          <AcceptedBtn onClick={handleAccept}>수락</AcceptedBtn>
+          <UpdateBtn2 onClick={handleReject}>거절</UpdateBtn2>
         </BtnGroup>
       </Right>
     </Item>
