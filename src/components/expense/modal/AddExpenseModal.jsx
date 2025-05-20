@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import Camera from "./../../../assets/camera.svg";
 import Colors from "../../../constanst/color.mjs";
@@ -120,6 +120,17 @@ const ImageUpload = styled.div`
   cursor: pointer;
 `;
 
+const UploadImage = styled.img`
+  width: ${({ hasPreview }) => (hasPreview ? "100%" : "40px")};
+  height: ${({ hasPreview }) => (hasPreview ? "100%" : "40px")};
+  object-fit: ${({ hasPreview }) => (hasPreview ? "cover" : "contain")};
+  border-radius: ${({ hasPreview }) => (hasPreview ? "20px" : "0")};
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
 const AddExpenseModal = ({ onClose }) => {
   const categories = [
     "식비",
@@ -131,11 +142,29 @@ const AddExpenseModal = ({ onClose }) => {
     "기타 생활비",
   ];
   const [selectedCategory, setSelectedCategory] = React.useState("식비");
+  const [previewImage, setPreviewImage] = React.useState(null);
+
+  const fileInputRef = useRef(null);
 
   // 배경 클릭 시 모달 닫기
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result); // base64 URL 저장
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -148,8 +177,18 @@ const AddExpenseModal = ({ onClose }) => {
         </HeaderRow>
 
         <Row>
-          <ImageUpload>
-            <img src={Camera} alt="사진진" width="40" height="40" />
+          <ImageUpload onClick={handleImageClick}>
+            <UploadImage
+              src={previewImage || Camera}
+              alt="사진"
+              hasPreview={!!previewImage}
+            />
+            <HiddenFileInput
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
           </ImageUpload>
           <Column>
             <Label>지출명</Label>
