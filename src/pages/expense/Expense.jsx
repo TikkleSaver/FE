@@ -263,7 +263,9 @@ const Expense = () => {
         )}
       </ExpenseCommentListContainer>
 
-      {showAddModal && <AddExpenseModal onClose={handleCloseAddExpenseModal} />}
+      {showAddModal && (
+        <AddExpenseModal onClose={handleCloseAddExpenseModal} date={date} />
+      )}
     </ExpenseContainer>
   );
 };
