@@ -4,8 +4,10 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import addImageURL from "../../assets/productAdd.svg";
 import lockImageURL from "../../assets/wishLockGrey.svg";
+import unlockImageURL from "../../assets/wishUnlockGrey.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { createWishExistProductAPI } from "../../api/wish";
 
 // 전체 상자
 const ProductPageContainer = styled.div`   
@@ -141,7 +143,7 @@ const ProductPublicExplain = styled.div`
   display: flex;                
   align-items: center; 
   color: ${Colors.secondary300};
-  font-size: 8px;
+  font-size: 8px; // 13px -- 잊지 말자 크기 수정 
   font-weight: 500;
   line-height: 15px;
   word-wrap: break-word;
@@ -235,14 +237,14 @@ const ProductPriceExplain = styled.div`
 `;
 
 // 가격 입력 상자
-const SearchContainer = styled.div` 
+const PriceInputContainer = styled.div` 
   margin-top: 5px;
   position: relative;
   width: fit-content;
 `;
 
 // 가격 입력
-const SearchInput = styled.input`    
+const PriceInput = styled.input`    
   width: 132px;
   height: 40px;
   padding: 0px 30px 0px 10px;
@@ -296,18 +298,49 @@ const  ProductAddImage = styled.span`
 
 function AddWishExistPage() {
 
-    const navigate = useNavigate();
-    const [selectedCategory, setCategory] = useState("식비");
-    const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
-    const [isPublic, setIsPublic] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-    const location = useLocation();
-    const product = location.state?.product;
+  const navigate = useNavigate();
+  const [selectedCategory, setCategory] = useState("식비");
+  const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
+  const [isPublic, setIsPublic] = useState(false);
+  const [inputPrice, setInputPrice] = useState("");
+  const location = useLocation();
+  const product = location.state?.product;
+
+  const categoryMap = {
+    "식비": 1,
+    "카페": 2,
+    "쇼핑": 3,
+    "건강": 4,
+    "취미": 5,
+    "교통비": 6,
+    "기타 생활비": 7,
+  };
 
     // 상품 존재X 예외 처리
     if (!product) {
       return;
-    } 
+    }
+    
+    const handleAddWish = async () => {
+    const wishData = {
+      publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
+      title: product.title,
+      brand: product.brand,
+      price: parseInt(inputPrice),
+      image: product.image,
+      category1: product.category1,
+      category2: product.category2,
+      category3: product.category3,
+      category4: product.category4,
+      categoryId: categoryMap[selectedCategory]
+    };
+
+    const result = await createWishExistProductAPI(wishData);
+    if (result) {
+      alert("위시가 성공적으로 추가되었습니다.");
+      navigate("/wish/mine");
+    }
+  };
 
     return (
         <ProductPageContainer>
@@ -346,9 +379,15 @@ function AddWishExistPage() {
                     <ProductPublicWapper>
                       <ProductPublicTextWapper>
                         <ProductPublicText>공개 설정</ProductPublicText>
+                        {isPublic ? (
                         <ProductPublicExplain>해당 상품을 공개하지 않습니다.
                           <ProductLockImage imageUrl={lockImageURL} />
                         </ProductPublicExplain>
+                        ) : (
+                        <ProductPublicExplain>해당 상품을 공개합니다.
+                          <ProductLockImage imageUrl={unlockImageURL} />
+                        </ProductPublicExplain>
+                        )}
                       </ProductPublicTextWapper>
                       <ProductPublicSwitch>
                         <ProductPublicSwitchInput 
@@ -363,18 +402,18 @@ function AddWishExistPage() {
                   <ProductPriceContainer>
                     <ProductPriceText>가격</ProductPriceText>
                     <ProductPriceExplain>가격은 원 단위로 입력하세요.</ProductPriceExplain>
-                    <SearchContainer>
-                      <SearchInput
+                    <PriceInputContainer>
+                      <PriceInput
                           type="text"
-                          placeholder=""
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
+                          placeholder={product.lprice}
+                          value={inputPrice}
+                          onChange={(e) => setInputPrice(e.target.value)}
                       />
                       <ProductPriceWonText>원</ProductPriceWonText>
-                    </SearchContainer>
+                    </PriceInputContainer>
                   </ProductPriceContainer>
               </ProductInputInfoContainer>
-              <ProductAddBtn>
+              <ProductAddBtn onClick={handleAddWish}>
                 <ProductAddImage imageUrl={addImageURL}/>
                 위시 추가하기</ProductAddBtn>
             </ProductTextInfoContainer>
