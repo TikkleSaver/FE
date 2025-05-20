@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChallengePreviewCard from "../../components/challenge/ChallengePreviewCard";
-import SearchIcon from "../../assets/search.svg"
+import SearchIcon from "../../assets/search.svg";
 import Colors from "../../constanst/color.mjs";
-import { Link } from 'react-router-dom';
 
-const ChallengePageContainer = styled.div`
+const ChallengeSearchPageWrapper= styled.div`
   width:80%;
   max-width: 100%;
   margin: 120px auto;
@@ -21,7 +20,7 @@ const SearchContainer = styled.div`
 `;
 
 const SearchInput = styled.input`
- width: 100%;
+  width: 100%;
   padding: 18px 18px 18px 55px; 
   border: 1px solid ${Colors.secondary100};
   border-radius: 15px;
@@ -50,7 +49,12 @@ const ChallengeContainer = styled.div`
   width:100%;
 
 `;
-const TopChallengeInnerContainer = styled.div`
+
+const ChallengeResultContainer = styled.div`
+  display:block;
+`;
+
+const ChallengeInnerContainer = styled.div`
   width: 90%; 
   max-width: 1200px; 
   margin: 5px auto;
@@ -60,59 +64,44 @@ const TopChallengeInnerContainer = styled.div`
   gap: 40px;
   justify-content: center;
 
+
 `;
 
-const TopChallengeText = styled.div`
-
+const SearchChallengeText = styled.div`
   margin-left: 65px;
   margin-bottom: 30px;
-  font-size: 25px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
   
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-left: 65px;
-  margin-bottom: 50px;
-  position: relative;
-
+const NoResultContainer = styled.div`
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;     
+  height: 50vh;        
+  text-align: center;
+  padding: 0 20px;         
+  display: none;
 `;
 
-const CateButton = styled.button`
-   background-color: ${(props) =>
-    props.$active === "true" ? Colors.primary300 : "white"};
-  color: ${(props) =>
-    props.$active === "true" ? "white" : Colors.secondary200};
-  border: 1px solid
-    ${(props) =>
-      props.$active === "true" ? Colors.primary300 : Colors.secondary100};
-  padding: 6px 15px;
-  border-radius: 12px;
-  cursor: pointer;
+const NoResultTitle = styled.div`
   font-size: 18px;
-  font-weight: 500;
-
-`;
-
-const MoreBtn = styled(Link)`
+  font-weight: 600;
   color: ${Colors.secondary200};
-  font-size: 18px;
-  font-weight: 500;
-  text-decoration: none;
-  position: absolute;
-  right: 70px;
-
+  margin-bottom: 10px;
 `;
 
-function ChallengePage() {
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
+`;
+
+function ChallengeSearchPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
-  const categories = ["전체", "식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
 
   return (
-    <ChallengePageContainer>
+    <ChallengeSearchPageWrapper>
         <SearchContainer>
       <SearchIconWrapper>
         <img src={SearchIcon} alt="Search Icon" width="20" height="20" />
@@ -125,44 +114,32 @@ function ChallengePage() {
       />
     </SearchContainer>
     <ChallengeContainer>
-      <TopChallengeText>
-      인기 챌린지🔥
-      </TopChallengeText>
-      <TopChallengeInnerContainer>
+      <ChallengeResultContainer>
+      <SearchChallengeText>
+      ‘커피’로 검색한 결과입니다.
+      </SearchChallengeText>
+      <ChallengeInnerContainer>
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
       <ChallengePreviewCard/>
-      </TopChallengeInnerContainer>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      <ChallengePreviewCard/>
+      </ChallengeInnerContainer>
+      </ChallengeResultContainer>
+      <NoResultContainer>
+        <NoResultTitle>검색어에 해당하는 챌린지가 없습니다.</NoResultTitle>
+        <NoResultSubText>철자를 확인하거나 다른 키워드를 입력해주세요!</NoResultSubText>
+    </NoResultContainer>
     </ChallengeContainer>
-
-    <ChallengeContainer>
-    <ButtonContainer>
-          {categories.map((category) => (
-            <CateButton
-              key={category}
-              $active={selectedCategory === category ? "true" : "false"}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </CateButton>
-          ))}
-          <MoreBtn to="/challenges/challenge-list">{'더보기 >'}</MoreBtn>
-        </ButtonContainer>
-      <TopChallengeInnerContainer>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      
-      </TopChallengeInnerContainer>
-    </ChallengeContainer>
-    </ChallengePageContainer>
+    </ChallengeSearchPageWrapper>
   );
 }
 
-export default ChallengePage;
+export default ChallengeSearchPage;

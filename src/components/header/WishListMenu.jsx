@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const ExpenseWrapper = styled.div`
+const WishListWrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
@@ -23,7 +23,6 @@ const Dropdown = styled.div`
   z-index: 10;
   white-space: nowrap;
 
-  /* 🔽 여기서 visibility/opacity로 부드럽게 처리 */
   visibility: ${(props) => (props.$open ? "visible" : "hidden")};
   opacity: ${(props) => (props.$open ? 1 : 0)};
   pointer-events: ${(props) => (props.$open ? "auto" : "none")};
@@ -39,25 +38,26 @@ const DropdownItem = styled.div`
   align-items: center;
   height: 30px;
   color: black;
-  font-weight: ${(props) => (props.$active ? "500" : "300")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 `;
 
 const Menu = styled.button`
   all: unset;
-  width: 60px;
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
 `;
 
-const ExpenseMenu = () => {
+const WishListMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef(null);
 
-  const isActive = location.pathname.startsWith("/expense");
+  const isActive = 
+  location.pathname.startsWith("/products") ||
+  location.pathname.startsWith("/wish/mine");
 
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current);
@@ -71,30 +71,30 @@ const ExpenseMenu = () => {
   };
 
   return (
-    <ExpenseWrapper
+    <WishListWrapper
       as="li"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={isActive ? "active" : ""}
     >
-      <Menu>소비 일기</Menu>
+      <Menu>나의 위시리스트</Menu>
 
       <Dropdown className="dropdown" $open={open}>
         <DropdownItem
-          onClick={() => navigate("/expense-calendar")}
-          $active={location.pathname === "/expense-calendar"}
+          onClick={() => navigate("/products")}
+          $active={location.pathname === "/products"}
         >
-          지출 내역
+          상품 검색
         </DropdownItem>
         <DropdownItem
-          onClick={() => navigate("/expense-analysis")}
-          $active={location.pathname === "/expense-analysis"}
+          onClick={() => navigate("/wish/mine")}
+          $active={location.pathname === "/wish/mine"}
         >
-          지출 분석
+          위시 목록
         </DropdownItem>
       </Dropdown>
-    </ExpenseWrapper>
+    </WishListWrapper>
   );
 };
 
-export default ExpenseMenu;
+export default WishListMenu;

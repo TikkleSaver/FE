@@ -31,27 +31,31 @@ const Title = styled.span`
   font-size: 18px;
   font-weight: 700;
   color: #333333;
+  
 `;
 
 const Category = styled.span`
   font-size: 14px;
   color: #6b6b6b;
   font-weight: 600;
+  white-space: nowrap;
+ 
+  
+
+
 `;
 
-const ChallengePreviewCard = () => {
+const ChallengePreviewCard = ({ challengeId, title, category, imgUrl }) => {
   const navigate = useNavigate();
 
   return (
-    <>
-      <CardContainer onClick={() => navigate('/challenges/signup-challenge')}>
-        <ChallengeImage imageUrl={imageUrl} />
-        <ChallengeInfo>
-          <Title>커피값 세이브</Title>
-          <Category>카페/간식</Category>
-        </ChallengeInfo>
-      </CardContainer>
-    </>
+    <CardContainer onClick={() => navigate(`/challenges/signup-challenge/${challengeId}`)}>
+      <ChallengeImage imageUrl={imgUrl} />
+      <ChallengeInfo>
+        <Title>{title}</Title>
+        <Category>{category}</Category>
+      </ChallengeInfo>
+    </CardContainer>
   );
 };
 

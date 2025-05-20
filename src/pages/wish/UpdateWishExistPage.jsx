@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import lockImageURL from "../../assets/wishLock.svg";
+import lockImageURL from "../../assets/wishLockGrey.svg";
+import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
+import Colors from "../../constanst/color.mjs";
 
-const ProductPageContainer = styled.div`    // 전체 상자
+// 전체 상자
+const ProductPageContainer = styled.div`    
+  display: flex;
+  justify-content: center;
   width:80%;
   max-width: 100%;
   margin: 240px auto;
 `;
 
-const ProductInfoContainer = styled.span`   // 상품 정보 상자
+// 상품 정보 상자
+const ProductInfoContainer = styled.span`   
     display: flex;
 `;
 
-const ProductImage = styled.span`  // 상품 이미지
+// 상품 이미지
+const ProductImage = styled.span`  
   display: inline-block;  
   flex-shrink: 0;
   width: 450px;
   height: 450px;
-  background-color: #C4C4C4;
   border-radius: 20px;
   background-image: ${({ imageUrl }) => `url(${imageUrl})`};
   background-size: cover;
@@ -26,111 +32,122 @@ const ProductImage = styled.span`  // 상품 이미지
   background-repeat: no-repeat;
 `;
 
-const ProductTextInfoContainer = styled.div`  // 상품 이미지 제외 정보
-  margin-left: 45px;
+// 상품 이미지 제외 정보
+const ProductTextInfoContainer = styled.div`  
+  margin-left: 35px;
 `;
 
-const ProductCategory = styled.div`   // 상품 카테고리
-  color: #6B6B6B;
+// 상품 카테고리
+const ProductCategory = styled.div`   
+  color: ${Colors.secondary300};
   font-size: 16px;
-  font-family: Inter;
   font-weight: 500;
   line-height: 30px;
   word-wrap: break-word;
 `;
 
-const ProductName = styled.div` // 상품 이름
+// 상품 이름
+const ProductName = styled.div` 
   margin-top: 10px;
-  color: black;
+  color: ${Colors.secondary500};
   font-size: 28px;
-  font-family: Inter;
   font-weight: 600;
   line-height: 30px;
   word-wrap: break-word;
 `;
 
-const ProductInputInfoContainer = styled.div`   // 설정해야할 정보 (카테고리, 공개, 가격)
-  margin-top: 20px;
+// 설정해야할 정보 (카테고리, 공개, 가격)
+const ProductInputInfoContainer = styled.div`   
+  margin-top: 17px;
   display: flex;            
   flex-direction: column;  
-  gap: 15px;   
+  gap: 25px;   
 `;
 
-const ProductCategoryContainer = styled.div`  // 카테고리 상자
+// 카테고리 상자
+const ProductCategoryContainer = styled.div`  
 
 `;
 
-const ProductCategoryText = styled.div`     // 카테고리 제목
-  color: #333333;
+// 카테고리 제목
+const ProductCategoryText = styled.div`     
+  height: 26px;   
+  color: ${Colors.secondary500};
   font-size: 15px;
-  font-family: Pretendard;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
 `;
 
-const ProductCatgoryTabWrapper = styled.div`     // 카테고리 선택 와퍼
-    margin-top: 10px;
+// 카테고리 선택 와퍼
+const ProductCatgoryTabWrapper = styled.div`     
+    margin-top: 5px;
 `;
 
-const ProductCategoryTabBtnContainer = styled.div`    // 카테고리 선택 상자
+// 카테고리 선택 상자
+const ProductCategoryTabBtnContainer = styled.div`    
     flex-wrap: wrap;
-    top: 5px;
     display: flex;
     gap: 10px;
 `;
 
-const ProductCategoryTabBtn = styled.button`   // 카테고리 선택
+// 카테고리 선택
+const ProductCategoryTabBtn = styled.button`   
     background-color: ${(props) =>
-        props.$active === "true" ? "#51B69E" : "white"};
+        props.$active === "true" ? Colors.primary300 : "white"};
     color: ${(props) =>
-        props.$active === "true" ? "white" : "#999999"};
+        props.$active === "true" ? "white" : Colors.secondary200};
     border: 1px solid
         ${(props) =>
-        props.$active === "true" ? "#51B69E" : "#999999"};
+        props.$active === "true" ? Colors.primary300 : Colors.secondary200};
     padding: 6px 15px;
     border-radius: 12px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 15.45px;
+    font-size: 15px;
 `;
 
-const ProductPublicContainer = styled.div`  // 공개 여부 상자
-    width: 265px;
+// 공개 여부 상자
+const ProductPublicContainer = styled.div`  
+    width: 282px;
 `;
 
-const ProductPublicWapper = styled.span`  // 공개 여부 와퍼
+// 공개 여부 와퍼
+const ProductPublicWapper = styled.span`  
     display: flex;
     justify-content: space-between;
     align-items: center;
 `;
 
-const ProductPublicTextWapper = styled.div`  // 공개 여부 제목 및 설명 와퍼
+// 공개 여부 제목 및 설명 와퍼
+const ProductPublicTextWapper = styled.div`  
 
 `;
 
-const ProductPublicText = styled.div`     // 공개 여부 제목
-  color: #333333;
+// 공개 여부 제목
+const ProductPublicText = styled.div`     
+  height: 26px;
+  color: ${Colors.secondary500};
   font-size: 15px;
-  font-family: Pretendard;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
 `;
 
-const ProductPublicExplain = styled.div`     // 공개 여부 설명
+// 공개 여부 설명
+const ProductPublicExplain = styled.div`     
   display: flex;                
   align-items: center; 
-  color: #6B6B6B;
+  color: ${Colors.secondary300};
   font-size: 8px;
-  font-family: Pretendard;
   font-weight: 500;
   line-height: 15px;
   word-wrap: break-word;
   gap: 2.5px;
 `;
 
-const  ProductLockImage = styled.span` // 잠금 로고
+// 잠금 로고
+const  ProductLockImage = styled.span` 
   display: inline-block;
   width: 10px;
   height: 10px;
@@ -140,7 +157,8 @@ const  ProductLockImage = styled.span` // 잠금 로고
   background-repeat: no-repeat; 
 `;
 
-const ProductPublicSwitch =  styled.label`  // 공개 여부 스위치
+// 공개 여부 스위치
+const ProductPublicSwitch =  styled.label`  
   position: relative;
   display: inline-block;
   width: 36px;
@@ -148,13 +166,14 @@ const ProductPublicSwitch =  styled.label`  // 공개 여부 스위치
   margin-left: 10px;
 `;
 
-const ProductPublicSwitchInput = styled.input`  // 공개 여부 스위치 입력
+// 공개 여부 스위치 입력
+const ProductPublicSwitchInput = styled.input`  
   opacity: 0;
   width: 0;
   height: 0;
 
   &:checked + span {
-    background-color: #194238;
+    background-color: ${Colors.primary600};
   }
 
   &:checked + span:before {
@@ -162,14 +181,15 @@ const ProductPublicSwitchInput = styled.input`  // 공개 여부 스위치 입�
   }
 `;
 
-const ProductPublicSwitchSlider = styled.span`  // 공개 여부 스위치 슬라이드
+// 공개 여부 스위치 슬라이드
+const ProductPublicSwitchSlider = styled.span`  
   position: absolute;
   cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: ${Colors.secondary100};
   transition: 0.4s;
   border-radius: 34px;
 
@@ -186,91 +206,97 @@ const ProductPublicSwitchSlider = styled.span`  // 공개 여부 스위치 슬�
   }
 `;
 
-const ProductPriceContainer = styled.div`  // 가격 상자
+// 가격 상자
+const ProductPriceContainer = styled.div`  
 
 `;
 
-const ProductPriceText = styled.div`     // 가격 제목
-  color: #333333;
+// 가격 제목
+const ProductPriceText = styled.div`     
+  height: 26px;     
+  color: ${Colors.secondary500};
   font-size: 15px;
-  font-family: Pretendard;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
 `;
 
-const ProductPriceExplain = styled.div`     // 가격 설명
+// 가격 설명
+const ProductPriceExplain = styled.div`     
   display: flex;                
   align-items: center; 
-  color: #6B6B6B;
+  color: ${Colors.secondary300};
   font-size: 8px;
-  font-family: Pretendard;
   font-weight: 500;
   line-height: 15px;
   word-wrap: break-word;
-  gap: 2.5px;
 `;
 
-const SearchContainer = styled.div` // 가격 입력 상자
-  margin-top: 10px;
+// 가격 입력 상자
+const SearchContainer = styled.div` 
+  margin-top: 5px;
   position: relative;
   width: fit-content;
 `;
 
-const SearchInput = styled.input`    // 가격 입력
+// 가격 입력
+const SearchInput = styled.input`    
   width: 132px;
   height: 40px;
   padding: 0px 30px 0px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${Colors.secondary100};
   border-radius: 10px;
   font-size: 15px;
   font-weight: 600;
   outline: none;
 `;
 
-const ProductPriceWonText = styled.div`     // 가격 '원' 텍스트
+// 가격 '원' 텍스트
+const ProductPriceWonText = styled.div`     
   position: absolute;
-  color: #6B6B6B;
+  color: ${Colors.secondary300};
   top: 25%;
   right: 10px;
   font-size: 15px;
-  font-family: Pretendard;
   font-weight: 600;
   pointer-events: none;
 `;
 
-const ProductSatisfactionContainer = styled.div`  // 만족 여부 상자
+// 만족 여부 상자
+const ProductSatisfactionContainer = styled.div`  
 
 `;
 
-const ProductSatisfactionText = styled.div`     // 만족 여부 제목
-  color: #333333;
+// 만족 여부 제목
+const ProductSatisfactionText = styled.div`     
+  color: ${Colors.secondary500};
   font-size: 15px;
-  font-family: Pretendard;
   font-weight: 700;
   line-height: 24px;
   word-wrap: break-word;
 `;
 
-const ProductSatisfactionTabWrapper = styled.div`     // 만족 여부 선택 와퍼
-    margin-top: 10px;
+// 만족 여부 선택 와퍼
+const ProductSatisfactionTabWrapper = styled.div`     
+    margin-top: 5px;
 `;
 
-const ProductSatisfactionTabBtnContainer = styled.div`    // 만족 여부 선택 상자
+// 만족 여부 선택 상자
+const ProductSatisfactionTabBtnContainer = styled.div`    
     flex-wrap: wrap;
-    top: 5px;
     display: flex;
     gap: 10px;
 `;
 
-const ProductSatisfactionTabBtn = styled.button`   // 만족 여부 선택
+// 만족 여부 선택
+const ProductSatisfactionTabBtn = styled.button`   
     background-color: ${(props) =>
-        props.$active === "true" ? "#51B69E" : "white"};
+        props.$active === "true" ? Colors.primary300 : "white"};
     color: ${(props) =>
-        props.$active === "true" ? "white" : "#999999"};
+        props.$active === "true" ? "white" : Colors.secondary200};
     border: 1px solid
         ${(props) =>
-        props.$active === "true" ? "#51B69E" : "#999999"};
+        props.$active === "true" ? Colors.primary300 : Colors.secondary200};
     padding: 6px 15px;
     border-radius: 12px;
     cursor: pointer;
@@ -278,17 +304,19 @@ const ProductSatisfactionTabBtn = styled.button`   // 만족 여부 선택
     font-size: 15.45px;
 `;
 
-const ProductButtonWapper = styled.span`  // 수정 완료 취소 버튼 와퍼
+// 수정 완료 취소 버튼 와퍼
+const ProductButtonWapper = styled.span`  
     display: flex;
     align-items: center;
     gap: 25px;
 `;
 
-const ProductUpdateBtn = styled.button` // 수정 완료 버튼
+// 수정 완료 버튼
+const ProductUpdateBtn = styled.button` 
   display: flex;                
   align-items: center;    
   justify-content: center;     
-  background-color: #3D8D7A;
+  background-color: ${Colors.primary400};
   width: 112px;
   height: 45px;
   color: white;
@@ -302,11 +330,12 @@ const ProductUpdateBtn = styled.button` // 수정 완료 버튼
   word-wrap: break-word;
 `;
 
-const ProductCancelBtn = styled.button` // 수정 취소 버튼
+// 수정 취소 버튼
+const ProductCancelBtn = styled.button` 
   display: flex;                
   align-items: center;    
   justify-content: center;     
-  background-color: #3D8D7A;
+  background-color: ${Colors.primary400};
   width: 112px;
   height: 45px;
   color: white;
@@ -320,7 +349,7 @@ const ProductCancelBtn = styled.button` // 수정 취소 버튼
   word-wrap: break-word;
 `;
 
-function ProductDetailPage() {
+function UpdateWishExistPage() {
 
     const navigate = useNavigate();
     const [selectedCategory, setCategory] = useState("식비");
@@ -333,7 +362,7 @@ function ProductDetailPage() {
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
-            <ProductImage />
+            <ProductImage imageUrl={ProductImageUrl}/>
             <ProductTextInfoContainer>
               <ProductCategory>문구{">"}필기류{">"}색연필</ProductCategory>
               <ProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치 5세대 4세대 10.9인치 오드밤</ProductName>
@@ -412,4 +441,4 @@ function ProductDetailPage() {
     );
   }
   
-  export default ProductDetailPage;
+  export default UpdateWishExistPage;

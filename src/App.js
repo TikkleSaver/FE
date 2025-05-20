@@ -11,6 +11,8 @@ import SignUp from './pages/login/SignUp';
 import Login from './pages/login/Login';
 import Expense from './pages/expense/Expense';
 import ChallengeDetailPage from './pages/challenge/ChallengeDetailPage';
+import CreateChallengePage from './pages/challenge/CreateChallengePage';
+import WishInfoPage from "./pages/wish/WishInfoPage";
 import MyWishPage from './pages/wish/MyWishPage';
 import FriendWishPage from './pages/wish/FriendWishPage';
 import AddWishExistPage from './pages/wish/AddWishExistPage';
@@ -28,6 +30,8 @@ import FriendProfile from './pages/friend/FriendProfile';
 import FriendsPage from './pages/friend/FriendsPage';
 import ExpenseAnalysis from './pages/expense/ExpenseAnalysis';
 import MainPage from './pages/home/MainPage';
+import ChallengeSearchPage from './pages/challenge/ChallengeSearchPage';
+import ChallengeListPage from './pages/challenge/ChallengeListPage';
 
 function App() {
   return (
@@ -39,7 +43,7 @@ function App() {
         <Route path="/meddling" element={<MeddlePage />} />
         <Route path="/challenges" element={<ChallengePage />} />
         <Route
-          path="/challenges/signup-challenge"
+          path="/challenges/signup-challenge/:challengeId"
           element={<SignUpPageChallengePage />}
         />
         <Route path="/expense-calendar" element={<ExpenseCalendar />} />
@@ -48,22 +52,16 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
+        <Route path="/challenge-info" element={ <ChallengeDetailPage/>} />
+        <Route path="/challenges/create-challenge" element={<CreateChallengePage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
-        <Route path="/my-wish" element={<MyWishPage />} />
-        <Route path="/friend-wish" element={<FriendWishPage />} />
-        <Route path="/add-wish-exist-product" element={<AddWishExistPage />} />
-        <Route
-          path="/add-wish-not-exist-product"
-          element={<AddWishNotExistPage />}
-        />
-        <Route
-          path="/update-wish-exist-product"
-          element={<UpdateWishExistPage />}
-        />
-        <Route
-          path="/update-wish-not-exist-product"
-          element={<UpdateWishNotExistPage />}
-        />
+        <Route path="/wish-info" element={<WishInfoPage />} />
+        <Route path="/wish/mine" element={<MyWishPage />} />
+        <Route path="/wish/friend" element={<FriendWishPage />} />
+        <Route path="/wish/add/exist" element={<AddWishExistPage />} />
+        <Route path="/wish/add/not-exist" element={<AddWishNotExistPage />} />
+        <Route path="/wish/update/exist" element={<UpdateWishExistPage />} />
+        <Route path="/wish/update/not-exist" element={<UpdateWishNotExistPage />} />
         <Route path="/challenge-info" element={<ChallengeDetailPage />} />
         <Route path="/onboarding/category" element={<Category />} />
         <Route path="/onboarding/goal" element={<Goal />} />
@@ -73,6 +71,8 @@ function App() {
         <Route path="/searchFreind" element={<SearchFreindPage />} />
         <Route path="/friendprofile" element={<FriendProfile />} />
         <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/challenges/search-result" element={<ChallengeSearchPage />} />
+        <Route path="/challenges/challenge-list" element={<ChallengeListPage />} />
       </Routes>
     </Router>
   );
