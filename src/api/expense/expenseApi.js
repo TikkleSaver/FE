@@ -90,7 +90,7 @@ export const deleteExpense = async (data) => {
         },
       }
     );
-    return response.data;
+    return response.data.result;
   } catch (error) {
     console.error("Error fetching data:", error.response);
   }

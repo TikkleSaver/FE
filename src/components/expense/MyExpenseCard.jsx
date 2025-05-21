@@ -79,12 +79,12 @@ const Button = styled.button`
 // ✅ API로 데이터 받아오기
 const handleDelete = async () => {
   try {
-    const result = await deleteExpense({ expenseId: 1, memberId: 1 });
-    console.log("✅ 서버 응답:", result.data);
-    alert("지출이 삭제제되었습니다!");
+    const result = await deleteExpense({ expenseId: 43, memberId: 1 });
+    console.log("✅ 서버 응답:", result);
+    alert(result);
   } catch (err) {
     console.error("삭제 실패:", err.response?.data || err.message);
-    alert("삭제제 실패 😥");
+    alert("삭제 실패 😥");
   }
 };
 const MyExpenseCard = ({ item, date }) => {
