@@ -79,3 +79,19 @@ export const updateExpense = async (formValues, file) => {
     throw error;
   }
 };
+
+export const deleteExpense = async (data) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/expense/${data.expenseId}/${data.memberId}`,
+      {
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error.response);
+  }
+};

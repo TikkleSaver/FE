@@ -4,6 +4,7 @@ import PenIcon from "./../../assets/pen.svg";
 import TrashIcon from "./../../assets/trash.svg";
 import Colors from "../../constanst/color.mjs";
 import UpdateExpenseModal from "./modal/UpdateExpenseModal";
+import { deleteExpense } from "../../api/expense/expenseApi";
 
 const ExpenseItem = styled.div`
   position: relative;
@@ -75,6 +76,17 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+// ✅ API로 데이터 받아오기
+const handleDelete = async () => {
+  try {
+    const result = await deleteExpense({ expenseId: 1, memberId: 1 });
+    console.log("✅ 서버 응답:", result.data);
+    alert("지출이 삭제제되었습니다!");
+  } catch (err) {
+    console.error("삭제 실패:", err.response?.data || err.message);
+    alert("삭제제 실패 😥");
+  }
+};
 const MyExpenseCard = ({ item, date }) => {
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const imageSrc = require(`./../../assets/${item.image}`);
@@ -95,7 +107,7 @@ const MyExpenseCard = ({ item, date }) => {
           <Button onClick={() => setIsEditOpen(true)}>
             <img src={PenIcon} alt="수정" width="24" height="24" />
           </Button>
-          <Button onClick={() => alert("삭제 클릭")}>
+          <Button onClick={handleDelete}>
             <img src={TrashIcon} alt="삭제" width="24" height="24" />
           </Button>
         </ButtonContainer>
