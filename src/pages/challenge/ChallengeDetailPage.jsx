@@ -249,7 +249,7 @@ function ChallengeDetailPage() {
         <TopChallengeInnerContainer>
           {selectedTab === "메인" && <ChallengeMainComponent />}
           {selectedTab === "인증하기" && <ChallengeCertifyComponent />}
-          {selectedTab === "챌린저" && <ChallengerComponent/>}
+          {selectedTab === "챌린저" && <ChallengerComponent challengeId={challengeId} />}
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
     </>
