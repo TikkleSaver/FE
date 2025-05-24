@@ -140,7 +140,7 @@ const ExpenseCalendar = () => {
 
   // 특정 날짜의 지출 목록 페이지로 이동하는 함수
   const handleDateClick = (dateKey) => {
-    navigate("/expense", { state: { date: dateKey } }); // dateKey: '2025-04-15'
+    navigate(`/expense?date=${dateKey}`); // dateKey: '2025-04-15'
   };
 
   const renderCells = () => {
