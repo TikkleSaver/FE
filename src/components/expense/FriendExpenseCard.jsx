@@ -20,10 +20,14 @@ const ItemInfo = styled.div`
   gap: 5px;
 `;
 
-const ItemImage = styled.img`
+const ItemImage = styled.div`
   width: 80px;
   height: 60px;
   border-radius: 20px;
+  background-image: url(${(props) => props.imageUrl});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const ItemDetail = styled.div`
@@ -55,15 +59,29 @@ const ItemPrice = styled.div`
   color: ${Colors.primary700};
 `;
 
+const categories = [
+  { id: 1, label: "식비" },
+  { id: 2, label: "카페" },
+  { id: 3, label: "쇼핑" },
+  { id: 4, label: "건강" },
+  { id: 5, label: "취미" },
+  { id: 6, label: "교통비" },
+  { id: 7, label: "기타 생활비" },
+];
+
 const FriendExpenseCard = ({ item }) => {
-  const imageSrc = require(`./../../assets/${item.image}`);
+  const categoryLabel =
+    categories.find((cat) => cat.id === item.categoryId)?.label || "알 수 없음";
+  const imageurl = item.image
+    ? item.image
+    : require("./../../images/emptyImg.svg").default;
 
   return (
     <ExpenseItem>
-      <ItemImage src={imageSrc} />
+      <ItemImage imageUrl={imageurl} />
       <ItemInfo>
         <ItemDetail>
-          <ItemCategory>{item.category}</ItemCategory>
+          <ItemCategory>{categoryLabel}</ItemCategory>
           <ItemName>{item.expenseName}</ItemName>
           <ItemPlace>{item.expensePlace}</ItemPlace>
         </ItemDetail>
