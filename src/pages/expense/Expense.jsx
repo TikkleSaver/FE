@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import MyExpenseCard from "./../../components/expense/MyExpenseCard";
 import MyCommentCard from "../../components/expense/MyCommentCard";
@@ -8,6 +8,7 @@ import FriendCommentCard from "../../components/expense/FriendCommentCard";
 import SubmitBtn from "./../../assets/arrowUp.svg";
 import AddExpenseModal from "../../components/expense/modal/AddExpenseModal";
 import Colors from "../../constanst/color.mjs";
+import { getExpenseList } from "../../api/expense/expenseApi";
 
 // 최상위 container
 const ExpenseContainer = styled.div`
@@ -41,6 +42,7 @@ const ExpenseItems = styled.div`
   height: 500px;
   overflow-y: auto;
   padding-right: 8px;
+  padding-bottom: 50px;
   box-sizing: border-box;
   scrollbar-gutter: stable both-edges;
 
@@ -154,59 +156,129 @@ const AddExpenseButton = styled.button`
   cursor: pointer;
   border-top: 1px solid ${Colors.secondary25};
 `;
+// 날짜 포맷 함수
+const formatDateStr = (date) => date.toISOString().slice(0, 10);
 
 const Expense = () => {
   const location = useLocation();
-  const selectedDate = location.state?.date;
-  const [newComment, setNewComment] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
+  const navigate = useNavigate();
+  const query = new URLSearchParams(location.search);
 
-  // 임시 로그인한 사용자 ID
+  const queryDate = query.get("date");
+  const selectedDate = queryDate ? new Date(queryDate) : new Date();
+
   const loggedInUserId = "meartangLove0005";
-
-  // 보고 있는 지출 목록의 소유자와 비교
-  const viewedUserId = location.state?.userId || "meartangLove0005"; // 본인 기본값
+  const viewedUserId = location.state?.userId || loggedInUserId;
   const isMyExpense = loggedInUserId === viewedUserId;
 
-  const [date, setDate] = useState(
-    selectedDate ? new Date(selectedDate) : new Date()
+  const [date, setDate] = useState(selectedDate);
+  const [page, setPage] = useState(1);
+  const [expenses, setExpenses] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const loaderRef = useRef(null);
+
+  const loadExpenses = useCallback(
+    async (pageToLoad) => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await getExpenseList({
+          page: pageToLoad,
+          memberId: 1,
+          expenseDate: formatDateStr(date),
+        });
+
+        const newExpenses = result.expensePreviewDTOList || [];
+        if (pageToLoad === 1) {
+          setExpenses(newExpenses);
+        } else {
+          setExpenses((prev) => {
+            const existingIds = new Set(prev.map((item) => item.expenseId));
+            const uniqueNew = newExpenses.filter(
+              (item) => !existingIds.has(item.expenseId)
+            );
+            return [...prev, ...uniqueNew];
+          });
+        }
+
+        setHasMore(!result.isLast);
+      } catch (e) {
+        console.error("지출 리스트 조회 실패:", e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [date]
   );
 
-  const formatDate = (date) =>
-    date.toISOString().split("T")[0].replace(/-/g, ".");
-
+  // 날짜 변경 시 URL 쿼리 갱신
   const changeDate = (days) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
+    const newDateStr = formatDateStr(newDate);
     setDate(newDate);
+    query.set("date", newDateStr);
+    navigate({ search: query.toString() }, { replace: true });
   };
 
+  // 날짜 바뀌면 페이지 초기화
+  useEffect(() => {
+    setExpenses([]);
+    setHasMore(true);
+    setPage(1);
+  }, [date]);
+
+  // page나 date 바뀌면 데이터 로드
+  useEffect(() => {
+    loadExpenses(page);
+  }, [page, date, loadExpenses]);
+
+  // 무한 스크롤 옵저버
+  useEffect(() => {
+    if (!loaderRef.current || loading || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(loaderRef.current);
+
+    return () => observer.disconnect();
+  }, [loading, hasMore]);
+
+  // 쿼리 스트링이 직접 수정된 경우 date 상태 갱신
+  useEffect(() => {
+    const urlDate = query.get("date");
+    if (urlDate) {
+      const parsed = new Date(urlDate);
+      const current = formatDateStr(date);
+      if (formatDateStr(parsed) !== current) {
+        setDate(parsed);
+      }
+    }
+  }, [location.search]);
+
+  // 댓글 관련
+  const [newComment, setNewComment] = useState("");
   const handleCommentSubmit = () => {
     if (newComment.trim() === "") return;
-    // 실제로는 서버에 전송하거나 상태 업데이트
     console.log("새 피드백:", newComment);
     setNewComment("");
   };
 
-  // 지출 추가 모달 열기
-  const handleAddExpenseModal = () => {
-    setShowAddModal(true);
-  };
+  // 모달
+  const [showAddModal, setShowAddModal] = useState(false);
+  const handleAddExpenseModal = () => setShowAddModal(true);
+  const handleCloseAddExpenseModal = () => setShowAddModal(false);
 
-  // 지출 추가가 모달 닫기
-  const handleCloseAddExpenseModal = () => {
-    setShowAddModal(false);
-  };
-
-  const items = Array(9).fill({
-    expenseName: "마라탕",
-    expensePlace: "춘리 마라탕",
-    category: "식비",
-    cost: 15000,
-    expenseDate: "2025-03-28",
-    image: "food.jpg",
-  });
-
+  // 예시 댓글
   const comments = Array(9).fill({
     user: "meartangLove0005",
     comment:
@@ -219,24 +291,38 @@ const Expense = () => {
       <ExpenseListContainer>
         <ExpenseDateHeader>
           <ArrowButton onClick={() => changeDate(-1)}>{"<"}</ArrowButton>
-          <h2>{formatDate(date)}</h2>
+          <h2>{formatDateStr(date).replace(/-/g, ".")}</h2>
           <ArrowButton onClick={() => changeDate(1)}>{">"}</ArrowButton>
         </ExpenseDateHeader>
+
         <ExpenseItems>
-          {items.map((item, index) =>
+          {expenses.map((item, idx) =>
             isMyExpense ? (
-              <MyExpenseCard key={index} item={item} date={date} />
+              <MyExpenseCard
+                key={item.expenseId ?? idx}
+                item={item}
+                date={date}
+                onDone={() => {
+                  setPage(1);
+                  setExpenses([]);
+                  setHasMore(true);
+                  loadExpenses(1);
+                }}
+              />
             ) : (
-              <FriendExpenseCard key={index} item={item} />
+              <FriendExpenseCard key={item.id ?? idx} item={item} />
             )
           )}
+          <div ref={loaderRef} style={{ height: 40 }} />
         </ExpenseItems>
+
         {isMyExpense && (
           <AddExpenseButton onClick={handleAddExpenseModal}>
             + 지출 추가하기
           </AddExpenseButton>
         )}
       </ExpenseListContainer>
+
       <ExpenseCommentListContainer>
         <ExpenseCommentTittle>
           친구의 하루 소비에 피드백을 남겨주세요!
@@ -249,22 +335,32 @@ const Expense = () => {
               <FriendCommentCard key={i} comment={c} />
             )
           )}
-        </ExpenseComments>{" "}
+        </ExpenseComments>
         {!isMyExpense && (
           <CommentInputWrapper>
             <CommentInput
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
+              placeholder="피드백을 입력하세요"
             />
             <SubmitButton onClick={handleCommentSubmit}>
-              <img src={SubmitBtn} alt="Etc" width="32" height="32" />
+              <img src={SubmitBtn} alt="Submit" width="32" height="32" />
             </SubmitButton>
           </CommentInputWrapper>
         )}
       </ExpenseCommentListContainer>
 
       {showAddModal && (
-        <AddExpenseModal onClose={handleCloseAddExpenseModal} date={date} />
+        <AddExpenseModal
+          date={date}
+          onClose={handleCloseAddExpenseModal}
+          onDone={() => {
+            setPage(1);
+            setExpenses([]);
+            setHasMore(true);
+            loadExpenses(1);
+          }}
+        />
       )}
     </ExpenseContainer>
   );

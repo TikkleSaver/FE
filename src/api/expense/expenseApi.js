@@ -95,3 +95,24 @@ export const deleteExpense = async (data) => {
     console.error("Error fetching data:", error.response);
   }
 };
+
+export const getExpenseList = async ({ page, memberId, expenseDate }) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/expense`, {
+      params: {
+        page,
+        memberId,
+        expenseDate, // YYYY-MM-DD 형식 문자열
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("expense list:", response.data.result);
+
+    return response.data.result; // ApiResponse<ExpensePreviewListResultDTO>
+  } catch (error) {
+    console.error("Error fetching expense list:", error.response);
+    throw error;
+  }
+};

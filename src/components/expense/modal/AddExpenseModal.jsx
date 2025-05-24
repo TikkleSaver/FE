@@ -132,7 +132,7 @@ const HiddenFileInput = styled.input`
   display: none;
 `;
 
-const AddExpenseModal = ({ onClose, date }) => {
+const AddExpenseModal = ({ date, onClose, onDone }) => {
   const categories = [
     { id: 1, label: "식비" },
     { id: 2, label: "카페" },
@@ -195,6 +195,7 @@ const AddExpenseModal = ({ onClose, date }) => {
       );
       console.log("✅ 서버 응답:", result.data);
       alert("지출이 등록되었습니다!");
+      if (onDone) onDone();
       onClose();
     } catch (err) {
       console.error("등록 실패:", err.response?.data || err.message);

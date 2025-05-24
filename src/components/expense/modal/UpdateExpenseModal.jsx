@@ -142,7 +142,7 @@ const HiddenFileInput = styled.input`
   display: none;
 `;
 
-const UpdateExpenseModal = ({ expenseId, memberId, date, onClose }) => {
+const UpdateExpenseModal = ({ expenseId, memberId, date, onClose, onDone }) => {
   const categories = [
     { id: 1, label: "식비" },
     { id: 2, label: "카페" },
@@ -210,7 +210,8 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose }) => {
         file
       );
       console.log("✅ 서버 응답:", result.data);
-      alert("지출이 등록되었습니다!");
+      alert("지출이 수정되었습니다!");
+      if (onDone) onDone();
       onClose();
     } catch (err) {
       console.error("등록 실패:", err.response?.data || err.message);

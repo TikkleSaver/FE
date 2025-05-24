@@ -24,10 +24,14 @@ const ItemInfo = styled.div`
   gap: 5px;
 `;
 
-const ItemImage = styled.img`
+const ItemImage = styled.div`
   width: 80px;
   height: 60px;
   border-radius: 20px;
+  background-image: url(${(props) => props.imageUrl});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const ItemDetail = styled.div`
@@ -76,35 +80,59 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-// ✅ API로 데이터 받아오기
-const handleDelete = async () => {
-  try {
-    const result = await deleteExpense({ expenseId: 43, memberId: 1 });
-    console.log("✅ 서버 응답:", result);
-    alert(result);
-  } catch (err) {
-    console.error("삭제 실패:", err.response?.data || err.message);
-    alert("삭제 실패 😥");
-  }
-};
-const MyExpenseCard = ({ item, date }) => {
+const categories = [
+  { id: 1, label: "식비" },
+  { id: 2, label: "카페" },
+  { id: 3, label: "쇼핑" },
+  { id: 4, label: "건강" },
+  { id: 5, label: "취미" },
+  { id: 6, label: "교통비" },
+  { id: 7, label: "기타 생활비" },
+];
+
+const MyExpenseCard = ({ item, date, onDone }) => {
   const [isEditOpen, setIsEditOpen] = React.useState(false);
-  const imageSrc = require(`./../../assets/${item.image}`);
+  const categoryLabel =
+    categories.find((cat) => cat.id === item.categoryId)?.label || "알 수 없음";
+  const imageurl = item.image
+    ? item.image
+    : require("./../../images/emptyImg.svg").default;
+
+  // ✅ API로 데이터 받아오기
+  const handleDelete = async () => {
+    try {
+      const result = await deleteExpense({
+        expenseId: item.expenseId,
+        memberId: item.memberId,
+      });
+      console.log("✅ 서버 응답:", result);
+      alert(result);
+      if (onDone) onDone();
+    } catch (err) {
+      console.error("삭제 실패:", err.response?.data || err.message);
+      alert("삭제 실패 😥");
+    }
+  };
 
   return (
     <>
       <ExpenseItem>
-        <ItemImage src={imageSrc} />
+        <ItemImage imageUrl={imageurl} />
         <ItemInfo>
           <ItemDetail>
-            <ItemCategory>{item.category}</ItemCategory>
+            <ItemCategory>{categoryLabel}</ItemCategory>
             <ItemName>{item.expenseName}</ItemName>
             <ItemPlace>{item.expensePlace}</ItemPlace>
           </ItemDetail>
           <ItemPrice>{item.cost}원</ItemPrice>
         </ItemInfo>
         <ButtonContainer>
-          <Button onClick={() => setIsEditOpen(true)}>
+          <Button
+            onClick={() => {
+              setIsEditOpen(true);
+              console.log("🧾 MyExpenseCard item:", item);
+            }}
+          >
             <img src={PenIcon} alt="수정" width="24" height="24" />
           </Button>
           <Button onClick={handleDelete}>
@@ -114,9 +142,10 @@ const MyExpenseCard = ({ item, date }) => {
       </ExpenseItem>
       {isEditOpen && (
         <UpdateExpenseModal
-          expenseId={1}
-          memberId={1}
+          expenseId={item.expenseId}
+          memberId={item.memberId}
           date={date}
+          onDone={onDone}
           onClose={() => setIsEditOpen(false)}
         />
       )}
