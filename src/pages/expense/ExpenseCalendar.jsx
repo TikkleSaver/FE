@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../../constanst/color.mjs";
+import { getdailyExpenseList } from "../../api/expense/expenseCalendarApi";
 
 const Wrapper = styled.div`
   max-width: 965px;
@@ -88,44 +89,68 @@ const Footer = styled.div`
 
 const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
-// 임시 데이터
-const dummyExpenses = {
-  "2025-05-01": -120000,
-  "2025-05-03": -80000,
-  "2025-05-04": -120000,
-  "2025-05-05": 100,
-  "2025-05-06": -120000,
-  "2025-05-07": -120000,
-  "2025-05-08": -120000,
-  "2025-05-10": -80000,
-  "2025-05-11": -120000,
-  "2025-05-12": 100,
-  "2025-05-13": -120000,
-  "2025-05-14": -120000,
-  "2025-05-15": -120000,
-  "2025-05-17": -80000,
-  "2025-05-18": -120000,
-  "2025-05-19": 19,
-  "2025-05-20": 100,
-};
-
 const ExpenseCalendar = () => {
   const navigate = useNavigate();
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth()); // 0~11월
   const [dailyBudget, setDailyBudget] = useState(15000);
+  const [expenseData, setExpenseData] = useState({});
+  const memberId = 1;
+
+  useEffect(() => {
+    console.log("useEffect 실행 - API 호출 시도");
+    const fetchExpenses = async () => {
+      try {
+        const result = await getdailyExpenseList({
+          memberId,
+          year: currentYear,
+          month: currentMonth + 1,
+        });
+        console.log("API 호출 성공:", result);
+
+        // 1. dailyExpenseDTOList가 있는지 확인
+        const list = result.dailyExpenseDTOList || [];
+
+        // 2. 배열을 날짜키: totalCost 객체로 변환
+        const expenseMap = {};
+
+        list.forEach(({ totalCost, expenseDate }) => {
+          // ISO 날짜에서 시간 제거, 예: '2025-05-23T00:00:00.000+00:00' -> '2025-05-23'
+          const dateKey = expenseDate.split("T")[0];
+          expenseMap[dateKey] = totalCost;
+        });
+
+        // 3. 상태에 저장
+        setExpenseData(expenseMap);
+      } catch (error) {
+        console.error("지출 데이터 불러오기 실패", error);
+      }
+    };
+
+    fetchExpenses();
+  }, [memberId, currentYear, currentMonth]);
 
   // 이전 달로 변경하는 함수
   const handlePrevMonth = () => {
-    setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
-    if (currentMonth === 0) setCurrentYear((prev) => prev - 1);
+    setCurrentMonth((prevMonth) => {
+      if (prevMonth === 0) {
+        setCurrentYear((prevYear) => prevYear - 1);
+        return 11;
+      }
+      return prevMonth - 1;
+    });
   };
 
   // 다음 달로 변경하는 함수
   const handleNextMonth = () => {
-    setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
-    if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
+    setCurrentMonth((prevMonth) => {
+      if (prevMonth === 11) {
+        setCurrentYear((prevYear) => prevYear + 1);
+        return 0;
+      }
+      return prevMonth + 1;
+    });
   };
 
   // 날짜를 가져오는 함수
@@ -159,7 +184,7 @@ const ExpenseCalendar = () => {
         2,
         "0"
       )}-${String(date).padStart(2, "0")}`;
-      const expense = dummyExpenses[dateKey];
+      const expense = expenseData[dateKey];
 
       const isToday =
         date === today.getDate() &&
