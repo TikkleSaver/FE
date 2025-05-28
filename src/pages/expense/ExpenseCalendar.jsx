@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../../constanst/color.mjs";
-import { getdailyExpenseList } from "../../api/expense/expenseCalendarApi";
+import {
+  getDailyTotalExpense,
+  getgoalCost,
+  patchGoalCost,
+} from "../../api/expense/expenseCalendarApi";
 
 const Wrapper = styled.div`
   max-width: 965px;
@@ -20,7 +24,6 @@ const CalendarHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0%.5;
 `;
 
 const ArrowButton = styled.button`
@@ -55,7 +58,7 @@ const DateCell = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: ${(props) => (props.isToday ? "green" : "${Colors.secondary400}")};
+  color: ${(props) => (props.isToday ? "green" : Colors.secondary400)};
 `;
 
 const DateNumber = styled.div`
@@ -93,45 +96,97 @@ const ExpenseCalendar = () => {
   const navigate = useNavigate();
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth()); // 0~11월
-  const [dailyBudget, setDailyBudget] = useState(15000);
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [dailyBudget, setDailyBudget] = useState(0);
+  const [originalGoalCost, setOriginalGoalCost] = useState(null);
+  const [debouncedBudget, setDebouncedBudget] = useState(null);
   const [expenseData, setExpenseData] = useState({});
-  const memberId = 1;
+  const memberId = 1; // 조회할 지출 내역의의 주인 ID
+  const viewerId = 41;
 
+  // debounce 로직 (dailyBudget이 변할 때마다 1초 뒤에 업데이트)
   useEffect(() => {
-    console.log("useEffect 실행 - API 호출 시도");
+    const handler = setTimeout(() => {
+      if (dailyBudget !== null && dailyBudget !== "") {
+        setDebouncedBudget(dailyBudget);
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [dailyBudget]);
+
+  // PATCH(debouncedBudget이 바뀌면) API 호출
+  useEffect(() => {
+    const updateGoalCost = async () => {
+      try {
+        await patchGoalCost(debouncedBudget);
+        setOriginalGoalCost(debouncedBudget);
+        console.log("지출 목표 금액 업데이트 성공:", debouncedBudget);
+
+        const result = await getgoalCost(memberId);
+        const cost = result.result.goalCost;
+        setDailyBudget(cost);
+        setOriginalGoalCost(cost);
+      } catch (error) {
+        console.error("지출 목표 금액 업데이트 실패", error);
+      }
+    };
+
+    if (
+      debouncedBudget !== null &&
+      debouncedBudget !== "" &&
+      debouncedBudget !== originalGoalCost
+    ) {
+      updateGoalCost();
+    }
+  }, [debouncedBudget, originalGoalCost]);
+
+  // GET API 호출 로직
+  useEffect(() => {
+    const fetchGoalCost = async () => {
+      try {
+        const result = await getgoalCost(memberId);
+        const cost = result.result.goalCost; // 백엔드 응답 형식에 따라 수정
+        setDailyBudget(cost);
+        setOriginalGoalCost(cost);
+        console.log("지출 목표 금액 조회 성공:", result);
+      } catch (error) {
+        console.error("지출 목표 금액 조회 실패", error);
+      }
+    };
+
     const fetchExpenses = async () => {
       try {
-        const result = await getdailyExpenseList({
+        const result = await getDailyTotalExpense(
           memberId,
-          year: currentYear,
-          month: currentMonth + 1,
-        });
-        console.log("API 호출 성공:", result);
+          currentYear,
+          currentMonth + 1
+        );
+        const list = result.result.dailyExpenseDTOList || [];
 
-        // 1. dailyExpenseDTOList가 있는지 확인
-        const list = result.dailyExpenseDTOList || [];
-
-        // 2. 배열을 날짜키: totalCost 객체로 변환
         const expenseMap = {};
 
         list.forEach(({ totalCost, expenseDate }) => {
-          // ISO 날짜에서 시간 제거, 예: '2025-05-23T00:00:00.000+00:00' -> '2025-05-23'
-          const dateKey = expenseDate.split("T")[0];
+          // UTC → KST 변환
+          const dateObj = new Date(expenseDate);
+          const kstDate = new Date(dateObj.getTime() + 9 * 60 * 60 * 1000);
+          const dateKey = kstDate.toISOString().slice(0, 10); // YYYY-MM-DD
           expenseMap[dateKey] = totalCost;
         });
 
-        // 3. 상태에 저장
         setExpenseData(expenseMap);
+        console.log("API 호출 성공:", result);
       } catch (error) {
         console.error("지출 데이터 불러오기 실패", error);
       }
     };
 
+    fetchGoalCost();
     fetchExpenses();
   }, [memberId, currentYear, currentMonth]);
 
-  // 이전 달로 변경하는 함수
   const handlePrevMonth = () => {
     setCurrentMonth((prevMonth) => {
       if (prevMonth === 0) {
@@ -142,7 +197,6 @@ const ExpenseCalendar = () => {
     });
   };
 
-  // 다음 달로 변경하는 함수
   const handleNextMonth = () => {
     setCurrentMonth((prevMonth) => {
       if (prevMonth === 11) {
@@ -153,27 +207,22 @@ const ExpenseCalendar = () => {
     });
   };
 
-  // 날짜를 가져오는 함수
   const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  // 달의 시작 요일을 가져오는 함수
   const getStartDayOfWeek = (year, month) => {
     return new Date(year, month, 1).getDay();
   };
 
-  // 특정 날짜의 지출 목록 페이지로 이동하는 함수
   const handleDateClick = (dateKey) => {
-    navigate(`/expense?date=${dateKey}`); // dateKey: '2025-04-15'
+    navigate(`/expense?date=${dateKey}&memberId=${memberId}`);
   };
 
   const renderCells = () => {
     const daysInMonth = getDaysInMonth(currentYear, currentMonth);
     const startDay = getStartDayOfWeek(currentYear, currentMonth);
-
     const cells = [];
-    const today = new Date();
 
     for (let i = 0; i < startDay; i++) {
       cells.push(<DateCell key={`empty-${i}`} />);
@@ -230,15 +279,19 @@ const ExpenseCalendar = () => {
       </CalendarWrapper>
       <Footer>
         지출 목표 금액 :{" "}
-        <input
-          type="number"
-          value={dailyBudget === "" ? "" : dailyBudget}
-          min={0}
-          onChange={(e) => {
-            const value = e.target.value;
-            setDailyBudget(value === "" ? "" : Number(value));
-          }}
-        />{" "}
+        {memberId === viewerId ? (
+          <input
+            type="number"
+            value={dailyBudget === "" ? "" : dailyBudget}
+            min={0}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDailyBudget(value === "" ? "" : Number(value));
+            }}
+          />
+        ) : (
+          <span>{dailyBudget.toLocaleString()} 원</span>
+        )}
       </Footer>
     </Wrapper>
   );
