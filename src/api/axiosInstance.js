@@ -20,6 +20,12 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization =
         "Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoia2hzQG5hdmVyLmNvbSIsImlhdCI6MTc0NzkwMTA0MCwiZXhwIjoxNzUxNTAxMDQwfQ.4HisDBLXuaD4vxwVC5CjLBqosbSWactT6QnI4gLR3NI";
     }
+
+    // 👇 FormData일 경우 Content-Type 제거 → 브라우저가 자동으로 설정
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
+
     return config;
   },
   (error) => {

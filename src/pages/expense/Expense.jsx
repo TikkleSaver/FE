@@ -162,14 +162,14 @@ const formatDateStr = (date) => date.toISOString().slice(0, 10);
 const Expense = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const query = new URLSearchParams(location.search);
-
-  const queryDate = query.get("date");
-  const selectedDate = queryDate ? new Date(queryDate) : new Date();
-
-  const loggedInUserId = "meartangLove0005";
-  const viewedUserId = location.state?.userId || loggedInUserId;
-  const isMyExpense = loggedInUserId === viewedUserId;
+  const selectedDate = query.get("date")
+    ? new Date(query.get("date"))
+    : new Date();
+  const memberId = query.get("memberId");
+  const viewerId = query.get("viewerId");
+  const isMyExpense = memberId === viewerId;
 
   const [date, setDate] = useState(selectedDate);
   const [page, setPage] = useState(1);
@@ -186,7 +186,7 @@ const Expense = () => {
       try {
         const result = await getExpenseList({
           page: pageToLoad,
-          memberId: 1,
+          memberId: memberId,
           expenseDate: formatDateStr(date),
         });
 
@@ -210,7 +210,7 @@ const Expense = () => {
         setLoading(false);
       }
     },
-    [date]
+    [date, memberId] // 의존성에 memberId 추가
   );
 
   // 날짜 변경 시 URL 쿼리 갱신

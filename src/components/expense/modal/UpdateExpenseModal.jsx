@@ -142,7 +142,7 @@ const HiddenFileInput = styled.input`
   display: none;
 `;
 
-const UpdateExpenseModal = ({ expenseId, memberId, date, onClose, onDone }) => {
+const UpdateExpenseModal = ({ expenseId, date, onClose, onDone }) => {
   const categories = [
     { id: 1, label: "식비" },
     { id: 2, label: "카페" },
@@ -165,7 +165,7 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose, onDone }) => {
   // ✅ API로 데이터 받아오기
   useEffect(() => {
     const fetchExpense = async () => {
-      const data = await getExpense({ expenseId, memberId });
+      const data = await getExpense(expenseId);
       console.log(data);
       setExpenseName(data.expenseName);
       setExpensePlace(data.expensePlace);
@@ -176,7 +176,7 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose, onDone }) => {
     };
 
     fetchExpense();
-  }, [expenseId, memberId]);
+  }, [expenseId]);
 
   const handleImageClick = () => {
     fileInputRef.current.click();
@@ -196,7 +196,6 @@ const UpdateExpenseModal = ({ expenseId, memberId, date, onClose, onDone }) => {
 
   const handleSubmit = async () => {
     const formValues = {
-      memberId,
       expenseId,
       expenseName,
       expensePlace,
