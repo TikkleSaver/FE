@@ -1,17 +1,24 @@
-import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
-export const getdailyExpenseList = async ({ memberId, year, month }) => {
+/**
+ * 일별 총 지출 금액 리스트 조회 API
+ * @param {number} memberId - 사용자 ID
+ * @param {number} year - 조회할 연도 (ex. 2025)
+ * @param {number} month - 조회할 월 (1~12)
+ * @returns {Promise<Object>} API 응답 데이터
+ */
+export const getDailyTotalExpense = async (memberId, year, month) => {
   try {
-    const response = await axios.get(`${BASE_URL}/expense/dailyTotalExpense`, {
-      params: { memberId, year, month },
-      headers: { "Content-Type": "application/json" },
+    const response = await axiosInstance.get("/expense/dailyTotalExpense", {
+      params: {
+        memberId,
+        year,
+        month,
+      },
     });
-
-    return response.data.result;
+    return response.data;
   } catch (error) {
-    console.error("Error fetching expense list:", error.response || error);
+    console.error("일별 지출 총액 조회 실패:", error);
     throw error;
   }
 };
