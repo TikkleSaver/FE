@@ -216,7 +216,9 @@ const ExpenseCalendar = () => {
   };
 
   const handleDateClick = (dateKey) => {
-    navigate(`/expense?date=${dateKey}&memberId=${memberId}`);
+    navigate(
+      `/expense?date=${dateKey}&memberId=${memberId}&viewerId=${viewerId}`
+    );
   };
 
   const renderCells = () => {

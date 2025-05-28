@@ -101,10 +101,7 @@ const MyExpenseCard = ({ item, date, onDone }) => {
   // ✅ API로 데이터 받아오기
   const handleDelete = async () => {
     try {
-      const result = await deleteExpense({
-        expenseId: item.expenseId,
-        memberId: item.memberId,
-      });
+      const result = await deleteExpense(item.expenseId);
       console.log("✅ 서버 응답:", result);
       alert(result);
       if (onDone) onDone();
@@ -143,7 +140,6 @@ const MyExpenseCard = ({ item, date, onDone }) => {
       {isEditOpen && (
         <UpdateExpenseModal
           expenseId={item.expenseId}
-          memberId={item.memberId}
           date={date}
           onDone={onDone}
           onClose={() => setIsEditOpen(false)}
