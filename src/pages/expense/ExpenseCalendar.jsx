@@ -101,7 +101,8 @@ const ExpenseCalendar = () => {
   const [originalGoalCost, setOriginalGoalCost] = useState(null);
   const [debouncedBudget, setDebouncedBudget] = useState(null);
   const [expenseData, setExpenseData] = useState({});
-  const memberId = 41;
+  const memberId = 1; // 조회할 지출 내역의의 주인 ID
+  const viewerId = 41;
 
   // debounce 로직 (dailyBudget이 변할 때마다 1초 뒤에 업데이트)
   useEffect(() => {
@@ -124,8 +125,7 @@ const ExpenseCalendar = () => {
         setOriginalGoalCost(debouncedBudget);
         console.log("지출 목표 금액 업데이트 성공:", debouncedBudget);
 
-        // ✅ 여기서만 새로 조회
-        const result = await getgoalCost();
+        const result = await getgoalCost(memberId);
         const cost = result.result.goalCost;
         setDailyBudget(cost);
         setOriginalGoalCost(cost);
@@ -142,11 +142,12 @@ const ExpenseCalendar = () => {
       updateGoalCost();
     }
   }, [debouncedBudget, originalGoalCost]);
+
   // GET API 호출 로직
   useEffect(() => {
     const fetchGoalCost = async () => {
       try {
-        const result = await getgoalCost();
+        const result = await getgoalCost(memberId);
         const cost = result.result.goalCost; // 백엔드 응답 형식에 따라 수정
         setDailyBudget(cost);
         setOriginalGoalCost(cost);
@@ -215,7 +216,7 @@ const ExpenseCalendar = () => {
   };
 
   const handleDateClick = (dateKey) => {
-    navigate(`/expense?date=${dateKey}`);
+    navigate(`/expense?date=${dateKey}&memberId=${memberId}`);
   };
 
   const renderCells = () => {
@@ -278,15 +279,19 @@ const ExpenseCalendar = () => {
       </CalendarWrapper>
       <Footer>
         지출 목표 금액 :{" "}
-        <input
-          type="number"
-          value={dailyBudget === "" ? "" : dailyBudget}
-          min={0}
-          onChange={(e) => {
-            const value = e.target.value;
-            setDailyBudget(value === "" ? "" : Number(value));
-          }}
-        />{" "}
+        {memberId === viewerId ? (
+          <input
+            type="number"
+            value={dailyBudget === "" ? "" : dailyBudget}
+            min={0}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDailyBudget(value === "" ? "" : Number(value));
+            }}
+          />
+        ) : (
+          <span>{dailyBudget.toLocaleString()} 원</span>
+        )}
       </Footer>
     </Wrapper>
   );

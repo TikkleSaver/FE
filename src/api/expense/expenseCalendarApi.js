@@ -26,9 +26,11 @@ export const getDailyTotalExpense = async (memberId, year, month) => {
 /**
  * 특정 사용자의 지출 목표 금액 조회 API
  */
-export const getgoalCost = async () => {
+export const getgoalCost = async (memberId) => {
   try {
-    const response = await axiosInstance.get("/users/goalCost");
+    const response = await axiosInstance.get(
+      `/users/goalCost?memberId=${memberId}`
+    );
     return response.data;
   } catch (error) {
     console.error("사용자의 지출 목표 금액 조회 실패:", error);
