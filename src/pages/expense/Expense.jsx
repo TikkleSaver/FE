@@ -9,6 +9,10 @@ import SubmitBtn from "./../../assets/arrowUp.svg";
 import AddExpenseModal from "../../components/expense/modal/AddExpenseModal";
 import Colors from "../../constanst/color.mjs";
 import { getExpenseList } from "../../api/expense/expenseApi";
+import {
+  createExpenseComment,
+  getExpenseCommentList,
+} from "../../api/expense/expenseCommentApi";
 
 // 최상위 container
 const ExpenseContainer = styled.div`
@@ -103,6 +107,7 @@ const ExpenseComments = styled.div`
   height: 500px;
   overflow-y: auto;
   padding-right: 8px;
+  padding-bottom: 50px;
   box-sizing: border-box;
   scrollbar-gutter: stable both-edges;
 
@@ -156,7 +161,7 @@ const AddExpenseButton = styled.button`
   cursor: pointer;
   border-top: 1px solid ${Colors.secondary25};
 `;
-// 날짜 포맷 함수
+
 const formatDateStr = (date) => date.toISOString().slice(0, 10);
 
 const Expense = () => {
@@ -174,11 +179,20 @@ const Expense = () => {
   const [date, setDate] = useState(selectedDate);
   const [page, setPage] = useState(1);
   const [expenses, setExpenses] = useState([]);
+  const [newComment, setNewComment] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const [showAddModal, setShowAddModal] = useState(false);
   const loaderRef = useRef(null);
 
+  // 댓글 관련 상태
+  const [comments, setComments] = useState([]);
+  const [commentsPage, setCommentsPage] = useState(1);
+  const [commentsHasMore, setCommentsHasMore] = useState(true);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const commentsLoaderRef = useRef(null);
+
+  // 지출 리스트 불러오기
   const loadExpenses = useCallback(
     async (pageToLoad) => {
       if (loading) return;
@@ -189,7 +203,6 @@ const Expense = () => {
           memberId: memberId,
           expenseDate: formatDateStr(date),
         });
-
         const newExpenses = result.expensePreviewDTOList || [];
         if (pageToLoad === 1) {
           setExpenses(newExpenses);
@@ -202,7 +215,6 @@ const Expense = () => {
             return [...prev, ...uniqueNew];
           });
         }
-
         setHasMore(!result.isLast);
       } catch (e) {
         console.error("지출 리스트 조회 실패:", e);
@@ -210,10 +222,44 @@ const Expense = () => {
         setLoading(false);
       }
     },
-    [date, memberId] // 의존성에 memberId 추가
+    [date, memberId, loading]
   );
 
-  // 날짜 변경 시 URL 쿼리 갱신
+  // 댓글 리스트 불러오기
+  const loadComments = useCallback(
+    async (pageToLoad) => {
+      if (commentsLoading) return;
+      setCommentsLoading(true);
+      try {
+        const result = await getExpenseCommentList({
+          page: pageToLoad,
+          memberId: memberId,
+          expenseDate: formatDateStr(date),
+        });
+        const newComments = result.expenseCommentDTOList || [];
+
+        if (pageToLoad === 1) {
+          setComments(newComments);
+        } else {
+          setComments((prev) => {
+            const existingIds = new Set(prev.map((c) => c.expenseCommentId));
+            const uniqueNew = newComments.filter(
+              (c) => !existingIds.has(c.expenseCommentId)
+            );
+            return [...prev, ...uniqueNew];
+          });
+        }
+        setCommentsHasMore(!result.isLast);
+      } catch (e) {
+        console.error("피드백 리스트 조회 실패:", e);
+      } finally {
+        setCommentsLoading(false);
+      }
+    },
+    [memberId, date, commentsLoading]
+  );
+
+  // 날짜 변경 함수
   const changeDate = (days) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
@@ -223,22 +269,54 @@ const Expense = () => {
     navigate({ search: query.toString() }, { replace: true });
   };
 
-  // 날짜 바뀌면 페이지 초기화
+  const handleCommentSubmit = async () => {
+    if (newComment.trim() === "") return;
+    try {
+      await createExpenseComment({
+        memberId: memberId,
+        content: newComment,
+        expenseDate: formatDateStr(date),
+      });
+      alert("지출 피드백이 등록되었습니다!");
+      setNewComment("");
+      setCommentsPage(1);
+      setComments([]);
+      setCommentsHasMore(true);
+      loadComments(commentsPage);
+    } catch (e) {
+      console.error("피드백 등록 실패:", e);
+      alert("피드백 등록 실패");
+    }
+  };
+
+  // 날짜가 바뀔 때마다 초기화
   useEffect(() => {
     setExpenses([]);
     setHasMore(true);
     setPage(1);
   }, [date]);
 
-  // page나 date 바뀌면 데이터 로드
+  // 페이지 또는 날짜가 바뀔 때마다 리스트 로드
   useEffect(() => {
     loadExpenses(page);
   }, [page, date, loadExpenses]);
 
-  // 무한 스크롤 옵저버
+  useEffect(() => {
+    setComments([]);
+    setCommentsPage(1);
+    setCommentsHasMore(true);
+    setCommentsLoading(false);
+    loadComments(1); // 첫 페이지 명시적으로 호출
+  }, [date]);
+
+  useEffect(() => {
+    if (commentsPage === 1 || commentsLoading) return;
+    loadComments(commentsPage);
+  }, [commentsPage]);
+
+  // 지출 무한스크롤 옵저버
   useEffect(() => {
     if (!loaderRef.current || loading || !hasMore) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -247,44 +325,36 @@ const Expense = () => {
       },
       { threshold: 0.3 }
     );
-
     observer.observe(loaderRef.current);
-
     return () => observer.disconnect();
   }, [loading, hasMore]);
 
-  // 쿼리 스트링이 직접 수정된 경우 date 상태 갱신
+  // 댓글 무한스크롤 옵저버
+  useEffect(() => {
+    if (!commentsLoaderRef.current || commentsLoading || !commentsHasMore)
+      return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setCommentsPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(commentsLoaderRef.current);
+    return () => observer.disconnect();
+  }, [commentsLoading, commentsHasMore]);
+
+  // URL 쿼리에서 날짜 정보가 바뀌면 상태에 반영
   useEffect(() => {
     const urlDate = query.get("date");
     if (urlDate) {
       const parsed = new Date(urlDate);
-      const current = formatDateStr(date);
-      if (formatDateStr(parsed) !== current) {
+      if (formatDateStr(parsed) !== formatDateStr(date)) {
         setDate(parsed);
       }
     }
   }, [location.search]);
-
-  // 댓글 관련
-  const [newComment, setNewComment] = useState("");
-  const handleCommentSubmit = () => {
-    if (newComment.trim() === "") return;
-    console.log("새 피드백:", newComment);
-    setNewComment("");
-  };
-
-  // 모달
-  const [showAddModal, setShowAddModal] = useState(false);
-  const handleAddExpenseModal = () => setShowAddModal(true);
-  const handleCloseAddExpenseModal = () => setShowAddModal(false);
-
-  // 예시 댓글
-  const comments = Array(9).fill({
-    user: "meartangLove0005",
-    comment:
-      "마라탕이 돈 너무 많이 쓰는 거 아냐..?? 너 돈 많은가보다?? 좀 아껴 써. 지출 목표금액보다 많이 썼어~!!!",
-    date: "2025.03.28 11:10",
-  });
 
   return (
     <ExpenseContainer>
@@ -306,7 +376,7 @@ const Expense = () => {
                   setPage(1);
                   setExpenses([]);
                   setHasMore(true);
-                  loadExpenses(1);
+                  loadExpenses(commentsPage);
                 }}
               />
             ) : (
@@ -317,7 +387,7 @@ const Expense = () => {
         </ExpenseItems>
 
         {isMyExpense && (
-          <AddExpenseButton onClick={handleAddExpenseModal}>
+          <AddExpenseButton onClick={() => setShowAddModal(true)}>
             + 지출 추가하기
           </AddExpenseButton>
         )}
@@ -330,11 +400,23 @@ const Expense = () => {
         <ExpenseComments>
           {comments.map((c, i) =>
             isMyExpense ? (
-              <MyCommentCard key={i} comment={c} />
+              <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
+            ) : viewerId == c.commenterId ? (
+              <FriendCommentCard
+                key={c.expenseCommentId ?? i}
+                comment={c}
+                onDone={() => {
+                  setCommentsPage(1);
+                  setComments([]);
+                  setCommentsHasMore(true);
+                  loadComments(1);
+                }}
+              />
             ) : (
-              <FriendCommentCard key={i} comment={c} />
+              <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
             )
           )}
+          <div ref={commentsLoaderRef} style={{ height: 40 }} />
         </ExpenseComments>
         {!isMyExpense && (
           <CommentInputWrapper>
@@ -353,7 +435,7 @@ const Expense = () => {
       {showAddModal && (
         <AddExpenseModal
           date={date}
-          onClose={handleCloseAddExpenseModal}
+          onClose={() => setShowAddModal(false)}
           onDone={() => {
             setPage(1);
             setExpenses([]);

@@ -14,6 +14,7 @@ const CommentCardContainer = styled.div`
 
 const UserName = styled.div`
   display: flex;
+  align-items: center;
   gap: 12px;
   font-size: 16px;
 `;
@@ -29,14 +30,29 @@ const CommentDate = styled.div`
 `;
 
 const MyCommentCard = ({ comment }) => {
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date)) return ""; // invalid date 처리
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hour = String(date.getHours()).padStart(2, "0");
+    const minute = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  };
+
   return (
     <CommentCardContainer>
       <UserName>
         <img src={Profile} alt="사용자프로필" width="33" height="33" />
-        {comment.user}
+        {comment.nickname}
       </UserName>
-      <CommentText>{comment.comment}</CommentText>
-      <CommentDate>{comment.date}</CommentDate>
+      <CommentText>{comment.content}</CommentText>
+      <CommentDate>
+        {formatDateTime(comment.updatedAt || comment.createdAt)}
+      </CommentDate>
     </CommentCardContainer>
   );
 };

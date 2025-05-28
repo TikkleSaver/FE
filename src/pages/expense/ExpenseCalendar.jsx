@@ -101,7 +101,7 @@ const ExpenseCalendar = () => {
   const [originalGoalCost, setOriginalGoalCost] = useState(null);
   const [debouncedBudget, setDebouncedBudget] = useState(null);
   const [expenseData, setExpenseData] = useState({});
-  const memberId = 41; // 조회할 지출 내역의의 주인 ID
+  const memberId = 1; // 조회할 지출 내역의의 주인 ID
   const viewerId = 41;
 
   // debounce 로직 (dailyBudget이 변할 때마다 1초 뒤에 업데이트)
