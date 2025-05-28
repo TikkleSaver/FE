@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../../constanst/color.mjs";
-import { getDailyTotalExpense } from "../../api/expense/expenseCalendarApi";
+import {
+  getDailyTotalExpense,
+  getgoalCost,
+} from "../../api/expense/expenseCalendarApi";
 
 const Wrapper = styled.div`
   max-width: 965px;
@@ -93,11 +96,22 @@ const ExpenseCalendar = () => {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [dailyBudget, setDailyBudget] = useState(15000);
+  const [dailyBudget, setDailyBudget] = useState(0);
   const [expenseData, setExpenseData] = useState({});
-  const memberId = 1;
+  const memberId = 41;
 
   useEffect(() => {
+    const fetchGoalCost = async () => {
+      try {
+        const result = await getgoalCost();
+        const cost = result.result.goalCost; // 백엔드 응답 형식에 따라 수정
+        setDailyBudget(cost);
+        console.log("지출 목표 금액 조회 성공:", result);
+      } catch (error) {
+        console.error("지출 목표 금액 조회 실패", error);
+      }
+    };
+
     const fetchExpenses = async () => {
       try {
         const result = await getDailyTotalExpense(
@@ -124,6 +138,7 @@ const ExpenseCalendar = () => {
       }
     };
 
+    fetchGoalCost();
     fetchExpenses();
   }, [memberId, currentYear, currentMonth]);
 

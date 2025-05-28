@@ -22,3 +22,16 @@ export const getDailyTotalExpense = async (memberId, year, month) => {
     throw error;
   }
 };
+
+/**
+ * 특정 사용자의 지출 목표 금액 조회 API
+ */
+export const getgoalCost = async () => {
+  try {
+    const response = await axiosInstance.get("/users/goalCost");
+    return response.data;
+  } catch (error) {
+    console.error("사용자의 지출 목표 금액 조회 실패:", error);
+    throw error;
+  }
+};
