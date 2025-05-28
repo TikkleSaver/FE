@@ -35,3 +35,19 @@ export const getgoalCost = async () => {
     throw error;
   }
 };
+
+/**
+ * 특정 사용자의 지출 목표 금액 tn API
+ * @param {number} year - 조회할 연도 (ex. 2025)
+ */
+export const patchGoalCost = async (goalCost) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/users/goalCost?goalCost=${goalCost}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("사용자의 지출 목표 금액 조회 실패:", error);
+    throw error;
+  }
+};

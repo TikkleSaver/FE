@@ -5,6 +5,7 @@ import Colors from "../../constanst/color.mjs";
 import {
   getDailyTotalExpense,
   getgoalCost,
+  patchGoalCost,
 } from "../../api/expense/expenseCalendarApi";
 
 const Wrapper = styled.div`
@@ -97,15 +98,58 @@ const ExpenseCalendar = () => {
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [dailyBudget, setDailyBudget] = useState(0);
+  const [originalGoalCost, setOriginalGoalCost] = useState(null);
+  const [debouncedBudget, setDebouncedBudget] = useState(null);
   const [expenseData, setExpenseData] = useState({});
   const memberId = 41;
 
+  // debounce 로직 (dailyBudget이 변할 때마다 1초 뒤에 업데이트)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (dailyBudget !== null && dailyBudget !== "") {
+        setDebouncedBudget(dailyBudget);
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [dailyBudget]);
+
+  // PATCH(debouncedBudget이 바뀌면) API 호출
+  useEffect(() => {
+    const updateGoalCost = async () => {
+      try {
+        await patchGoalCost(debouncedBudget);
+        setOriginalGoalCost(debouncedBudget);
+        console.log("지출 목표 금액 업데이트 성공:", debouncedBudget);
+
+        // ✅ 여기서만 새로 조회
+        const result = await getgoalCost();
+        const cost = result.result.goalCost;
+        setDailyBudget(cost);
+        setOriginalGoalCost(cost);
+      } catch (error) {
+        console.error("지출 목표 금액 업데이트 실패", error);
+      }
+    };
+
+    if (
+      debouncedBudget !== null &&
+      debouncedBudget !== "" &&
+      debouncedBudget !== originalGoalCost
+    ) {
+      updateGoalCost();
+    }
+  }, [debouncedBudget, originalGoalCost]);
+  // GET API 호출 로직
   useEffect(() => {
     const fetchGoalCost = async () => {
       try {
         const result = await getgoalCost();
         const cost = result.result.goalCost; // 백엔드 응답 형식에 따라 수정
         setDailyBudget(cost);
+        setOriginalGoalCost(cost);
         console.log("지출 목표 금액 조회 성공:", result);
       } catch (error) {
         console.error("지출 목표 금액 조회 실패", error);
