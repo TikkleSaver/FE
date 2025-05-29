@@ -52,3 +52,21 @@ export const getCategoryTop3 = async (year, month) => {
     throw error;
   }
 };
+
+/**
+ * 특정 사용자의 특정 달 지출 총 금액 조회 API
+ * @param {Object} year - 조회할 년도
+ * @param {Object} month - 조회할 월도
+ * @returns {Promise<Object>} 특정 달 지출 총 금액
+ */
+export const getMonthExpense = async (year, month) => {
+  try {
+    const response = await axiosInstance.get(
+      `/expense/month/totalExpense?year=${year}&month=${month}`
+    );
+    return response.data.result;
+  } catch (error) {
+    console.error("특정 달 지출 총 금액 조회 실패:", error);
+    throw error;
+  }
+};

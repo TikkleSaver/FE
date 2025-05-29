@@ -15,6 +15,7 @@ import {
   getMonthlyTotalExpense,
   getTotalExpenseByCategory,
   getCategoryTop3,
+  getMonthExpense,
 } from "../../api/expense/expenseAnalysisApi";
 
 const Container = styled.div`
@@ -161,6 +162,9 @@ const ExpenseAnalysis = () => {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
+  const [saveExpense, setSaveExpense] = useState(0);
+
   const categories = [
     { id: 1, label: "식비" },
     { id: 2, label: "카페" },
@@ -263,8 +267,31 @@ const ExpenseAnalysis = () => {
       }
     };
 
+    const fetchMonthExpense = async () => {
+      try {
+        const currentRes = await getMonthExpense(currentYear, currentMonth + 1);
+        const current = currentRes.totalAmount;
+        setCurrentMonthExpense(current);
+
+        const prevRes = await getMonthExpense(currentYear, currentMonth);
+        const previous = prevRes.totalAmount;
+
+        const save = previous - current;
+        if (save > 0) {
+          setSaveExpense(save);
+        } else {
+          setSaveExpense(0);
+        }
+
+        console.log("비교 성공", { current, previous, save });
+      } catch (error) {
+        console.error("비교 실패", error);
+      }
+    };
+
     fetchTotalExpenseByCategory();
     fetchCategoryTop3();
+    fetchMonthExpense();
   }, [currentMonth]);
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
@@ -405,8 +432,8 @@ const ExpenseAnalysis = () => {
           <InfoBlock>
             <SmallTitle>총 정리</SmallTitle>
             <InfoText>
-              이번달은 -원을 사용했으며, <br />
-              전달 대비 -원을 아끼셨습니다! <br />
+              이번달은 {currentMonthExpense}원을 사용했으며, <br />
+              전달 대비 {saveExpense}원을 아끼셨습니다! <br />
               목표를 재설정하여 소비를 줄여보세요!
             </InfoText>
           </InfoBlock>
