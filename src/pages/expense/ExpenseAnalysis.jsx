@@ -11,7 +11,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Colors from "../../constanst/color.mjs";
-import { getMonthlyTotalExpense } from "../../api/expense/expenseAnalysisApi";
+import {
+  getMonthlyTotalExpense,
+  getTotalExpenseByCategory,
+} from "../../api/expense/expenseAnalysisApi";
 
 const Container = styled.div`
   max-width: 965px;
@@ -157,6 +160,15 @@ const ExpenseAnalysis = () => {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const categories = [
+    { id: 1, label: "식비" },
+    { id: 2, label: "카페" },
+    { id: 3, label: "쇼핑" },
+    { id: 4, label: "건강" },
+    { id: 5, label: "취미" },
+    { id: 6, label: "교통비" },
+    { id: 7, label: "기타 생활비" },
+  ];
 
   const [barData, setBarData] = useState([
     { name: "1월", amount: 0 },
@@ -200,15 +212,38 @@ const ExpenseAnalysis = () => {
     fetchMonthlyExpense();
   }, [currentYear]);
 
-  const pieData = [
-    { name: "식비", value: 502300 },
-    { name: "카페", value: 402300 },
-    { name: "쇼핑", value: 2300 },
-    { name: "건강", value: 300 },
-    { name: "취미", value: 502300 },
-    { name: "교통비", value: 302300 },
-    { name: "기타", value: 5020 },
-  ];
+  const [pieData, setPieData] = useState([]);
+
+  useEffect(() => {
+    const fetchTotalExpenseByCategory = async () => {
+      try {
+        const result = await getTotalExpenseByCategory(
+          currentYear,
+          currentMonth + 1
+        );
+
+        const list = result.categoryExpenseList || [];
+
+        const updatedData = list.map(({ categoryId, totalAmount }) => {
+          const matchedCategory = categories.find(
+            (cat) => cat.id === categoryId
+          );
+
+          return {
+            name: matchedCategory ? matchedCategory.label : "기타 생활비",
+            value: totalAmount,
+          };
+        });
+
+        setPieData(updatedData);
+        console.log("카테고리별 지출 금액 조회 성공:", result);
+      } catch (error) {
+        console.error("카테고리별 지출 금액 조회 실패", error);
+      }
+    };
+
+    fetchTotalExpenseByCategory();
+  }, [currentMonth]);
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
 
@@ -272,7 +307,8 @@ const ExpenseAnalysis = () => {
                   outerRadius={70}
                   innerRadius={30}
                   label={renderCustomizedLabel}
-                  isAnimationActive={false}
+                  animationDuration={800}
+                  animationEasing="ease-out"
                 >
                   {sortedPieData.map((entry, index) => (
                     <Cell
