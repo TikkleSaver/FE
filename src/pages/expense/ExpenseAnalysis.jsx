@@ -14,6 +14,7 @@ import Colors from "../../constanst/color.mjs";
 import {
   getMonthlyTotalExpense,
   getTotalExpenseByCategory,
+  getCategoryTop3,
 } from "../../api/expense/expenseAnalysisApi";
 
 const Container = styled.div`
@@ -114,20 +115,20 @@ const Top1 = styled.span`
   color: red;
   font-weight: bold;
   font-size: 25px;
-  margin-right: 20px;
+  margin-right: 10px;
 `;
 
 const Top2 = styled.span`
   font-size: 20px;
-  margin: 0 20px;
+  margin: 0 10px;
 `;
 
 const Top3 = styled.span`
-  margin-left: 20px;
+  margin-left: 10px;
 `;
 
 const InfoText = styled.p`
-  margin-top: 0.5rem;
+  margin-top: 2.5rem;
   line-height: 2rem;
 `;
 
@@ -184,6 +185,8 @@ const ExpenseAnalysis = () => {
     { name: "11월", amount: 0 },
     { name: "12월", amount: 0 },
   ]);
+
+  const [top3, setTop3] = useState([]);
 
   useEffect(() => {
     const fetchMonthlyExpense = async () => {
@@ -242,12 +245,30 @@ const ExpenseAnalysis = () => {
       }
     };
 
+    const fetchCategoryTop3 = async () => {
+      try {
+        const result = await getCategoryTop3(currentYear, currentMonth + 1);
+
+        const ids = [result.category1, result.category2, result.category3];
+
+        const updatedData = ids.map((id) => {
+          const matched = categories.find((cat) => cat.id === id);
+          return matched ?? { id, label: "" };
+        });
+
+        setTop3(updatedData);
+        console.log("지출 TOP3 카테고리 조회 성공:", result);
+      } catch (error) {
+        console.error("지출 TOP3 카테고리 조회 실패", error);
+      }
+    };
+
     fetchTotalExpenseByCategory();
+    fetchCategoryTop3();
   }, [currentMonth]);
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
 
-  const top3 = ["식비", "카페", "교통비"];
   const achievedDays = 18;
   const achievementRate = 58.06;
 
@@ -363,8 +384,19 @@ const ExpenseAnalysis = () => {
           <InfoBlock>
             <SmallTitle>지출 TOP3</SmallTitle>
             <InfoText>
-              <Top1>{top3[0]}</Top1> &gt; <Top2>{top3[1]}</Top2> &gt;{" "}
-              <Top3>{top3[2]}</Top3>
+              {top3[0]?.label && <Top1>{top3[0].label}</Top1>}
+              {top3[1]?.label && (
+                <>
+                  {" "}
+                  &gt; <Top2>{top3[1].label}</Top2>
+                </>
+              )}
+              {top3[2]?.label && (
+                <>
+                  {" "}
+                  &gt; <Top3>{top3[2].label}</Top3>
+                </>
+              )}
             </InfoText>
           </InfoBlock>
 
