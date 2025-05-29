@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   PieChart,
@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Colors from "../../constanst/color.mjs";
+import { getMonthlyTotalExpense } from "../../api/expense/expenseAnalysisApi";
 
 const Container = styled.div`
   max-width: 965px;
@@ -157,6 +158,48 @@ const ExpenseAnalysis = () => {
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
+  const [barData, setBarData] = useState([
+    { name: "1월", amount: 0 },
+    { name: "2월", amount: 0 },
+    { name: "3월", amount: 0 },
+    { name: "4월", amount: 0 },
+    { name: "5월", amount: 0 },
+    { name: "6월", amount: 0 },
+    { name: "7월", amount: 0 },
+    { name: "8월", amount: 0 },
+    { name: "9월", amount: 0 },
+    { name: "10월", amount: 0 },
+    { name: "11월", amount: 0 },
+    { name: "12월", amount: 0 },
+  ]);
+
+  useEffect(() => {
+    const fetchMonthlyExpense = async () => {
+      try {
+        const result = await getMonthlyTotalExpense(currentYear);
+
+        const list = result.monthlyExpenseDTOList || [];
+
+        const updatedData = [...barData];
+
+        list.forEach(({ month, totalAmount }) => {
+          const idx = month - 1;
+          updatedData[idx] = {
+            name: `${month}월`,
+            amount: totalAmount,
+          };
+        });
+
+        setBarData(updatedData);
+        console.log("월별 지출 목록 조회 성공:", result);
+      } catch (error) {
+        console.error("월별 지출 목록 조회 실패", error);
+      }
+    };
+
+    fetchMonthlyExpense();
+  }, [currentYear]);
+
   const pieData = [
     { name: "식비", value: 502300 },
     { name: "카페", value: 402300 },
@@ -168,21 +211,6 @@ const ExpenseAnalysis = () => {
   ];
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
-
-  const barData = [
-    { name: "1월", amount: 700000 },
-    { name: "2월", amount: 820000 },
-    { name: "3월", amount: 502300 },
-    { name: "4월", amount: 700000 },
-    { name: "5월", amount: 820000 },
-    { name: "6월", amount: 0 },
-    { name: "7월", amount: 0 },
-    { name: "8월", amount: 0 },
-    { name: "9월", amount: 0 },
-    { name: "10월", amount: 0 },
-    { name: "11월", amount: 0 },
-    { name: "12월", amount: 0 },
-  ];
 
   const top3 = ["식비", "카페", "교통비"];
   const achievedDays = 18;
