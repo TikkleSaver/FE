@@ -2,28 +2,38 @@ import React, { useEffect, useState } from 'react';
 import * as S from '../style/Login.style';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../../images/logo.svg';
+import { login } from '../../api/loginApi'; //
+import styled from 'styled-components';
 
+const Error = styled.div`
+  width: 290px;
+  color: #ff0558;
+  font-size: 12px;
+  padding-left: 5px;
+  margin: 10px 0 5px;
+`;
 export default function Login() {
-  const [Password, setPassword] = useState('');
-  const [idValid, setIDValid] = useState(false);
-  const [passwordValid, setPasswordValid] = useState(false);
-  const navigate = useNavigate(); // 페이지 이동용 훅
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
-  const onChangePasswords = (e) => {
-    setPassword(e.target.value);
-    const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#*?!]).{8,}$/;
-    setPasswordValid(regex.test(e.target.value));
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // form 기본 제출 막기
-    if (!idValid || !passwordValid) {
-      alert('이메일과 비밀번호를 모두 올바르게 입력해주세요');
+    if (!loginId || !password) {
       return;
     }
-    // 로그인 성공 로직 추가하면 됨
-    navigate('/'); // 로그인 성공 시 홈으로 이동
+    const result = await login(loginId, password);
+    if (!result.success) {
+      setError(true);
+      return;
+    }
+
+    alert('로그인 성공');
+    navigate('/');
   };
+
   return (
     <S.HomeWrap>
       <S.WrapLogin>
@@ -32,19 +42,31 @@ export default function Login() {
         </Link>
         <S.Form onSubmit={handleSubmit}>
           <S.InputWrapper>
-            {/* <S.Label htmlFor="id">아이디</S.Label> */}
-            <S.Input id="id" placeholder="아이디를 입력해주세요" />
+            <S.Input
+              id="id"
+              value={loginId}
+              onChange={(e) => setLoginId(e.target.value)}
+              placeholder="아이디를 입력해주세요"
+            />
           </S.InputWrapper>
-
-          {/* <S.Label htmlFor="pw">비밀번호</S.Label> */}
           <S.Input
             id="pw"
             type="password"
-            value={Password}
-            onChange={onChangePasswords}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호를 입력해주세요"
           />
-          <S.SubmitButton type="submit">로그인</S.SubmitButton>
+
+          {error && (
+            <Error>
+              아이디(로그인 전화번호, 로그인 전용 아이디) 또는 비밀번호가 잘못
+              되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요
+            </Error>
+          )}
+
+          <S.SubmitButton type="submit" disabled={!loginId || !password}>
+            로그인
+          </S.SubmitButton>
         </S.Form>
         <S.WrapLink>
           <Link
