@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import logoImage from '../../images/logo.svg';
 import image352 from '../../images/onboarding/image 352.svg';
-import { Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { saveGoalCost } from '../../api/signupApi'; // 경로는 상황에 맞게 수정
 
 export default function Goal() {
+  const [goalCost, setGoalCost] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const memberId = location.state?.memberId;
+
+  const handleClick = async () => {
+    if (!memberId || !goalCost) {
+      alert('회원 ID와 목표 금액을 입력해주세요.');
+      return;
+    }
+
+    const result = await saveGoalCost(memberId, Number(goalCost));
+    if (result) {
+      alert('로그인하고 티끌모으기 이용해보세요!');
+      navigate('/login');
+    } else {
+      alert('저장에 실패했습니다.');
+    }
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -12,15 +33,20 @@ export default function Goal() {
         <CenterImage src={image352} alt="Image" />
         <Title>하루 최대 지출 목표 금액을 적어주세요</Title>
         <GoalBox>
-          <Input type="number" /> <Span>원</Span>
+          <Input
+            type="number"
+            value={goalCost}
+            onChange={(e) => setGoalCost(e.target.value)}
+            placeholder="ex)300000"
+          />
+          <Span>원</Span>
         </GoalBox>
-        <Link to="/">
-          <NextBtn>티끌모으기 시작하러 가기</NextBtn>
-        </Link>
+        <NextBtn onClick={handleClick}>티끌모으기 시작하러 가기</NextBtn>
       </Wrapper>
     </Container>
   );
 }
+
 const Span = styled.span`
   font-size: 1.2rem;
   font-weight: 600;

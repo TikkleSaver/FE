@@ -5,14 +5,22 @@ import profileImage from '../../images/profile.svg'; // 예시용 프로필 이�
 import icon1 from '../../images/header/profile_icon1.svg';
 import icon2 from '../../images/header/profile_icon2.svg';
 import icon3 from '../../images/header/logout_icon.svg';
+import { logout } from '../../api/loginApi';
 
 export default function ProfileMenu({ setIsLoggedIn }) {
   const navigate = useNavigate();
-  const handleLogout = () => {
-    // 실제 로그아웃 처리 로직 추가 가능 (ex. localStorage.clear())
-    setIsLoggedIn(false);
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      setIsLoggedIn(false);
+      alert('로그아웃 되었습니다');
+      navigate('/');
+    } catch (err) {
+      alert('로그아웃 실패: ' + (err.response?.data?.message || '오류 발생'));
+    }
   };
+
   return (
     <WishlistWrapper as="li">
       <ProfileButton className="profile-button">

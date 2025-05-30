@@ -17,6 +17,11 @@ export const checkBtn = styled.button`
   border-radius: 8px;
   cursor: pointer;
   font-family: 'Pretendard';
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `;
 
 export const SubmitButton = styled.button`
@@ -33,6 +38,11 @@ export const SubmitButton = styled.button`
   cursor: pointer;
   font-family: 'Pretendard';
   box-shadow: 1px 2px 8px #f3f3f3;
+
+  &:disabled {
+    background-color: #ccc; // 비활성화 시 색상
+    cursor: not-allowed;
+  }
 `;
 
 export const Form = styled.form`
@@ -45,6 +55,7 @@ export const Label = styled.label`
   width: fit-content;
   font-size: 12px;
   width: 290px;
+  padding-left: 5px;
 `;
 export const HomeWrap = styled.div`
   margin: auto;
@@ -123,13 +134,12 @@ export const WrapLogin = styled.div`
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   position: relative;
+  margin-bottom: 10px;
 `;
 export const Input = styled.input`
   font-family: 'Pretendard';
-  margin-bottom: 15px;
-  margin-top: 5px;
+  margin: 5px 0;
   border: none;
   width: 290px;
   padding-left: 10px;
@@ -141,10 +151,7 @@ export const Input = styled.input`
   &:focus {
     outline: none;
   }
-  /* @media screen and (max-width: 500px) {
-    width: 308px;
-    height: 47.24px;
-  } */
+  border: ${(props) => (props.isError ? '1px solid #ff0558' : 'none')};
 `;
 //input 태그 스타일
 

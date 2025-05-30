@@ -1,13 +1,11 @@
-
-import React, { useState } from 'react'; // 추가
-import { useNavigate, useLocation } from "react-router-dom";
-import styled from "styled-components";
-import logo from "../../images/logo.svg";
-import WishlistMenu from "./WishListMenu";
-import ProfileMenu from "./ProfileMenu";
-import ExpenseMenu from "./ExpenseMenu";
-import ChallengeMenu from "./ChallengeMenu";
-
+import React, { useState, useEffect } from 'react'; // 추가
+import { useNavigate, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import logo from '../../images/logo.svg';
+import WishlistMenu from './WishListMenu';
+import ProfileMenu from './ProfileMenu';
+import ExpenseMenu from './ExpenseMenu';
+import ChallengeMenu from './ChallengeMenu';
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -47,7 +45,6 @@ const Header = styled.div`
   }
 
   li:hover {
-
   }
 
   .active {
@@ -69,8 +66,13 @@ function MainHeader() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 실제 로그인 여부 판단 로직에 맞게 대체할 것
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 로그인 상태 확인 (accessToken이 있으면 로그인 된 상태로 간주)
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    setIsLoggedIn(!!token); // 토큰이 있으면 true, 없으면 false
+  }, [location.pathname]); // 경로가 바뀔 때마다 로그인 여부 재확인
 
   // 로그인 페이지에서는 헤더를 보여주지 않음
   if (

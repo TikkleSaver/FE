@@ -3,9 +3,14 @@ import styled from 'styled-components';
 import image344 from '../../images/onboarding/image 344.svg';
 import logoImage from '../../images/logo.svg';
 import { Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { saveCategories } from '../../api/signupApi'; // 경로는 실제 경로에 맞게 수정하세요
 
 export default function Category() {
   const [selectedItems, setSelectedItems] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const memberId = location.state?.memberId;
 
   const toggleCategory = (category) => {
     setSelectedItems((prev) =>
@@ -14,7 +19,21 @@ export default function Category() {
         : [...prev, category]
     );
   };
+  const handleNext = async () => {
+    if (!memberId) {
+      alert('회원 정보가 없습니다.');
+      return;
+    }
 
+    const result = await saveCategories(memberId, selectedItems);
+
+    if (result) {
+      console.log('API 응답:', result);
+      navigate('/onboarding/goal', { state: { memberId } }); // 필요 시 memberId 넘기기
+    } else {
+      alert('카테고리 저장에 실패했습니다.');
+    }
+  };
   return (
     <Container>
       <Wrapper>
@@ -24,61 +43,59 @@ export default function Category() {
         <CategoryWrap>
           <div></div>
           <CategoryBlue
-            onClick={() => toggleCategory('식비')}
-            $selected={selectedItems.includes('식비')}
+            onClick={() => toggleCategory(1)}
+            $selected={selectedItems.includes(1)}
             style={{ transform: 'translate(-10px,0)' }}
           >
             <CategoryText>식비🍽️</CategoryText>
           </CategoryBlue>
           <CategoryPink
-            onClick={() => toggleCategory('쇼핑')}
-            $selected={selectedItems.includes('쇼핑')}
+            onClick={() => toggleCategory(2)}
+            $selected={selectedItems.includes(2)}
             style={{ transform: 'translate(10px, 0)' }}
           >
             <CategoryText>쇼핑👗👟</CategoryText>
           </CategoryPink>
           <div></div>
           <CategoryPurple
-            onClick={() => toggleCategory('기타 생활비')}
-            $selected={selectedItems.includes('기타 생활비')}
+            onClick={() => toggleCategory(3)}
+            $selected={selectedItems.includes(3)}
             style={{ transform: 'translate(40px, -10px)' }}
           >
             <CategoryText>기타 생활비🏠</CategoryText>
           </CategoryPurple>
           <CategoryGreen
-            onClick={() => toggleCategory('건강')}
-            $selected={selectedItems.includes('건강')}
+            onClick={() => toggleCategory(4)}
+            $selected={selectedItems.includes(4)}
             style={{ transform: 'translate(45px, 5px)' }}
           >
             <CategoryText>건강 🏋</CategoryText>
           </CategoryGreen>
           <CategoryBlue
-            onClick={() => toggleCategory('교통비')}
-            $selected={selectedItems.includes('교통비')}
+            onClick={() => toggleCategory(5)}
+            $selected={selectedItems.includes(5)}
             style={{ transform: 'translate(25px, 40px)' }}
           >
             <CategoryText>교통비🚆🚗</CategoryText>
           </CategoryBlue>
           <CategoryYellow
-            onClick={() => toggleCategory('취미')}
-            $selected={selectedItems.includes('취미')}
+            onClick={() => toggleCategory(6)}
+            $selected={selectedItems.includes(6)}
             style={{ transform: 'translate(-30px, -30px)' }}
           >
             <CategoryText>취미🎮📚</CategoryText>
           </CategoryYellow>
           <div></div>
           <CategoryYellow
-            onClick={() => toggleCategory('카페')}
-            $selected={selectedItems.includes('카페')}
+            onClick={() => toggleCategory(7)}
+            $selected={selectedItems.includes(7)}
             style={{ transform: 'translate(-50px, -10px)' }}
           >
             <CategoryText>카페 ☕</CategoryText>
           </CategoryYellow>
           <div></div>
         </CategoryWrap>
-        <Link to="/onboarding/goal">
-          <NextBtn>다음</NextBtn>
-        </Link>
+        <NextBtn onClick={handleNext}>다음</NextBtn>
       </Wrapper>
     </Container>
   );
