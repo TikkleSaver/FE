@@ -37,3 +37,32 @@ export const checkEmailDuplicate = async (email) => {
     throw error;
   }
 };
+
+//온보딩
+export const saveCategories = async (memberId, categoryList) => {
+  try {
+    const response = await axiosInstance.post('/users/onboarding/category', {
+      memberId,
+      categoryList,
+    });
+
+    console.log('카테고리 저장 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('카테고리 저장 실패:', error.response?.data || error.message);
+  }
+};
+
+export const saveGoalCost = async (memberId, goalCost) => {
+  try {
+    const response = await axiosInstance.patch('/users/onboarding/goalCost', {
+      memberId,
+      goalCost,
+    });
+    console.log(response.data); // "목표 지출액 저장 완료"
+    return response.data;
+  } catch (error) {
+    console.error('API 호출 에러:', error.response?.data || error.message);
+    return null;
+  }
+};
