@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import refreshAxios from '../api/refreshAxios';
 
 /**
  * 회원가입 요청 API
@@ -13,7 +13,7 @@ export const signUp = async (formValues) => {
       nickname: formValues.nickname,
     };
 
-    const response = await axiosInstance.post('/signup', requestBody);
+    const response = await refreshAxios.post('/signup', requestBody);
     console.error('회원가입 실패:', response.data);
 
     return response.data;
@@ -30,7 +30,7 @@ export const signUp = async (formValues) => {
  */
 export const checkEmailDuplicate = async (email) => {
   try {
-    const response = await axiosInstance.post(`/check-id/${email}`);
+    const response = await refreshAxios.post(`/check-id/${email}`);
     return response.data; // 응답 메시지: "사용가능한 이메일입니다."
   } catch (error) {
     console.error('이메일 중복 확인 실패:', error);
@@ -41,7 +41,7 @@ export const checkEmailDuplicate = async (email) => {
 //온보딩
 export const saveCategories = async (memberId, categoryList) => {
   try {
-    const response = await axiosInstance.post('/users/onboarding/category', {
+    const response = await refreshAxios.post('/users/onboarding/category', {
       memberId,
       categoryList,
     });
@@ -55,7 +55,7 @@ export const saveCategories = async (memberId, categoryList) => {
 
 export const saveGoalCost = async (memberId, goalCost) => {
   try {
-    const response = await axiosInstance.patch('/users/onboarding/goalCost', {
+    const response = await refreshAxios.patch('/users/onboarding/goalCost', {
       memberId,
       goalCost,
     });
