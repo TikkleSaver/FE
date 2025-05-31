@@ -55,13 +55,13 @@ const FriendCard = ({ item }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/friendprofile');
+    navigate('/friendprofile', { state: { friendId: item.id } });
   };
 
   return (
     <Item onClick={handleClick}>
-      <ItemImage src={profileImage} />
-      <ItemName>{item.name}</ItemName>
+      <ItemImage src={item.profileUrl} />
+      <ItemName>{item.nickname}</ItemName>
       <BtnGroup>
         <UpdateBtn2>위시리스트</UpdateBtn2>
         <UpdateBtn2>구매 목록</UpdateBtn2>

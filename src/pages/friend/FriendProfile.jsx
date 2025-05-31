@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import profileImage from '../../images/profile.svg';
 import check from '../../images/myprofile/material-symbols_check-rounded.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AddExpenseModal from '../../components/expense/modal/AddExpenseModal';
 import CancelModal from '../../components/friend/CancelModal';
 import DeleteModal from '../../components/friend/DeleteModal';
 
 export default function FriendProfile() {
+  const location = useLocation();
+  const friendId = location.state?.id;
   const [friendStatus, setFriendStatus] = useState('accepted'); // 상태: 'none' | 'pending' | 'accepted'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
