@@ -145,7 +145,12 @@ export default function FriendProfile() {
         </TopChallengeInnerContainer>
       </ChallengeContainer>
       {showAddModal && <CancelModal onClose={handleCloseAddExpenseModal} />}
-      {showDeleteModal && <DeleteModal onClose={handleCloseDeleteModal} />}
+      {showDeleteModal && (
+        <DeleteModal
+          friendId={profile.friendId}
+          onClose={handleCloseDeleteModal}
+        />
+      )}
     </Wrapper>
   );
 }

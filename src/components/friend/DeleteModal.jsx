@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { deleteFriend } from '../../api/friendApi'; // 경로는 실제 프로젝트 구조에 맞게 수정
 
 const Overlay = styled.div`
   position: fixed;
@@ -58,11 +59,22 @@ const SubmitButton = styled.button`
   margin: 30px 0 15px;
 `;
 
-const DeleteModal = ({ onClose }) => {
+const DeleteModal = ({ friendId, onClose }) => {
   // 배경 클릭 시 모달 닫기
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      console.log(friendId);
+      await deleteFriend(friendId);
+      onClose();
+      // 필요시 친구 목록 새로고침 로직 여기에
+    } catch (error) {
+      alert('친구 삭제에 실패했습니다.');
     }
   };
 
@@ -71,14 +83,7 @@ const DeleteModal = ({ onClose }) => {
       <ModalBox onClick={(e) => e.stopPropagation()}>
         <ModalTitle>모티 님을 제거하기</ModalTitle>
         <span>정말로 모티 님을 친구에서 삭제하시겠어요?</span>
-        <SubmitButton
-          onClick={() => {
-            alert('친구 삭제하기');
-            onClose();
-          }}
-        >
-          친구 삭제하기
-        </SubmitButton>
+        <SubmitButton onClick={handleDelete}>친구 삭제하기</SubmitButton>
 
         <CloseButton onClick={onClose}>괜찮아요</CloseButton>
       </ModalBox>
