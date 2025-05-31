@@ -32,3 +32,21 @@ export const updatePassword = async (password, newPassword) => {
   }
 };
 
+export const updateProfile = async (nickname, profileImgFile) => {
+  const formData = new FormData();
+  formData.append(
+    'requestDTO',
+    new Blob([JSON.stringify({ nickname })], { type: 'application/json' })
+  );
+  formData.append('profileImg', profileImgFile); // null 또는 undefined일 경우 append하지 않아도 됩니다.
+
+  try {
+    const response = await axiosInstance.patch('/users', formData);
+
+    console.log('업데이트 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('업데이트 실패:', error);
+    throw error;
+  }
+};
