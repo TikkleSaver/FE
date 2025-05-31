@@ -55,7 +55,7 @@ const FriendCard = ({ item }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/friendprofile', { state: { friendId: item.id } });
+    navigate('/friendprofile', { state: { memberId: item.id } });
   };
 
   return (

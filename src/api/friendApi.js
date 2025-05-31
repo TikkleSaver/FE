@@ -10,3 +10,13 @@ export async function fetchFriendList() {
     throw error;
   }
 }
+
+export const fetchFriendProfile = async (friendId) => {
+  try {
+    const response = await axiosInstance.get(`/friends/${friendId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch profile for friend ID ${friendId}:`, error);
+    throw error;
+  }
+};
