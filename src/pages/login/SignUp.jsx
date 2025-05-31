@@ -33,7 +33,7 @@ const schema = yup.object().shape({
     .string()
     .min(2, '닉네임은 두 글자 이상이어야 합니다.')
     .max(8, '닉네임은 8자 이하여야 합니다.')
-    .required('닉네임을을 입력해주세요.'),
+    .required('닉네임을 입력해주세요.'),
 });
 
 export default function SignUp() {
