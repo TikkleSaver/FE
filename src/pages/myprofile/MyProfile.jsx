@@ -5,19 +5,38 @@ import profileImage from '../../images/profile.svg';
 import friend from '../../images/myprofile/friend.svg';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { getUserProfile } from '../../api/profileApi'; // 파일 경로는 상황에 맞게 수정
 
 export default function MyProfile() {
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getUserProfile();
+        setProfile(data.result); // ApiResponse 구조라면 .result 안에 있음
+      } catch (e) {
+        console.error('프로필 가져오기 실패:', e);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+  if (!profile) return <div>Loading...</div>;
 
   return (
     <Wrapper>
       <ProfileContainer>
-        <img src={profileImage} alt="My Page" />
+        <img
+          src={profile.profileUrl ? profile.profileUrl : profileImage}
+          alt="My Page"
+        />{' '}
         <ProfileBox>
           <Top>
-            <NickName>티모</NickName>
+            <NickName>{profile.nickname}</NickName>
             <ButtonGroup>
-              <UpdateBtn as={Link} to="/editprofile">
+              <UpdateBtn as={Link} to="/editprofile" state={{ profile }}>
                 프로필 편집
               </UpdateBtn>
 
@@ -28,18 +47,18 @@ export default function MyProfile() {
           </Top>
           <Bottom>
             <Group>
-              <Number>0</Number>
+              <Number>{profile.wishListNum}</Number>
               <Name>위시리스트</Name>
             </Group>
             <Group>
-              <Number>4</Number>
+              <Number>{profile.challengeNum}</Number>
               <Name>참여중인 챌린지</Name>
             </Group>
             <Group
               onClick={() => navigate('/friends')}
               style={{ cursor: 'pointer' }}
             >
-              <Number>17</Number>
+              <Number>{profile.friendNum}</Number>
               <Name>친구</Name>
             </Group>
           </Bottom>
