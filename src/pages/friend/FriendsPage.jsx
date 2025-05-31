@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import SearchIcon from '../../assets/search.svg';
-
-import FriendCard from '../../components/friend/FriendCard';
-import friends from '../../images/myprofile/fa-solid_user-friends.svg';
+import friendsImg from '../../images/myprofile/fa-solid_user-friends.svg';
 import alarm from '../../images/myprofile/alarm_icon.svg';
 import redIcon from '../../images/myprofile/red_icon.svg';
-import DeleteModal from '../../components/friend/DeleteModal';
+import FriendCard from '../../components/friend/FriendCard';
 import RequestListModal from '../../components/friend/RequestListModal';
+import { fetchFriendList } from '../../api/friendApi'; // API 호출 함수 import
 
 const SearchFreindPageContainer = styled.div`
   display: flex;
@@ -73,23 +71,38 @@ const AlarmBtn = styled.div`
   cursor: pointer;
 `;
 
-const items = Array(10).fill({
-  name: '티모시',
-  image: 'food.jpg',
-});
 export default function FriendsPage() {
   const [hasNewRequest, setHasNewRequest] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadFriends() {
+      try {
+        setLoading(true);
+        const friendList = await fetchFriendList();
+        setFriends(friendList);
+      } catch (e) {
+        setError('친구 목록을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadFriends();
+  }, []);
 
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
   };
+
   return (
     <SearchFreindPageContainer>
       <ContainerWrapper>
-        <img src={friends} alt="friends" style={{ width: '30px' }} />
+        <img src={friendsImg} alt="friends" style={{ width: '30px' }} />
         <Title>친구</Title>
-        <FriendNum>{items.length}</FriendNum>
+        <FriendNum>{friends.length}</FriendNum>
         <AlarmBtn onClick={() => setShowDeleteModal(true)}>
           <img src={alarm} alt="friends" style={{ width: '35px' }} />
           {hasNewRequest && <RedIcon src={redIcon} alt="friends" />}
@@ -97,10 +110,14 @@ export default function FriendsPage() {
       </ContainerWrapper>
 
       <Items>
-        {items.map((item, index) => (
-          <FriendCard key={index} item={item} />
-        ))}
+        {loading && <p>로딩중...</p>}
+        {error && <p>{error}</p>}
+        {!loading && !error && friends.length === 0 && <p>친구가 없습니다.</p>}
+        {!loading &&
+          !error &&
+          friends.map((item) => <FriendCard key={item.id} item={item} />)}
       </Items>
+
       {showDeleteModal && <RequestListModal onClose={handleCloseDeleteModal} />}
     </SearchFreindPageContainer>
   );

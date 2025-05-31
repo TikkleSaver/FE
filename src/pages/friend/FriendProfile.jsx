@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import profileImage from '../../images/profile.svg';
 import check from '../../images/myprofile/material-symbols_check-rounded.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AddExpenseModal from '../../components/expense/modal/AddExpenseModal';
 import CancelModal from '../../components/friend/CancelModal';
 import DeleteModal from '../../components/friend/DeleteModal';
+import { fetchFriendProfile } from '../../api/friendApi'; // 아까 만든 API 함수
 
 export default function FriendProfile() {
+  const location = useLocation();
+  const memberId = location.state?.memberId;
   const [friendStatus, setFriendStatus] = useState('accepted'); // 상태: 'none' | 'pending' | 'accepted'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -29,14 +32,52 @@ export default function FriendProfile() {
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
   };
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    console.log('memberId:', memberId);
+
+    const fetchProfile = async (memberId) => {
+      try {
+        console.log('fetchProfile:', memberId);
+
+        const data = await fetchFriendProfile(memberId);
+        setProfile(data.result);
+        console.log('data:', data);
+      } catch (e) {
+        console.error('프로필 가져오기 실패:', e);
+      }
+    };
+
+    if (memberId) {
+      fetchProfile(memberId);
+    }
+  }, [memberId]);
+
+  // profile 정보에 따라 friendStatus 설정
+  useEffect(() => {
+    if (!profile) return;
+
+    if (profile.friendId) {
+      setFriendStatus('accepted');
+    } else if (profile.friendReqInfo === null) {
+      setFriendStatus('none');
+    } else if (profile.friendReqInfo.senderId === memberId) {
+      setFriendStatus('pending2');
+    } else {
+      setFriendStatus('pending');
+    }
+  }, [profile]);
+
+  if (!profile) return <div>Loading...</div>; // 무조건 필요
 
   return (
     <Wrapper>
       <ProfileContainer>
-        <img src={profileImage} alt="My Page" />
+        <img src={profile?.profileUrl ?? profileImage} alt="프로필 이미지" />
         <ProfileBox>
           <Top>
-            <NickName>티모</NickName>
+            <NickName>{profile?.nickname}</NickName>
             <ButtonGroup>
               <UpdateBtn
                 onClick={
@@ -46,10 +87,15 @@ export default function FriendProfile() {
                     ? handleAddExpenseModal
                     : friendStatus === 'accepted'
                     ? () => setShowDeleteModal(true)
+                    : friendStatus === 'pending2'
+                    ? () => {
+                        /* 친구 수락 핸들러 작성 */
+                      }
                     : undefined
                 }
                 $status={friendStatus}
               >
+                {friendStatus === 'pending2' && '친구 받아주기'}
                 {friendStatus === 'none' && '친구 요청'}
                 {friendStatus === 'pending' && '대기 중'}
                 {friendStatus === 'accepted' && (
@@ -71,15 +117,15 @@ export default function FriendProfile() {
           </Top>
           <Bottom>
             <Group>
-              <Number>0</Number>
+              <Number>{profile.wishListNum}</Number>
               <Name>위시리스트</Name>
             </Group>
             <Group>
-              <Number>4</Number>
+              <Number>{profile.challengeNum}</Number>
               <Name>참여중인 챌린지</Name>
             </Group>
             <Group>
-              <Number>17</Number>
+              <Number>{profile.friendNum}</Number>
               <Name>친구</Name>
             </Group>
           </Bottom>
@@ -99,7 +145,12 @@ export default function FriendProfile() {
         </TopChallengeInnerContainer>
       </ChallengeContainer>
       {showAddModal && <CancelModal onClose={handleCloseAddExpenseModal} />}
-      {showDeleteModal && <DeleteModal onClose={handleCloseDeleteModal} />}
+      {showDeleteModal && (
+        <DeleteModal
+          friendId={profile.friendId}
+          onClose={handleCloseDeleteModal}
+        />
+      )}
     </Wrapper>
   );
 }
@@ -145,12 +196,13 @@ const UpdateBtn = styled.button`
   background-color: ${({ $status }) =>
     $status === 'none'
       ? '#51b69e'
+      : $status === 'pending2'
+      ? '#51b69e'
       : $status === 'pending'
       ? '#C7C7C7'
       : '#fff'};
 
-  color: ${({ $status }) =>
-    $status === 'none' ? 'white' : $status === 'pending' ? 'white' : '#51b69e'};
+  color: ${({ $status }) => ($status === 'accepted' ? '#51b69e' : 'white')};
 `;
 
 const Top = styled.div`
