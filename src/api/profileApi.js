@@ -17,3 +17,18 @@ export const getUserProfile = async () => {
   }
 };
 
+export const updatePassword = async (password, newPassword) => {
+  try {
+    const body = {
+      password,
+      newPassword,
+    };
+
+    const response = await axiosInstance.patch('/users/password', body);
+    return response.data;
+  } catch (error) {
+    console.error('비밀번호 변경 실패:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
