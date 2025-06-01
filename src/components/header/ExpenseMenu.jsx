@@ -39,12 +39,11 @@ const DropdownItem = styled.div`
   align-items: center;
   height: 30px;
   color: black;
-  font-weight: ${(props) => (props.$active ? "500" : "300")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 `;
 
 const Menu = styled.button`
   all: unset;
-  width: 60px;
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
