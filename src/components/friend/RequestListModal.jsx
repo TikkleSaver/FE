@@ -144,13 +144,19 @@ const RequestListModal = ({ onClose }) => {
           <CloseButton onClick={onClose} src={close} alt="close" />
         </Top>
         <Items>
-          {requests?.map((item, index) => (
-            <RequestCard
-              key={index}
-              item={item}
-              onRemove={() => handleRemove(index)} // 삭제 콜백 전달
-            />
-          ))}
+          {requests.length === 0 ? (
+            <span style={{ margin: '10px', color: '#888' }}>
+              요청이 없습니다
+            </span>
+          ) : (
+            requests?.map((item, index) => (
+              <RequestCard
+                key={index}
+                item={item}
+                onRemove={() => handleRemove(index)}
+              />
+            ))
+          )}
         </Items>
       </ModalBox>
     </Overlay>

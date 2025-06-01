@@ -1,6 +1,6 @@
 import axiosInstance from '../api/axiosInstance';
 
-// 친구 요청 취소
+// 친구 요청 취소 & 거절
 export const deleteFriendReq = async (reqId) => {
   try {
     const response = await axiosInstance.delete(`/friend-requests/${reqId}`);
@@ -31,6 +31,17 @@ export const getFriendRequests = async () => {
     return response.data.result; // 백엔드 응답 구조에 따라 result 사용
   } catch (error) {
     console.error('친구 요청 목록 불러오기 실패:', error);
+    throw error;
+  }
+};
+
+// 친구 요청 수락
+export const acceptFriendReq = async (reqId) => {
+  try {
+    const response = await axiosInstance.patch(`/friend-requests/${reqId}`);
+    return response.data.result; // 응답 구조에 따라 적절히 조정
+  } catch (error) {
+    console.error('친구 요청 수락 실패:', error);
     throw error;
   }
 };

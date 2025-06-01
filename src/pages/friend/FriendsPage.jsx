@@ -91,7 +91,7 @@ export default function FriendsPage() {
       }
     }
     loadFriends();
-  }, []);
+  }, [showModal]);
 
   const handleModal = () => {
     setShowModal(false);
