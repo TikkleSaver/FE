@@ -145,46 +145,38 @@ const ExpenseCalendar = () => {
 
   // GET API 호출 로직
   useEffect(() => {
-    const fetchGoalCost = async () => {
+    const fetchData = async () => {
       try {
-        const result = await getgoalCost(memberId);
-        const cost = result.result.goalCost; // 백엔드 응답 형식에 따라 수정
+        const [goalCostRes, expensesRes] = await Promise.all([
+          getgoalCost(memberId),
+          getDailyTotalExpense(memberId, currentYear, currentMonth + 1),
+        ]);
+
+        // 지출 목표 금액 처리
+        const cost = goalCostRes.result.goalCost;
         setDailyBudget(cost);
         setOriginalGoalCost(cost);
-        console.log("지출 목표 금액 조회 성공:", result);
-      } catch (error) {
-        console.error("지출 목표 금액 조회 실패", error);
-      }
-    };
+        console.log("지출 목표 금액 조회 성공:", goalCostRes);
 
-    const fetchExpenses = async () => {
-      try {
-        const result = await getDailyTotalExpense(
-          memberId,
-          currentYear,
-          currentMonth + 1
-        );
-        const list = result.result.dailyExpenseDTOList || [];
-
+        // 지출 내역 처리
+        const list = expensesRes.result.dailyExpenseDTOList || [];
         const expenseMap = {};
 
         list.forEach(({ totalCost, expenseDate }) => {
-          // UTC → KST 변환
           const dateObj = new Date(expenseDate);
-          const kstDate = new Date(dateObj.getTime() + 9 * 60 * 60 * 1000);
+          const kstDate = new Date(dateObj.getTime() + 9 * 60 * 60 * 1000); // KST 변환
           const dateKey = kstDate.toISOString().slice(0, 10); // YYYY-MM-DD
           expenseMap[dateKey] = totalCost;
         });
 
         setExpenseData(expenseMap);
-        console.log("API 호출 성공:", result);
+        console.log("지출 데이터 조회 성공:", expensesRes);
       } catch (error) {
-        console.error("지출 데이터 불러오기 실패", error);
+        console.error("지출 목표 금액 또는 일별 지출 조회 실패", error);
       }
     };
 
-    fetchGoalCost();
-    fetchExpenses();
+    fetchData();
   }, [memberId, currentYear, currentMonth]);
 
   const handlePrevMonth = () => {
