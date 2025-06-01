@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Colors from '../../constanst/color.mjs';
 import alarm from '../../images/myprofile/alarm_icon.svg';
 import redIcon from '../../images/myprofile/red_icon.svg';
 import close from '../../images/myprofile/material-symbols-light_close.svg';
 import RequestCard from './RequestCard';
+import { getFriendRequests } from '../../api/friendRequestApi';
 
 const Overlay = styled.div`
   position: fixed;
@@ -105,9 +106,7 @@ const items = Array(6).fill({
 });
 
 const RequestListModal = ({ onClose }) => {
-  const [requests, setRequests] = useState(
-    Array(6).fill({ name: '티모시', image: 'food.jpg' })
-  );
+  const [requests, setRequests] = useState([]);
 
   // 삭제 함수
   const handleRemove = (indexToRemove) => {
@@ -119,6 +118,19 @@ const RequestListModal = ({ onClose }) => {
       onClose();
     }
   };
+
+  useEffect(() => {
+    const fetchFriendRequests = async () => {
+      try {
+        const result = await getFriendRequests();
+        setRequests(result.friendReqList); // 응답 구조에 따라 조정
+      } catch (error) {
+        alert('친구 요청 목록을 불러오는 데 실패했습니다.');
+      }
+    };
+
+    fetchFriendRequests();
+  }, []);
 
   return (
     <Overlay onClick={handleOverlayClick}>
@@ -132,7 +144,7 @@ const RequestListModal = ({ onClose }) => {
           <CloseButton onClick={onClose} src={close} alt="close" />
         </Top>
         <Items>
-          {requests.map((item, index) => (
+          {requests?.map((item, index) => (
             <RequestCard
               key={index}
               item={item}

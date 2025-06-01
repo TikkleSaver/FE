@@ -88,9 +88,9 @@ const RequestCard = ({ item, onRemove }) => {
 
   return (
     <Item onClick={handleClick}>
-      <ItemImage src={profileImage} />
+      <ItemImage src={item.sender.profileUrl} />
       <Right>
-        <ItemName>{item.name}님이 친구 요청을 보냈어요</ItemName>
+        <ItemName>{item.sender.nickname}님이 친구 요청을 보냈어요</ItemName>
         <BtnGroup>
           <AcceptedBtn onClick={handleAccept}>수락</AcceptedBtn>
           <UpdateBtn2 onClick={handleReject}>거절</UpdateBtn2>
