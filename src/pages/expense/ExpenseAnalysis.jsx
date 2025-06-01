@@ -43,6 +43,12 @@ const NavButton = styled.button`
   font-size: 1.5rem;
   color: ${Colors.secondary100};
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    color: white;
+    opacity: 0.4; /* 시각적으로도 비활성화 상태임을 명확히 */
+  }
 `;
 
 const MonthTitle = styled.h2`
@@ -161,8 +167,19 @@ const COLORS = [
 
 const ExpenseAnalysis = () => {
   const today = new Date();
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  // localStorage에서 연도, 월 불러오기 (없으면 오늘 날짜 기준)
+  const getInitialYear = () => {
+    const savedYear = localStorage.getItem("expenseAnalysisYear");
+    return savedYear ? Number(savedYear) : today.getFullYear();
+  };
+
+  const getInitialMonth = () => {
+    const savedMonth = localStorage.getItem("expenseAnalysisMonth");
+    return savedMonth ? Number(savedMonth) : today.getMonth();
+  };
+
+  const [currentYear, setCurrentYear] = useState(getInitialYear);
+  const [currentMonth, setCurrentMonth] = useState(getInitialMonth);
   const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
   const [saveExpense, setSaveExpense] = useState(0);
   const [achievedDays, setAchievedDays] = useState(0);
@@ -227,6 +244,9 @@ const ExpenseAnalysis = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+        const prevMonth = currentMonth === 0 ? 12 : currentMonth;
+
         const [
           categoryExpenseRes,
           top3Res,
@@ -237,7 +257,7 @@ const ExpenseAnalysis = () => {
           getTotalExpenseByCategory(currentYear, currentMonth + 1),
           getCategoryTop3(currentYear, currentMonth + 1),
           getMonthExpense(currentYear, currentMonth + 1),
-          getMonthExpense(currentYear, currentMonth),
+          getMonthExpense(prevYear, prevMonth),
           getAchievedGoalCost(currentYear, currentMonth + 1),
         ]);
 
@@ -278,18 +298,60 @@ const ExpenseAnalysis = () => {
     };
 
     fetchAll();
+
+    localStorage.setItem("expenseAnalysisYear", currentYear);
+    localStorage.setItem("expenseAnalysisMonth", currentMonth);
   }, [currentMonth]);
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
 
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem("expenseAnalysisYear");
+      localStorage.removeItem("expenseAnalysisMonth");
+    };
+  }, []);
+
   const handlePrevMonth = () => {
-    setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
-    if (currentMonth === 0) setCurrentYear((prev) => prev - 1);
+    if (currentMonth === 0) {
+      setCurrentYear((year) => year - 1);
+      setCurrentMonth(11);
+    } else {
+      setCurrentMonth((prev) => prev - 1);
+    }
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
+    const today = new Date();
+    const thisMonth = today.getMonth(); // 0~11
+    const thisYear = today.getFullYear();
+
+    const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+
+    // 다음 월이 현재보다 미래면 이동 금지
+    if (
+      nextYear > thisYear ||
+      (nextYear === thisYear && nextMonth > thisMonth)
+    ) {
+      return;
+    }
+
+    setCurrentMonth(nextMonth);
     if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
+  };
+
+  const isNextMonthDisabled = () => {
+    const today = new Date();
+    const thisMonth = today.getMonth();
+    const thisYear = today.getFullYear();
+
+    const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+
+    return (
+      nextYear > thisYear || (nextYear === thisYear && nextMonth > thisMonth)
+    );
   };
 
   const renderCustomizedLabel = (props) => {
@@ -322,7 +384,9 @@ const ExpenseAnalysis = () => {
             2,
             "0"
           )}`}</MonthTitle>
-          <NavButton onClick={handleNextMonth}>&gt;</NavButton>
+          <NavButton onClick={handleNextMonth} disabled={isNextMonthDisabled()}>
+            &gt;
+          </NavButton>
         </Header>
 
         <Section>

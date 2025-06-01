@@ -9,12 +9,13 @@ import axiosInstance from "../axiosInstance";
  */
 export const getDailyTotalExpense = async (memberId, year, month) => {
   try {
+    const params = { year, month };
+    if (memberId !== null && memberId !== undefined) {
+      params.memberId = memberId;
+    }
+
     const response = await axiosInstance.get("/expense/dailyTotalExpense", {
-      params: {
-        memberId,
-        year,
-        month,
-      },
+      params,
     });
     return response.data;
   } catch (error) {
@@ -28,9 +29,12 @@ export const getDailyTotalExpense = async (memberId, year, month) => {
  */
 export const getgoalCost = async (memberId) => {
   try {
-    const response = await axiosInstance.get(
-      `/users/goalCost?memberId=${memberId}`
-    );
+    let url = "/users/goalCost";
+    if (memberId !== null && memberId !== undefined) {
+      url += `?memberId=${memberId}`;
+    }
+
+    const response = await axiosInstance.get(url);
     return response.data;
   } catch (error) {
     console.error("사용자의 지출 목표 금액 조회 실패:", error);
@@ -39,7 +43,7 @@ export const getgoalCost = async (memberId) => {
 };
 
 /**
- * 특정 사용자의 지출 목표 금액 tn API
+ * 특정 사용자의 지출 목표 금액 수정 API
  * @param {number} year - 조회할 연도 (ex. 2025)
  */
 export const patchGoalCost = async (goalCost) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../../constanst/color.mjs";
 import {
@@ -33,6 +33,11 @@ const ArrowButton = styled.button`
   font-size: 1.5rem;
   color: ${Colors.secondary100};
   cursor: pointer;
+  &:disabled {
+    cursor: default;
+    color: white;
+    opacity: 0.4; /* 시각적으로도 비활성화 상태임을 명확히 */
+  }
 `;
 
 const Title = styled.h2`
@@ -58,11 +63,17 @@ const DateCell = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: ${(props) => (props.isToday ? "green" : Colors.secondary400)};
+  color: ${(props) => (props.$isToday ? "green" : Colors.secondary400)};
 `;
 
-const DateNumber = styled.div`
+const DateNumber = styled.button`
+  all: unset;
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5; /* 시각적으로도 비활성화 상태임을 명확히 */
+  }
 `;
 
 const ExpenseAmount = styled.div`
@@ -94,15 +105,28 @@ const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
 const ExpenseCalendar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const today = new Date();
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const query = new URLSearchParams(location.search);
+  // localStorage에서 연도, 월 불러오기 (없으면 오늘 날짜 기준)
+  const getInitialYear = () => {
+    const savedYear = localStorage.getItem("expenseCalendarYear");
+    return savedYear ? Number(savedYear) : today.getFullYear();
+  };
+
+  const getInitialMonth = () => {
+    const savedMonth = localStorage.getItem("expenseCalendarMonth");
+    return savedMonth ? Number(savedMonth) : today.getMonth();
+  };
+
+  const [currentYear, setCurrentYear] = useState(getInitialYear);
+  const [currentMonth, setCurrentMonth] = useState(getInitialMonth);
   const [dailyBudget, setDailyBudget] = useState(0);
   const [originalGoalCost, setOriginalGoalCost] = useState(null);
   const [debouncedBudget, setDebouncedBudget] = useState(null);
   const [expenseData, setExpenseData] = useState({});
-  const memberId = 1; // 조회할 지출 내역의의 주인 ID
-  const viewerId = 41;
+  const memberId = query.get("memberId") || null; // 조회할 지출 내역의의 주인 ID
+  const viewerId = query.get("viewerId") || null;
 
   // debounce 로직 (dailyBudget이 변할 때마다 1초 뒤에 업데이트)
   useEffect(() => {
@@ -177,26 +201,58 @@ const ExpenseCalendar = () => {
     };
 
     fetchData();
+
+    localStorage.setItem("expenseCalendarYear", currentYear);
+    localStorage.setItem("expenseCalendarMonth", currentMonth);
   }, [memberId, currentYear, currentMonth]);
 
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem("expenseCalendarYear");
+      localStorage.removeItem("expenseCalendarMonth");
+    };
+  }, []);
+
   const handlePrevMonth = () => {
-    setCurrentMonth((prevMonth) => {
-      if (prevMonth === 0) {
-        setCurrentYear((prevYear) => prevYear - 1);
-        return 11;
-      }
-      return prevMonth - 1;
-    });
+    if (currentMonth === 0) {
+      setCurrentYear((year) => year - 1);
+      setCurrentMonth(11);
+    } else {
+      setCurrentMonth((prev) => prev - 1);
+    }
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prevMonth) => {
-      if (prevMonth === 11) {
-        setCurrentYear((prevYear) => prevYear + 1);
-        return 0;
-      }
-      return prevMonth + 1;
-    });
+    const today = new Date();
+    const thisMonth = today.getMonth(); // 0~11
+    const thisYear = today.getFullYear();
+
+    const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+
+    // 다음 월이 현재보다 미래면 이동 금지
+    if (
+      nextYear > thisYear ||
+      (nextYear === thisYear && nextMonth > thisMonth)
+    ) {
+      return;
+    }
+
+    setCurrentMonth(nextMonth);
+    if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
+  };
+
+  const isNextMonthDisabled = () => {
+    const today = new Date();
+    const thisMonth = today.getMonth();
+    const thisYear = today.getFullYear();
+
+    const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+
+    return (
+      nextYear > thisYear || (nextYear === thisYear && nextMonth > thisMonth)
+    );
   };
 
   const getDaysInMonth = (year, month) => {
@@ -209,7 +265,9 @@ const ExpenseCalendar = () => {
 
   const handleDateClick = (dateKey) => {
     navigate(
-      `/expense?date=${dateKey}&memberId=${memberId}&viewerId=${viewerId}`
+      `/expense?date=${dateKey}${memberId ? `&memberId=${memberId}` : ""}${
+        viewerId ? `&viewerId=${viewerId}` : ""
+      }`
     );
   };
 
@@ -237,9 +295,18 @@ const ExpenseCalendar = () => {
       const isOverBudget =
         expense !== undefined && Math.abs(expense) > dailyBudget;
 
+      const todayOnly = new Date(today);
+      todayOnly.setHours(0, 0, 0, 0);
+      const currentDateOnly = new Date(currentYear, currentMonth, date);
+      currentDateOnly.setHours(0, 0, 0, 0);
+      const isDisabled = currentDateOnly > todayOnly;
+
       cells.push(
-        <DateCell key={dateKey} isToday={isToday}>
-          <DateNumber onClick={() => handleDateClick(dateKey)}>
+        <DateCell key={dateKey} $isToday={isToday}>
+          <DateNumber
+            onClick={() => !isDisabled && handleDateClick(dateKey)}
+            disabled={isDisabled}
+          >
             {date}
           </DateNumber>
           {expense !== undefined && (
@@ -261,7 +328,12 @@ const ExpenseCalendar = () => {
             2,
             "0"
           )}`}</Title>
-          <ArrowButton onClick={handleNextMonth}>&gt;</ArrowButton>
+          <ArrowButton
+            onClick={handleNextMonth}
+            disabled={isNextMonthDisabled()}
+          >
+            &gt;
+          </ArrowButton>
         </CalendarHeader>
 
         <Grid>
@@ -273,7 +345,7 @@ const ExpenseCalendar = () => {
       </CalendarWrapper>
       <Footer>
         지출 목표 금액 :{" "}
-        {memberId === viewerId ? (
+        {memberId == null ? (
           <input
             type="number"
             value={dailyBudget === "" ? "" : dailyBudget}
