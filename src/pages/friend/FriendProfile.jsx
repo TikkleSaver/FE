@@ -52,7 +52,7 @@ export default function FriendProfile() {
     if (memberId) {
       fetchProfile(memberId);
     }
-  }, [memberId]);
+  }, [memberId, showDeleteModal, showAddModal]);
 
   // profile 정보에 따라 friendStatus 설정
   useEffect(() => {
@@ -144,7 +144,12 @@ export default function FriendProfile() {
           <ChallengePreviewCard />
         </TopChallengeInnerContainer>
       </ChallengeContainer>
-      {showAddModal && <CancelModal onClose={handleCloseAddExpenseModal} />}
+      {showAddModal && (
+        <CancelModal
+          friendReqId={profile.friendReqInfo.requestId}
+          onClose={handleCloseAddExpenseModal}
+        />
+      )}
       {showDeleteModal && (
         <DeleteModal
           friendId={profile.friendId}
