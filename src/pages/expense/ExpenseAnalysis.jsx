@@ -16,6 +16,7 @@ import {
   getTotalExpenseByCategory,
   getCategoryTop3,
   getMonthExpense,
+  getAchievedGoalCost,
 } from "../../api/expense/expenseAnalysisApi";
 
 const Container = styled.div`
@@ -164,6 +165,8 @@ const ExpenseAnalysis = () => {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentMonthExpense, setCurrentMonthExpense] = useState(0);
   const [saveExpense, setSaveExpense] = useState(0);
+  const [achievedDays, setAchievedDays] = useState(0);
+  const [achievementRate, setAchievementRate] = useState(0);
 
   const categories = [
     { id: 1, label: "식비" },
@@ -222,82 +225,62 @@ const ExpenseAnalysis = () => {
   const [pieData, setPieData] = useState([]);
 
   useEffect(() => {
-    const fetchTotalExpenseByCategory = async () => {
+    const fetchAll = async () => {
       try {
-        const result = await getTotalExpenseByCategory(
-          currentYear,
-          currentMonth + 1
-        );
+        const [
+          categoryExpenseRes,
+          top3Res,
+          currentMonthRes,
+          prevMonthRes,
+          achievedGoalRes,
+        ] = await Promise.all([
+          getTotalExpenseByCategory(currentYear, currentMonth + 1),
+          getCategoryTop3(currentYear, currentMonth + 1),
+          getMonthExpense(currentYear, currentMonth + 1),
+          getMonthExpense(currentYear, currentMonth),
+          getAchievedGoalCost(currentYear, currentMonth + 1),
+        ]);
 
-        const list = result.categoryExpenseList || [];
-
-        const updatedData = list.map(({ categoryId, totalAmount }) => {
+        // pieData 처리
+        const list = categoryExpenseRes.categoryExpenseList || [];
+        const updatedPieData = list.map(({ categoryId, totalAmount }) => {
           const matchedCategory = categories.find(
             (cat) => cat.id === categoryId
           );
-
           return {
             name: matchedCategory ? matchedCategory.label : "기타 생활비",
             value: totalAmount,
           };
         });
+        setPieData(updatedPieData);
 
-        setPieData(updatedData);
-        console.log("카테고리별 지출 금액 조회 성공:", result);
-      } catch (error) {
-        console.error("카테고리별 지출 금액 조회 실패", error);
-      }
-    };
-
-    const fetchCategoryTop3 = async () => {
-      try {
-        const result = await getCategoryTop3(currentYear, currentMonth + 1);
-
-        const ids = [result.category1, result.category2, result.category3];
-
-        const updatedData = ids.map((id) => {
+        // top3 처리
+        const ids = [top3Res.category1, top3Res.category2, top3Res.category3];
+        const updatedTop3 = ids.map((id) => {
           const matched = categories.find((cat) => cat.id === id);
           return matched ?? { id, label: "" };
         });
+        setTop3(updatedTop3);
 
-        setTop3(updatedData);
-        console.log("지출 TOP3 카테고리 조회 성공:", result);
+        // 지출 비교
+        const save = prevMonthRes.totalAmount - currentMonthRes.totalAmount;
+        setCurrentMonthExpense(currentMonthRes.totalAmount);
+        setSaveExpense(save > 0 ? save : 0);
+
+        // 달성률
+        setAchievedDays(achievedGoalRes.achievedGoalCostDay);
+        setAchievementRate(achievedGoalRes.achievementRate);
+
+        console.log("모든 데이터 조회 성공");
       } catch (error) {
-        console.error("지출 TOP3 카테고리 조회 실패", error);
+        console.error("데이터 조회 실패", error);
       }
     };
 
-    const fetchMonthExpense = async () => {
-      try {
-        const currentRes = await getMonthExpense(currentYear, currentMonth + 1);
-        const current = currentRes.totalAmount;
-        setCurrentMonthExpense(current);
-
-        const prevRes = await getMonthExpense(currentYear, currentMonth);
-        const previous = prevRes.totalAmount;
-
-        const save = previous - current;
-        if (save > 0) {
-          setSaveExpense(save);
-        } else {
-          setSaveExpense(0);
-        }
-
-        console.log("비교 성공", { current, previous, save });
-      } catch (error) {
-        console.error("비교 실패", error);
-      }
-    };
-
-    fetchTotalExpenseByCategory();
-    fetchCategoryTop3();
-    fetchMonthExpense();
+    fetchAll();
   }, [currentMonth]);
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
-
-  const achievedDays = 18;
-  const achievementRate = 58.06;
 
   const handlePrevMonth = () => {
     setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
