@@ -168,6 +168,13 @@ const AddExpenseButton = styled.button`
   border-top: 1px solid ${Colors.secondary25};
 `;
 
+const LoadingMessage = styled.div`
+  text-align: center;
+  width: 100%;
+  padding-top: 20px;
+  color: ${Colors.secondary300}; // 필요 시 색상도 조정
+`;
+
 const formatDateStr = (date) => date.toISOString().slice(0, 10);
 
 const Expense = () => {
@@ -277,8 +284,13 @@ const Expense = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
 
-    // 오늘 이후 날짜는 막기
-    if (newDate > today) return;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const compareDate = new Date(newDate);
+    compareDate.setHours(0, 0, 0, 0);
+
+    if (compareDate.getTime() > today.getTime()) return;
 
     const newDateStr = formatDateStr(newDate);
     setDate(newDate);
@@ -309,14 +321,17 @@ const Expense = () => {
   // 날짜가 바뀔 때마다 초기화
   useEffect(() => {
     setExpenses([]);
-    setHasMore(true);
     setPage(1);
+    setLoading(true);
+    setHasMore(true);
+    loadExpenses(1);
   }, [date]);
 
   // 페이지 또는 날짜가 바뀔 때마다 리스트 로드
   useEffect(() => {
+    if (page === 1 || loading) return;
     loadExpenses(page);
-  }, [page, date, loadExpenses]);
+  }, [page]);
 
   useEffect(() => {
     setComments([]);
@@ -395,12 +410,16 @@ const Expense = () => {
                   setPage(1);
                   setExpenses([]);
                   setHasMore(true);
-                  loadExpenses(commentsPage);
+                  loadExpenses(page);
                 }}
               />
             ) : (
               <FriendExpenseCard key={item.id ?? idx} item={item} />
             )
+          )}
+
+          {loading && page === 1 && (
+            <LoadingMessage>지출 불러오는 중...</LoadingMessage>
           )}
           <div ref={loaderRef} style={{ height: 40 }} />
         </ExpenseItems>
@@ -434,6 +453,9 @@ const Expense = () => {
             ) : (
               <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
             )
+          )}
+          {commentsLoading && commentsPage === 1 && (
+            <LoadingMessage>피드백 불러오는 중...</LoadingMessage>
           )}
           <div ref={commentsLoaderRef} style={{ height: 40 }} />
         </ExpenseComments>
