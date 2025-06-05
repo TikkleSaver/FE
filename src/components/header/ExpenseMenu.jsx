@@ -80,13 +80,27 @@ const ExpenseMenu = () => {
 
       <Dropdown className="dropdown" $open={open}>
         <DropdownItem
-          onClick={() => navigate("/expense-calendar")}
+          onClick={() => {
+            const token = localStorage.getItem("accessToken");
+            if (token) {
+              navigate("/expense-calendar");
+            } else {
+              alert("로그인 후 이용해주세요");
+            }
+          }}
           $active={location.pathname === "/expense-calendar"}
         >
           지출 내역
         </DropdownItem>
         <DropdownItem
-          onClick={() => navigate("/expense-analysis")}
+          onClick={() => {
+            const token = localStorage.getItem("accessToken");
+            if (token) {
+              navigate("/expense-analysis");
+            } else {
+              alert("로그인 후 이용해주세요");
+            }
+          }}
           $active={location.pathname === "/expense-analysis"}
         >
           지출 분석
