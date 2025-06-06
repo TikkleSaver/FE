@@ -4,10 +4,10 @@ import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCar
 import profileImage from '../../images/profile.svg';
 import check from '../../images/myprofile/material-symbols_check-rounded.svg';
 import { Link, useLocation } from 'react-router-dom';
-import AddExpenseModal from '../../components/expense/modal/AddExpenseModal';
 import CancelModal from '../../components/friend/CancelModal';
 import DeleteModal from '../../components/friend/DeleteModal';
 import { fetchFriendProfile } from '../../api/friendApi'; // 아까 만든 API 함수
+import { sendFriendReq } from '../../api/friendRequestApi';
 
 export default function FriendProfile() {
   const location = useLocation();
@@ -15,10 +15,20 @@ export default function FriendProfile() {
   const [friendStatus, setFriendStatus] = useState('accepted'); // 상태: 'none' | 'pending' | 'accepted'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [requestId, setRequestId] = useState(null);
 
-  const handleFriendRequest = () => {
-    if (friendStatus === 'none') {
-      setFriendStatus('pending'); // 친구 요청 보냄
+  const handleFriendRequest = async () => {
+    try {
+      const data = await sendFriendReq(profile.memberId);
+      setRequestId(data.result.requestId);
+
+      if (friendStatus === 'none') {
+        setFriendStatus('pending'); // 친구 요청 보냄
+      }
+      alert('친구 요청 성공');
+    } catch (error) {
+      alert('친구 요청 실패');
     }
   };
   const handleAddExpenseModal = () => {
@@ -32,7 +42,6 @@ export default function FriendProfile() {
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
   };
-  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     console.log('memberId:', memberId);
@@ -43,6 +52,7 @@ export default function FriendProfile() {
 
         const data = await fetchFriendProfile(memberId);
         setProfile(data.result);
+
         console.log('data:', data);
       } catch (e) {
         console.error('프로필 가져오기 실패:', e);
@@ -52,11 +62,15 @@ export default function FriendProfile() {
     if (memberId) {
       fetchProfile(memberId);
     }
-  }, [memberId]);
+  }, [memberId, showDeleteModal, showAddModal]);
 
   // profile 정보에 따라 friendStatus 설정
   useEffect(() => {
     if (!profile) return;
+
+    if (profile.friendReqInfo?.requestId) {
+      setRequestId(profile.friendReqInfo.requestId);
+    }
 
     if (profile.friendId) {
       setFriendStatus('accepted');
@@ -144,7 +158,12 @@ export default function FriendProfile() {
           <ChallengePreviewCard />
         </TopChallengeInnerContainer>
       </ChallengeContainer>
-      {showAddModal && <CancelModal onClose={handleCloseAddExpenseModal} />}
+      {showAddModal && (
+        <CancelModal
+          friendReqId={requestId}
+          onClose={handleCloseAddExpenseModal}
+        />
+      )}
       {showDeleteModal && (
         <DeleteModal
           friendId={profile.friendId}

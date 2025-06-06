@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Colors from '../../constanst/color.mjs';
 import profileImage from '../../images/profile.svg';
+import { acceptFriendReq, deleteFriendReq } from '../../api/friendRequestApi';
 
 const Item = styled.div`
   position: relative;
@@ -76,24 +77,40 @@ const RequestCard = ({ item, onRemove }) => {
     navigate('/friendprofile');
   };
 
-  const handleAccept = (e) => {
-    e.stopPropagation(); // 상위 onClick 방지
-    onRemove(); // 삭제
+  const handleAccept = async (e, reqId) => {
+    e.stopPropagation();
+    try {
+      await acceptFriendReq(reqId);
+      alert('친구 요청을 수락했습니다.');
+      onRemove(); // 이 부분에서 친구 요청 목록에서 제거
+    } catch (error) {
+      alert('친구 요청 수락에 실패했습니다.');
+    }
   };
 
-  const handleReject = (e) => {
+  const handleReject = async (e, reqId) => {
     e.stopPropagation();
-    onRemove(); // 삭제
+    try {
+      await deleteFriendReq(reqId);
+      alert('친구 요청을 거절했습니다.');
+      onRemove(); // 삭제
+    } catch (error) {
+      alert('친구 요청 거절에 실패했습니다.');
+    }
   };
 
   return (
     <Item onClick={handleClick}>
-      <ItemImage src={profileImage} />
+      <ItemImage src={item.sender.profileUrl} />
       <Right>
-        <ItemName>{item.name}님이 친구 요청을 보냈어요</ItemName>
+        <ItemName>{item.sender.nickname}님이 친구 요청을 보냈어요</ItemName>
         <BtnGroup>
-          <AcceptedBtn onClick={handleAccept}>수락</AcceptedBtn>
-          <UpdateBtn2 onClick={handleReject}>거절</UpdateBtn2>
+          <AcceptedBtn onClick={(e) => handleAccept(e, item.requestId)}>
+            수락
+          </AcceptedBtn>
+          <UpdateBtn2 onClick={(e) => handleReject(e, item.requestId)}>
+            거절
+          </UpdateBtn2>
         </BtnGroup>
       </Right>
     </Item>
