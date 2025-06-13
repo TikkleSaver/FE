@@ -10,7 +10,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { deleteWish } from "../../api/wish/wishAPI"; 
+import { deleteWish, updateWishPurchaseSatus, updateWishPublicSatus } from "../../api/wish/wishAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -352,11 +352,12 @@ function formatDateTime(dateString) {
 const MyWishPlannedCard = ({ wish }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [publicStatus, setPublicStatus] = useState(wish.publicStatus);
 
     const dropdownRef = useRef();
 
     // 공개 여부
-    const isPublic = wish.publicStatus === "PUBLIC";
+    const isPublic = publicStatus === "PUBLIC";
     const publicIconUrl = isPublic ? unLockImageUrl : lockImageUrl;
     const publicText = isPublic ? "공개" : "비공개";
 
@@ -406,6 +407,21 @@ const MyWishPlannedCard = ({ wish }) => {
         }
     };
 
+    const handlePurchaseStatus = async () => {
+        const result = await updateWishPurchaseSatus(wish.wishId);
+        if (result) {
+            alert("구매 완료로 변경되었습니다.");
+            window.location.reload(); 
+          }
+      };
+
+    const handlePublicStatus = async () => {
+        const result = await updateWishPublicSatus(wish.wishId);
+        if (result) {
+            setPublicStatus((prev) => (prev === "PUBLIC" ? "PRIVATE" : "PUBLIC"));
+        }
+    };
+
     return (
         <>
         <CardContainer onClick={handleClick}>
@@ -419,7 +435,11 @@ const MyWishPlannedCard = ({ wish }) => {
                         </MyWishNickNDateContainer> 
                     </MyWishLeftTopContainer>  
                     <MyWishRightTopContainer>
-                        <MyWishPublicBtn>
+                        <MyWishPublicBtn
+                            onClick={(e) => {
+                                e.stopPropagation(); 
+                                handlePublicStatus();
+                            }}>
                         <MyWishPublicImage imageUrl={publicIconUrl} />
                             {publicText}</MyWishPublicBtn>
                             <MyWishEtcImage imageUrl={etcImageUrl}
@@ -464,7 +484,10 @@ const MyWishPlannedCard = ({ wish }) => {
                             <MyWishCommentCntText>{wish.commentCnt}</MyWishCommentCntText>
                         </MyWishCommentContainer>
                     </MyWishBottomButtonContainer>
-                    <MyWishPurchaseBtn>구매 확정</MyWishPurchaseBtn>
+                    <MyWishPurchaseBtn onClick={(e) => {
+                        e.stopPropagation();
+                        handlePurchaseStatus();
+                    }}>구매 확정</MyWishPurchaseBtn>
                 </MyWishBottomContainer>
             </MyWishInfoContainer>
             <MyWishProductImg imageUrl={wish.image}/>

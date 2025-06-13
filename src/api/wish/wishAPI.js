@@ -122,3 +122,37 @@ export const deleteWish = async (wishId) => {
     throw error;
   }
 };
+
+
+// 위시 만족/불만족 수정 API
+export const updateWishSatisfactionStatus = async (wishId, status) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/satisfaction-status?status=${status}`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 만족/불만족 수정:", error);
+    throw error;
+  }
+};
+
+// 위시 구매 확정 API
+export const updateWishPurchaseSatus = async (wishId) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/purchase-status`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 구매 확정 수정:", error);
+    throw error;
+  }
+};
+
+// 위시 공개/비공개 수정 API
+export const updateWishPublicSatus = async (wishId) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/public-status`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 공개/비공개 수정:", error);
+    throw error;
+  }
+};
