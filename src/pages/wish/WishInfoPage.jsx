@@ -17,7 +17,7 @@ import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 import { getWishInfo, deleteWish } from "../../api/wish/wishAPI";
 import { getWishCommentList, createWishComment } from "../../api/wish/wishCommentAPI";
-import { createWishVote, getWishVote } from "../../api/wish/wishVoteAPI"; 
+import { createWishVote, getWishVote, deleteWishVote } from "../../api/wish/wishVoteAPI"; 
 
 const WishInfoPageContainer = styled.div`
     display: flex;
@@ -573,15 +573,26 @@ function WishInfoPage() {
         setUnLikeCnt(wishInfo.unLikeCnt ?? 0);
     }, [wishInfo]);
 
-    const handleCreateVote = async (newStatus) => {
+    const handleCreateDeleteVote = async (newStatus) => {
         try {
-            await createWishVote(wishInfo.wishId, newStatus);
+            if (voted === newStatus) {
+                await deleteWishVote(wishInfo.wishId);
+            if (newStatus === "LIKE") {
+                setLikeCnt((prev) => prev - 1);
+            } else if (newStatus === "UNLIKE") {
+                setUnLikeCnt((prev) => prev - 1);
+            }
+            setVoted(null);
+            } else {
+                await createWishVote(wishInfo.wishId, newStatus);
             if (newStatus === "LIKE") {
                 setLikeCnt((prev) => prev + 1);
-                setVoted("LIKE");
-             } else if (newStatus === "UNLIKE") {
+                if (voted === "UNLIKE") setUnLikeCnt((prev) => prev - 1);
+            } else if (newStatus === "UNLIKE") {
                 setUnLikeCnt((prev) => prev + 1);
-                setVoted("UNLIKE");
+                if (voted === "LIKE") setLikeCnt((prev) => prev - 1);
+            }
+                setVoted(newStatus);
             }
         } catch (error) {
             alert(error.response.data.message);
@@ -656,7 +667,7 @@ function WishInfoPage() {
                         <WishInfoAgreeContainer
                         onClick={(e) => {
                             e.stopPropagation();
-                             handleCreateVote("LIKE");
+                             handleCreateDeleteVote("LIKE");
                         }}>
                         <WishInfoAgreeImage imageUrl={voted === "LIKE" ? agreeImageGreenUrl : agreeImageUrl} />
                             <WishInfoAgreeText>
@@ -666,7 +677,7 @@ function WishInfoPage() {
                             <WishInfoDisagreeContainer
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleCreateVote("UNLIKE");
+                                handleCreateDeleteVote("UNLIKE");
                             }}>
                         <WishInfoDisagreeImage imageUrl={voted === "UNLIKE" ? disagreeImageGreenUrl : disagreeImageUrl} />
                                 <WishInfoDisagreeText>

@@ -21,3 +21,15 @@ export const getWishVote = async (wishId) => {
     throw error;
   }
 };
+
+
+// 위시 찬성/반대 투표 취소 API
+export const deleteWishVote = async (wishId) => {
+  try {
+    const response = await axiosInstance.delete(`/wish/${wishId}/vote`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 찬성/반대 투표 취소 실패:", error);
+    throw error;
+  }
+};

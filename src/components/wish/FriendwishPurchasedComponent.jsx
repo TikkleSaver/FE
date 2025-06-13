@@ -11,7 +11,7 @@ import disSatisfactionImageUrl from "../../assets/wishDisSatisfacrion.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { createWishVote, getWishVote } from "../../api/wish/wishVoteAPI"; 
+import { createWishVote, getWishVote, deleteWishVote } from "../../api/wish/wishVoteAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -323,15 +323,26 @@ const FriendWishPurchasedCard = ({ wish }) => {
         navigate(`/wish-info`, { state: { wishId: wish.wishId } });
     };
 
-    const handleCreateVote = async (newStatus) => {
+    const handleCreateDeleteVote = async (newStatus) => {
         try {
-            await createWishVote(wish.wishId, newStatus);
+            if (voted === newStatus) {
+                await deleteWishVote(wish.wishId);
+            if (newStatus === "LIKE") {
+                setLikeCnt((prev) => prev - 1);
+            } else if (newStatus === "UNLIKE") {
+                setUnLikeCnt((prev) => prev - 1);
+            }
+            setVoted(null);
+            } else {
+                await createWishVote(wish.wishId, newStatus);
             if (newStatus === "LIKE") {
                 setLikeCnt((prev) => prev + 1);
-                setVoted("LIKE");
-             } else if (newStatus === "UNLIKE") {
+                if (voted === "UNLIKE") setUnLikeCnt((prev) => prev - 1);
+            } else if (newStatus === "UNLIKE") {
                 setUnLikeCnt((prev) => prev + 1);
-                setVoted("UNLIKE");
+                if (voted === "LIKE") setLikeCnt((prev) => prev - 1);
+            }
+                setVoted(newStatus);
             }
         } catch (error) {
             alert(error.response.data.message);
@@ -384,7 +395,7 @@ const FriendWishPurchasedCard = ({ wish }) => {
                     <FriendWishAgreeContainer
                         onClick={(e) => {
                             e.stopPropagation();
-                             handleCreateVote("LIKE");
+                             handleCreateDeleteVote("LIKE");
                         }}>
                         <FriendWishAgreeImage imageUrl={voted === "LIKE" ? agreeImageGreenUrl : agreeImageUrl} />
                         <FriendWishAgreeText>
@@ -394,7 +405,7 @@ const FriendWishPurchasedCard = ({ wish }) => {
                     <FriendWishDisagreeContainer
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleCreateVote("UNLIKE");
+                            handleCreateDeleteVote("UNLIKE");
                         }}>
                         <FriendWishDisagreeImage imageUrl={voted === "UNLIKE" ? disagreeImageGreenUrl : disagreeImageUrl} />
                         <FriendWishDisagreeText>
