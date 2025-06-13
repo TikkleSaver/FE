@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import lockImageURL from "../../assets/wishLockGrey.svg";
 import wishEmptyImageURL from "../../assets/wishEmptyImg.svg"
 import Colors from "../../constanst/color.mjs";
+import { createWishNotExistProduct } from "../../api/wish/wish";
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
@@ -337,11 +338,98 @@ function AddWishNotExistPage() {
     const [inputName, setInputName] = useState("");
     const [inputBrand, setInputBrand] = useState("");
     const [inputPrice, setInputPrice] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+
+    const categoryMap = {
+      "식비": 1,
+      "카페": 2,
+      "쇼핑": 3,
+      "건강": 4,
+      "취미": 5,
+      "교통비": 6,
+      "기타 생활비": 7,
+    };
+
+    // 상품 사진
+    const [preview, setPreview] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const handleClick = () => {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    };
+
+    const handleImageChange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setPreview(imageUrl);
+        setImageFile(file);
+      }
+    };
+
+    const handleAddWish = async () => {
+      if (!inputName.trim()) {
+        alert("제품명을 입력해주세요.");
+        return;
+      }
+
+      if (!inputBrand.trim()) {
+        alert("브랜드를 입력해주세요.");
+        return;
+      }
+
+      if (!inputPrice.trim()) {
+        alert("가격을 입력해주세요.");
+        return;
+      }
+
+      if (!imageFile) {
+        alert("사진을 반드시 등록해주세요.");
+        return;
+      }
+
+      const priceNumber = parseInt(inputPrice.replace(/,/g, ""), 10);
+      if (isNaN(priceNumber) || priceNumber <= 0) {
+        alert("유효한 숫자 형식의 가격을 입력해주세요.");
+        return;
+      }
+
+      const wishData = {
+        publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
+        title: inputName,
+        brand: inputBrand,
+        price: parseInt(inputPrice),
+        categoryId: categoryMap[selectedCategory]
+      };
+
+      const formData = new FormData();
+      formData.append("request", new Blob([JSON.stringify(wishData)], { type: "application/json" }));
+
+      if (imageFile) {
+        formData.append("file", imageFile); 
+      }
+
+      const result = await createWishNotExistProduct(formData);
+      if (result) {
+        alert("위시가 성공적으로 추가되었습니다.");
+        navigate("/wish/mine");
+      }
+    };
 
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
-            <ProductImage imageUrl={wishEmptyImageURL}/>
+            <ProductImage imageUrl={preview || wishEmptyImageURL} onClick={handleClick}>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+            </ProductImage>
             <ProductTextInfoContainer>
               <ProductInputInfoContainer>
                 <ProductNameContainer>
@@ -414,7 +502,7 @@ function AddWishNotExistPage() {
                     </ProductPriceInputContainer>
                   </ProductPriceContainer>
               </ProductInputInfoContainer>
-              <ProductAddBtn>작성 완료</ProductAddBtn>
+              <ProductAddBtn onClick={handleAddWish}>작성 완료</ProductAddBtn>
             </ProductTextInfoContainer>
           </ProductInfoContainer>
         </ProductPageContainer>

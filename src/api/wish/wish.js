@@ -4,24 +4,24 @@ import axiosInstance from "../axiosInstance";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 // 존재 상품 위시 추가 API
-export const createWishExistProductAPI = async (wishData) => {
-
+export const createWishExistProduct = async (wishData) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/wish/existing-product`,
-      wishData,
-      {
-        headers: {
-          'content-type': 'application/json',
-        },
-      }
-    );
-
-    console.log(response);
-
+    const response = await axiosInstance.post(`/wish/existing-product`, wishData);
     return response.data;
   } catch (error) {
-    console.error('Error fetching data:', error.response);
+    console.error("위시 추가(네이버 상품) 실패:", error);
+    throw error;
+  }
+};
+
+// 직접 추가한 상품 위시 추가 API
+export const createWishNotExistProduct = async (wishData) => {
+  try {
+    const response = await axiosInstance.post(`/wish/my-product`, wishData);
+    return response.data;
+  } catch (error) {
+    console.error("위시 추가(내가 직접) 실패:", error);
+    throw error;
   }
 };
 

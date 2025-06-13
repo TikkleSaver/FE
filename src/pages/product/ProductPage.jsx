@@ -177,7 +177,9 @@ function ProductPage() {
             </SearchContainer>
             <ProductContainer>
                 <ButtonWrapper>
-                    <ProductCreateBtn>직접 추가</ProductCreateBtn>
+                    <ProductCreateBtn onClick={() => navigate("/wish/add/not-exist")}>
+                      직접 추가
+                    </ProductCreateBtn>
                 </ButtonWrapper>
                 <ProductInnerContainer>
                   {data.map((item, idx) => (
