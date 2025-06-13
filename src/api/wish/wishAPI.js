@@ -89,3 +89,15 @@ export const getWishList = async () => {
     throw error;
   }
 };
+
+
+// 직접 추가한 상품 위시 수정 API
+export const updateWishNotExistProduct = async (wishId, wishData) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/my-product`, wishData);
+    return response.data;
+  } catch (error) {
+    console.error("위시 수정(내가 직접) 실패:", error);
+    throw error;
+  }
+};

@@ -366,6 +366,17 @@ const MyWishPlannedCard = ({ wish }) => {
         navigate(`/wish-info`, { state: { wishId: wish.wishId } });
     };
 
+    const handleEditClick = (e) => {
+        e.stopPropagation(); 
+        setIsOpen(false); 
+
+        if (wish.productType === "MYPRODUCT") {
+            navigate("/wish/update/not-exist", { state: { wishId: wish.wishId  } });
+        } else {
+            navigate("/wish/update/exist", { state: { wishId: wish.wishId } });
+        }
+    };
+
     useEffect(() => {
     const handleClickOutside = (event) => {
         if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -401,11 +412,8 @@ const MyWishPlannedCard = ({ wish }) => {
                             }}  />
                                   {isOpen && (
                                 <EtcDropdown ref={dropdownRef}>
-                                <EtcDropdownItem
-                                    onClick={() => {
-                                    setIsOpen(false);
-                                    }}
-                                >
+                                <EtcDropdownItem 
+                                    onClick={handleEditClick}>
                                     수정
                                 </EtcDropdownItem>
                                 <EtcDropdownItem
