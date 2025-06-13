@@ -55,3 +55,14 @@ export const getWishInfo = async (wishId) => {
     throw error;
   }
 };
+
+// 친구의 구매 예정 위시 목록 조회
+export const getFriendWishPlanned = async (friendId) => {
+  try {
+    const response = await axiosInstance.get(`/wish/friend/${friendId}/planned`);
+    return response.data.result;
+  } catch (error) {
+    console.error("친구의 구매 예정 위시 목록 조회 실패:", error);
+    throw error;
+  }
+};

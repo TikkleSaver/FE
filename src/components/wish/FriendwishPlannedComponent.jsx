@@ -230,46 +230,69 @@ const FriendWishLine = styled.div`
     margin-bottom: 25px;
 `;
 
-const FriendWishPlannedCard = () => {
+// 날짜 변환
+function formatDateTime(dateString) {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date)) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}.${month}.${day} ${hours}:${minutes}`;
+}
+
+const FriendWishPlannedCard = ({ wish }) => {
     const navigate = useNavigate();
+
+    // 프로필 여부
+    const profileUrl = wish.profileUrl || ProfileImageUrl;
+
+    const handleClick = () => {
+        navigate(`/wish-info`, { state: { wishId: wish.wishId } });
+    };
 
     return (
         <>
-        <CardContainer>
+        <CardContainer onClick={handleClick}>
             <FriendWishInfoContainer>
                 <FriendWishTopContainer>
                     <FriendWishLeftTopContainer>
-                        <FriendWishProfileImg imageUrl={ProfileImageUrl}/>
+                        <FriendWishProfileImg imageUrl={profileUrl}/>
                         <FriendWishNickNDateContainer>
-                            <FriendWishNickname>닉네임</FriendWishNickname>
-                            <FriendWishCreatedDate>2025.04.04 11:30</FriendWishCreatedDate>
+                            <FriendWishNickname>{wish.nickname}</FriendWishNickname>
+                            <FriendWishCreatedDate>{formatDateTime(wish.createdAt)}</FriendWishCreatedDate>
                         </FriendWishNickNDateContainer> 
                     </FriendWishLeftTopContainer>  
                 </FriendWishTopContainer>
-                <FriendWishProductName>감성 투명 아이패드 케이스 에어</FriendWishProductName>
-                <FriendWishProductPrice>가격</FriendWishProductPrice>
+                <FriendWishProductName>{wish.title}</FriendWishProductName>
+                <FriendWishProductPrice>{wish.price}원</FriendWishProductPrice>
                 <FriendWishButtonContainer>
                     <FriendWishAgreeContainer>
                         <FriendWishAgreeImage imageUrl={agreeImageUrl} />
                         <FriendWishAgreeText>
                         찬성</FriendWishAgreeText>
-                        <FriendWishAgreeCntText>23</FriendWishAgreeCntText>
+                        <FriendWishAgreeCntText>{wish.likeCnt}</FriendWishAgreeCntText>
                     </FriendWishAgreeContainer>
                     <FriendWishDisagreeContainer>
                         <FriendWishDisagreeImage imageUrl={disagreeImageUrl} />
                         <FriendWishDisagreeText>
-                        찬성</FriendWishDisagreeText>
-                        <FriendWishDisagreeCntText>23</FriendWishDisagreeCntText>
+                        반대</FriendWishDisagreeText>
+                        <FriendWishDisagreeCntText>{wish.unLikeCnt}</FriendWishDisagreeCntText>
                     </FriendWishDisagreeContainer>
                     <FriendWishCommentContainer>
                         <FriendWishCommentImage imageUrl={commentImageUrl} />
                         <FriendWishCommentText>
-                        찬성</FriendWishCommentText>
-                        <FriendWishCommentCntText>23</FriendWishCommentCntText>
+                        댓글</FriendWishCommentText>
+                        <FriendWishCommentCntText>{wish.commentCnt}</FriendWishCommentCntText>
                     </FriendWishCommentContainer>
                 </FriendWishButtonContainer>
             </FriendWishInfoContainer>
-            <FriendWishProductImg imageUrl={ProductImageUrl}/>
+            <FriendWishProductImg imageUrl={wish.image}/>
         </CardContainer>
         <FriendWishLine/>
         </>

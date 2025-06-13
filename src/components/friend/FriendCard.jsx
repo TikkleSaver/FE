@@ -61,7 +61,7 @@ const FriendCard = ({ item }) => {
   // 친구 위시리스트로 이동
   const handleWishlistClick = (e) => {
     e.stopPropagation(); // 부모 클릭 방지
-    navigate('/wish/friend', { state: { memberId: item.id } });
+    navigate('/wish/friend', { state: { friendId: item.id, friendName: item.nickname, } });
   };
 
   return (
