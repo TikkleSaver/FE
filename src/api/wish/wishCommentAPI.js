@@ -21,3 +21,14 @@ export const createWishComment = async (wishId, commentData) => {
     throw error;
   }
 };
+
+// 위시 댓글 삭제 API
+export const deleteWishComment = async (commentId) => {
+  try {
+    const response = await axiosInstance.delete(`/wish/comment/${commentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 댓글 삭제 실패:", error);
+    throw error;
+  }
+};

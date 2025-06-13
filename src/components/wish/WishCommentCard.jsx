@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Profile from "./../../assets/defaultProfile.svg";
 import Etc from "./../../assets/etc-vertical.svg";
 import Colors from "../../constanst/color.mjs";
+import { deleteWishComment } from "../../api/wish/wishCommentAPI"; 
 
 const WishCommentCardContainer = styled.div`
   position: relative;
@@ -32,7 +33,7 @@ const WishCommentDate = styled.div`
 
 const WishEtcBtn = styled.button`
   position: absolute;
-  right: -30px;
+  right: 10px;
   background: none;
   border: none;
   padding: 0;
@@ -41,6 +42,33 @@ const WishEtcBtn = styled.button`
   cursor: pointer;
 `;
 
+const EtcDropdown = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background-color: white;
+  border: 1px solid ${Colors.secondary50};
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  width: 50px;
+`;
+
+const EtcDropdownItem = styled.div`
+  padding: 10px;
+  font-size: 14px;
+  color: ${Colors.secondary500};
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: ${Colors.secondary25};
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid ${Colors.secondary50};
+  }
+`;
 
 // 날짜 변환
 function formatDateTime(dateString) {
@@ -59,8 +87,39 @@ function formatDateTime(dateString) {
 }
 
 const WishCommentCard = ({ comment }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    const profileUrl = comment.profileUrl || Profile;
+  const dropdownRef = useRef();
+
+  const profileUrl = comment.profileUrl || Profile;
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setIsOpen(false);
+        }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+  }, [isOpen]);
+
+  const handleDeleteClick = async (e) => {
+    e.stopPropagation(); 
+    setIsOpen(false);
+
+     const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
+      if (!isConfirmed) return;
+
+      try {
+          await deleteWishComment(comment.wishCommentId);
+          alert("위시 댓글 성공적으로 삭제되었습니다.");
+          window.location.reload(); 
+      } catch (error) {
+          alert("삭제 중 오류가 발생했습니다.");
+      }
+  };
 
   return (
     <WishCommentCardContainer>
@@ -72,9 +131,24 @@ const WishCommentCard = ({ comment }) => {
       <WishCommentDate>{formatDateTime(comment.createdAt)}</WishCommentDate>
 
       {comment.isAuthor && (
-        <WishEtcBtn>
+        <WishEtcBtn
+          onClick={(e) => {
+           e.stopPropagation()
+            setIsOpen((prev) => !prev);
+          }}  >
           <img src={Etc} alt="Etc" width="35" height="35" />
         </WishEtcBtn>
+      )}
+      {isOpen && (
+        <EtcDropdown ref={dropdownRef}>
+          <EtcDropdownItem>
+              수정
+          </EtcDropdownItem>
+          <EtcDropdownItem
+            onClick={handleDeleteClick}>
+            삭제
+          </EtcDropdownItem>
+        </EtcDropdown>
       )}
     </WishCommentCardContainer>
   );
