@@ -10,3 +10,14 @@ export const createWishVote = async (wishId, status) => {
     throw error;
   }
 };
+
+// 위시 찬성/반대 투표 조회 API
+export const getWishVote = async (wishId) => {
+  try {
+    const response = await axiosInstance.get(`/wish/${wishId}/vote`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 찬성/반대 투표 조회 실패:", error);
+    throw error;
+  }
+};

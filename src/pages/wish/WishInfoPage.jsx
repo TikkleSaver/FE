@@ -17,7 +17,7 @@ import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 import { getWishInfo, deleteWish } from "../../api/wish/wishAPI";
 import { getWishCommentList, createWishComment } from "../../api/wish/wishCommentAPI";
-import { createWishVote } from "../../api/wish/wishVoteAPI"; 
+import { createWishVote, getWishVote } from "../../api/wish/wishVoteAPI"; 
 
 const WishInfoPageContainer = styled.div`
     display: flex;
@@ -568,6 +568,11 @@ function WishInfoPage() {
         }
     };
 
+    useEffect(() => {
+        setLikeCnt(wishInfo.likeCnt ?? 0);
+        setUnLikeCnt(wishInfo.unLikeCnt ?? 0);
+    }, [wishInfo]);
+
     const handleCreateVote = async (newStatus) => {
         try {
             await createWishVote(wishInfo.wishId, newStatus);
@@ -583,6 +588,18 @@ function WishInfoPage() {
         }
     };
     
+    useEffect(() => {
+        const fetchVoteStatus = async () => {
+        try {
+            const data = await getWishVote(wishInfo.wishId);
+            setVoted(data.result.likeStatus);
+        } catch (error) {
+            console.error("투표 상태 불러오기 실패:", error);
+        }
+        };
+        fetchVoteStatus();
+    }, [wishInfo.wishId]);
+
     return (
         <WishInfoPageContainer>
             <WishInfoBox>

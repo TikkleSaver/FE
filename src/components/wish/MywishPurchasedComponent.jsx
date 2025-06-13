@@ -13,7 +13,7 @@ import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 import { deleteWish, updateWishSatisfactionStatus, updateWishPublicSatus } from "../../api/wish/wishAPI";
-import { createWishVote } from "../../api/wish/wishVoteAPI"; 
+import { createWishVote, getWishVote } from "../../api/wish/wishVoteAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -477,6 +477,18 @@ const MyWishPurchasedCard = ({ wish }) => {
             alert(error.response.data.message);
         }
     };
+
+    useEffect(() => {
+        const fetchVoteStatus = async () => {
+        try {
+            const data = await getWishVote(wish.wishId);
+            setVoted(data.result.likeStatus);
+        } catch (error) {
+            console.error("투표 상태 불러오기 실패:", error);
+        }
+        };
+        fetchVoteStatus();
+    }, [wish.wishId]);
 
     return (
         <>
