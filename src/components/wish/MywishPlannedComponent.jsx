@@ -10,6 +10,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { deleteWish } from "../../api/wish/wishAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -389,6 +390,22 @@ const MyWishPlannedCard = ({ wish }) => {
     };
     }, [isOpen]);
 
+    const handleDeleteClick = async (e) => {
+        e.stopPropagation(); 
+        setIsOpen(false);
+
+        const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
+        if (!isConfirmed) return;
+
+        try {
+            await deleteWish(wish.wishId);
+            alert("위시가 성공적으로 삭제되었습니다.");
+            window.location.reload(); 
+        } catch (error) {
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+
     return (
         <>
         <CardContainer onClick={handleClick}>
@@ -417,10 +434,7 @@ const MyWishPlannedCard = ({ wish }) => {
                                     수정
                                 </EtcDropdownItem>
                                 <EtcDropdownItem
-                                    onClick={() => {
-                                    setIsOpen(false);
-                                    }}
-                                >
+                                     onClick={handleDeleteClick}>
                                     삭제
                                 </EtcDropdownItem>
                                 </EtcDropdown>

@@ -111,3 +111,14 @@ export const updateWishNotExistProduct = async (wishId, wishData) => {
     throw error;
   }
 };
+
+// 위시 삭제 API
+export const deleteWish = async (wishId) => {
+  try {
+    const response = await axiosInstance.delete(`/wish/${wishId}`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 삭제 실패:", error);
+    throw error;
+  }
+};
