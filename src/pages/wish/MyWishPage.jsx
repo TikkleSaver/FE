@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MywishPlannedComponent from "../../components/wish/MywishPlannedComponent";
 import MywishPurchasedComponent from "../../components/wish/MywishPurchasedComponent";
 import Colors from "../../constanst/color.mjs";
-import { getMyWishPlanned } from "../../api/wish/wish";
+import { getMyWishPlanned, getMyWishPurchased } from "../../api/wish/wish";
 
 const MyWishPageContainer = styled.div`
     width:70%;
@@ -80,20 +80,23 @@ function MyWishPage() {
     const [selectedTab, setSelectedTab] = useState("구매 예정");
 
     const [plannedItems, setPlannedItems] = useState([]);
-    const [purchasedItems, setPurchasedItems] = useState([1, 2, 3, 4, 5, 6]); 
+    const [purchasedItems, setPurchasedItems] = useState([]); 
 
+    // API 연동
     useEffect(() => {
-        const fetchPlannedItems = async () => {
+        const fetchAll = async () => {
             try {
-                const result = await getMyWishPlanned();
-                setPlannedItems(result.myWishPlannedLst);
+            const planned = await getMyWishPlanned();   // 구매 예정 목록 조회
+            const purchased = await getMyWishPurchased();   // 구매 완료 목록 조회
+
+            setPlannedItems(planned.myWishPlannedLst);
+            setPurchasedItems(purchased.myWishPurchasedLst);
             } catch (error) {
-                console.error("구매 예정 위시 불러오기 실패", error);
+                console.error("API 불러오기 실패", error);
             }
         };
-
-        fetchPlannedItems();
-    }, []);    
+    fetchAll();
+    }, []);
     
     const tabs = [
       { name: "구매 예정" },
@@ -127,8 +130,9 @@ function MyWishPage() {
                                 <MywishPlannedComponent key={index} wish={item} />
                         ))}
                         {selectedTab === "구매 완료" &&
+                            purchasedItems.length > 0 &&
                             purchasedItems.map((item, index) => (
-                                <MywishPurchasedComponent key={index} />
+                                <MywishPurchasedComponent key={index} wish={item} />
                         ))}
                     </TopMyWishInnerContainer>
                 </TabMyWishContainer>

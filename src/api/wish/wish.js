@@ -35,3 +35,14 @@ export const getMyWishPlanned = async () => {
     throw error;
   }
 };
+
+// 나의 구매 완료 위시 목록 조회
+export const getMyWishPurchased = async () => {
+  try {
+    const response = await axiosInstance.get(`/wish/mine/purchased`);
+    return response.data.result;
+  } catch (error) {
+    console.error("나의 구매 완료 위시 조회 실패:", error);
+    throw error;
+  }
+};
