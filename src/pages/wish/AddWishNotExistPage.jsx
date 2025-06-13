@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import lockImageURL from "../../assets/wishLockGrey.svg";
+import unlockImageURL from "../../assets/wishUnlockGrey.svg";
 import wishEmptyImageURL from "../../assets/wishEmptyImg.svg"
 import Colors from "../../constanst/color.mjs";
 import { createWishNotExistProduct } from "../../api/wish/wishAPI";
@@ -474,9 +475,15 @@ function AddWishNotExistPage() {
                     <ProductPublicWapper>
                       <ProductPublicTextWapper>
                         <ProductPublicText>공개 설정</ProductPublicText>
+                        {isPublic ? (
                         <ProductPublicExplain>해당 상품을 공개하지 않습니다.
                           <ProductLockImage imageUrl={lockImageURL} />
                         </ProductPublicExplain>
+                        ) : (
+                        <ProductPublicExplain>해당 상품을 공개합니다.
+                          <ProductLockImage imageUrl={unlockImageURL} />
+                        </ProductPublicExplain>
+                        )}
                       </ProductPublicTextWapper>
                       <ProductPublicSwitch>
                         <ProductPublicSwitchInput 

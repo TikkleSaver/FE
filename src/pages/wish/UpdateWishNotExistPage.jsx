@@ -475,7 +475,11 @@ function UpdateWishNotExistPage() {
         setIsPublic(wishInfo.publicStatus === "PRIVATE");
         setInputPrice(wishInfo.price ? String(wishInfo.price) : "");
         if (wishInfo.purchaseStatus === "PURCHASE") {
-          setSatisfaction(wishInfo.satisfactionStatus || "");
+              const satisfactionMap = {
+                SATISFIED: "만족",
+                DISSATISFIED: "불만족",
+              };
+          setSatisfaction(satisfactionMap[wishInfo.satisfactionStatus] || "");
         }
       }
     }, [wishInfo]);
