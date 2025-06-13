@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ProductPreviewCard from "../../components/product/ProductPreviewCard";
 import SearchIcon from "../../assets/search.svg"
 import Colors from "../../constanst/color.mjs";
-import { fetchShoppingData } from "../../api/naver"
+import { fetchShoppingData } from "../../api/product/naver"
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
