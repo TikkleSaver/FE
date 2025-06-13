@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import styled from "styled-components";
 import FriendwishPlannedComponent from "../../components/wish/FriendwishPlannedComponent";
 import FriendwishPurchasedComponent from "../../components/wish/FriendwishPurchasedComponent";
 import Colors from "../../constanst/color.mjs";
+import { getFriendWishPlanned, getFriendWishPurchased } from "../../api/wish/wishAPI";
 
 const FriendWishPageContainer = styled.div`
     width:70%;
@@ -76,10 +78,29 @@ const TopFriendWishInnerContainer = styled.div`
 `;
 
 function FriendWishPage() {
+    const location = useLocation();
+    const { friendId, friendName } = location.state || {};
+
     const [selectedTab, setSelectedTab] = useState("구매 예정");
 
-    const [plannedItems, setPlannedItems] = useState([1, 2, 3, 4, 5]);  // 더미 데이터
-    const [purchasedItems, setPurchasedItems] = useState([1, 2, 3, 4, 5, 6]); // 더미 데이터
+    const [plannedItems, setPlannedItems] = useState([]);  
+    const [purchasedItems, setPurchasedItems] = useState([]); 
+
+    // API 연동
+    useEffect(() => {
+        const fetchAll = async () => {
+            try {
+            const planned = await getFriendWishPlanned(friendId);   // 구매 예정 목록 조회
+            const purchased = await getFriendWishPurchased(friendId);   // 구매 완료 목록 조회
+
+            setPlannedItems(planned.friendWishPlannedList);
+            setPurchasedItems(purchased.friendWishPurchasedList);
+            } catch (error) {
+                console.error("API 불러오기 실패", error);
+            }
+        };
+    fetchAll();
+    }, []);
 
     const tabs = [
       { name: "구매 예정" },
@@ -89,7 +110,7 @@ function FriendWishPage() {
     return (
         <FriendWishPageContainer>
             <FriendWishContainer>
-                <FriendWishTitleName>리리의 위시리스트 목록</FriendWishTitleName>
+                <FriendWishTitleName>{friendName}의 위시리스트 목록</FriendWishTitleName>
                 <TabContainer>
                     <TabInnerContainer>
                         {tabs.map((tab) => (
@@ -108,12 +129,14 @@ function FriendWishPage() {
                 <TabFriendWishContainer>
                     <TopFriendWishInnerContainer>
                             {selectedTab === "구매 예정" &&
+                            plannedItems.length > 0 &&
                                 plannedItems.map((item, index) => (
-                                    <FriendwishPlannedComponent key={index} />
+                                    <FriendwishPlannedComponent key={index} wish={item} />
                                 ))}
                             {selectedTab === "구매 완료" &&
+                            purchasedItems.length > 0 &&
                                 purchasedItems.map((item, index) => (
-                                    <FriendwishPurchasedComponent key={index} />
+                                    <FriendwishPurchasedComponent key={index} wish={item} />
                                 ))}
                     </TopFriendWishInnerContainer>
                 </TabFriendWishContainer>
