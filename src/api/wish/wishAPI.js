@@ -1,8 +1,6 @@
 import axios from "axios";
 import axiosInstance from "../axiosInstance";
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 // 존재 상품 위시 추가 API
 export const createWishExistProduct = async (wishData) => {
   try {

@@ -13,6 +13,7 @@ import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 import { getWishInfo } from "../../api/wish/wishAPI";
+import { getWishCommentList } from "../../api/wish/wishCommentAPI";
 
 const WishInfoPageContainer = styled.div`
     display: flex;
@@ -355,7 +356,7 @@ const WishInfoCommentListContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 639px;
-  height: 335px;
+  height: 370px;
   box-sizing: border-box;
   overflow: hidden;
 `;
@@ -437,6 +438,7 @@ function WishInfoPage() {
     const { wishId } = location.state || {};
     const [newComment, setNewComment] = useState("");
     const [wishInfo, setWishInfo] = useState([]);
+    const [comments, setComments] = useState([]);
 
     const categoryMap = {
         1: "식비",
@@ -451,18 +453,14 @@ function WishInfoPage() {
     // 프로필 여부
     const profileUrl = wishInfo.profileUrl || ProfileImageUrl;
 
-    const comments = Array(9).fill({
-        user: "meartangLove0005",
-        comment:
-        "마라탕에 돈을 너무 많이 쓰는 거 아냐..?? 지출 목표 금액을 훌쩍 넘었어!!! 아껴!!",
-        date: "2025.03.28 11:10",
-    });
     // API 연동
     useEffect(() => {
         const fetch = async () => {
             try {
                 const wish = await getWishInfo(wishId);
                 setWishInfo(wish);
+                const commentList = await getWishCommentList(wishId);
+                setComments(commentList.wishCommentList || []);
             } catch (error) {
                 console.error("API 불러오기 실패", error);
             }

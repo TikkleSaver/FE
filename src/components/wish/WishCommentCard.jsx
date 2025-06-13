@@ -41,16 +41,35 @@ const WishEtcBtn = styled.button`
   cursor: pointer;
 `;
 
+
+// 날짜 변환
+function formatDateTime(dateString) {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date)) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}.${month}.${day} ${hours}:${minutes}`;
+}
+
 const WishCommentCard = ({ comment }) => {
+
+    const profileUrl = comment.profileUrl || Profile;
 
   return (
     <WishCommentCardContainer>
       <WishUserName>
-        <img src={Profile} alt="사용자프로필"/>
-        {comment.user}
+        <img src={profileUrl} alt="사용자프로필"/>
+        {comment.nickname}
       </WishUserName>
-      <WishCommentText>{comment.comment}</WishCommentText>
-      <WishCommentDate>{comment.date}</WishCommentDate>
+      <WishCommentText>{comment.contents}</WishCommentText>
+      <WishCommentDate>{formatDateTime(comment.createdAt)}</WishCommentDate>
 
       <WishEtcBtn>
         <img src={Etc} alt="Etc" width="35" height="35" />
