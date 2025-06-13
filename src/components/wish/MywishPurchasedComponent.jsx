@@ -10,7 +10,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { deleteWish } from "../../api/wish/wishAPI";
+import { deleteWish, updateWishSatisfactionStatus } from "../../api/wish/wishAPI";
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -433,6 +433,21 @@ const handleEditClick = (e) => {
             alert("삭제 중 오류가 발생했습니다.");
         }
     };
+
+    const handleSatisfactionClick = async (satisfaction) => {
+        const statusMap = {
+            만족: "SATISFIED",
+            불만족: "DISSATISFIED",
+        };
+        const newStatus = statusMap[satisfaction];
+
+        try {
+            await updateWishSatisfactionStatus(wish.wishId, newStatus);
+            setSatisfaction(satisfaction);
+        } catch (error) {
+            alert("만족/불만족 변경 중 오류가 발생했습니다.");
+        }
+    };
     
     return (
         <>
@@ -475,7 +490,10 @@ const handleEditClick = (e) => {
                             <SatisfactionBtn
                             key={satisfaction}
                             $active={selectedSatisfaction === satisfaction ? "true" : "false"}
-                            onClick={() => setSatisfaction(satisfaction)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleSatisfactionClick(satisfaction);
+                                }}
                             >
                             {satisfaction}
                             </SatisfactionBtn>

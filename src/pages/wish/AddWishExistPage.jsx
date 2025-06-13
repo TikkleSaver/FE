@@ -322,6 +322,11 @@ function AddWishExistPage() {
     }
     
     const handleAddWish = async () => {
+      if (!inputPrice.trim()) {
+        alert("가격을 입력해주세요.");
+        return;
+      }
+      
       const wishData = {
         publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
         title: product.title,

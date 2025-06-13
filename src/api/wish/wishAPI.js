@@ -122,3 +122,15 @@ export const deleteWish = async (wishId) => {
     throw error;
   }
 };
+
+
+// 위시 만족/불만족 수정 API
+export const updateWishSatisfactionStatus = async (wishId, status) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/satisfaction-status?status=${status}`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 만족/불만족 수정:", error);
+    throw error;
+  }
+};
