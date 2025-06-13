@@ -134,3 +134,14 @@ export const updateWishSatisfactionStatus = async (wishId, status) => {
     throw error;
   }
 };
+
+// 위시 구매 확정 API
+export const updateWishPurchaseSatus = async (wishId) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/purchase-status`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 구매 확정 수정:", error);
+    throw error;
+  }
+};
