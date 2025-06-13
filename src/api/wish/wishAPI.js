@@ -145,3 +145,14 @@ export const updateWishPurchaseSatus = async (wishId) => {
     throw error;
   }
 };
+
+// 위시 공개/비공개 수정 API
+export const updateWishPublicSatus = async (wishId) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/${wishId}/public-status`);
+    return response.data;
+  } catch (error) {
+    console.error("위시 공개/비공개 수정:", error);
+    throw error;
+  }
+};

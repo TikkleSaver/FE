@@ -10,7 +10,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { deleteWish, updateWishSatisfactionStatus } from "../../api/wish/wishAPI";
+import { deleteWish, updateWishSatisfactionStatus, updateWishPublicSatus } from "../../api/wish/wishAPI";
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -370,11 +370,12 @@ function formatDateTime(dateString) {
 const MyWishPurchasedCard = ({ wish }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [publicStatus, setPublicStatus] = useState(wish.publicStatus);
 
     const dropdownRef = useRef();
 
     // 공개 여부
-    const isPublic = wish.publicStatus === "PUBLIC";
+    const isPublic = publicStatus === "PUBLIC";
     const publicIconUrl = isPublic ? unLockImageUrl : lockImageUrl;
     const publicText = isPublic ? "공개" : "비공개";
 
@@ -395,7 +396,7 @@ const MyWishPurchasedCard = ({ wish }) => {
         navigate(`/wish-info`, { state: { wishId: wish.wishId } });
     };
 
-const handleEditClick = (e) => {
+    const handleEditClick = (e) => {
         e.stopPropagation(); 
         setIsOpen(false); 
 
@@ -448,6 +449,13 @@ const handleEditClick = (e) => {
             alert("만족/불만족 변경 중 오류가 발생했습니다.");
         }
     };
+
+    const handlePublicStatus = async () => {
+        const result = await updateWishPublicSatus(wish.wishId);
+        if (result) {
+            setPublicStatus((prev) => (prev === "PUBLIC" ? "PRIVATE" : "PUBLIC"));
+        }
+    };
     
     return (
         <>
@@ -462,7 +470,11 @@ const handleEditClick = (e) => {
                         </MyWishNickNDateContainer> 
                     </MyWishLeftTopContainer>  
                     <MyWishRightTopContainer>
-                        <MyWishPublicBtn>
+                        <MyWishPublicBtn
+                            onClick={(e) => {
+                                e.stopPropagation(); 
+                                handlePublicStatus();
+                            }}>
                         <MyWishPublicImage imageUrl={publicIconUrl} />
                             {publicText}</MyWishPublicBtn>
                             <MyWishEtcImage imageUrl={etcImageUrl}
