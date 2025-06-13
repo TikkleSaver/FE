@@ -14,7 +14,7 @@ import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 import { getWishInfo, deleteWish } from "../../api/wish/wishAPI";
-import { getWishCommentList } from "../../api/wish/wishCommentAPI";
+import { getWishCommentList, createWishComment } from "../../api/wish/wishCommentAPI";
 
 const WishInfoPageContainer = styled.div`
     display: flex;
@@ -479,6 +479,7 @@ function WishInfoPage() {
     const [wishInfo, setWishInfo] = useState([]);
     const [comments, setComments] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     const dropdownRef = useRef();
     
@@ -508,7 +509,7 @@ function WishInfoPage() {
             }
         };
         fetch();
-    }, []);
+    }, [refreshTrigger]);
 
     const handleEditClick = (e) => {
         e.stopPropagation(); 
@@ -546,6 +547,18 @@ function WishInfoPage() {
             navigate(-1)
         } catch (error) {
             alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+
+    const handleAddComment = async () => {
+        const CommentData = {
+            contents: newComment
+        };
+    
+        const result = await createWishComment(wishInfo.wishId, CommentData);
+        if (result) {
+            setNewComment(""); 
+            setRefreshTrigger(prev => prev + 1);
         }
     };
 
@@ -642,7 +655,7 @@ function WishInfoPage() {
                                 value={newComment} placeholder="위시에 피드백을 남겨주세요!"
                                 onChange={(e) => setNewComment(e.target.value)}
                                 />
-                                <SubmitBtn>
+                                <SubmitBtn onClick={handleAddComment}>
                                 <img src={SubmitImageUrl} alt="Etc"/>
                                 </SubmitBtn>
                             </CommentInputWrapper>

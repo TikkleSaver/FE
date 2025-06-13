@@ -71,9 +71,11 @@ const WishCommentCard = ({ comment }) => {
       <WishCommentText>{comment.contents}</WishCommentText>
       <WishCommentDate>{formatDateTime(comment.createdAt)}</WishCommentDate>
 
-      <WishEtcBtn>
-        <img src={Etc} alt="Etc" width="35" height="35" />
-      </WishEtcBtn>
+      {comment.isAuthor && (
+        <WishEtcBtn>
+          <img src={Etc} alt="Etc" width="35" height="35" />
+        </WishEtcBtn>
+      )}
     </WishCommentCardContainer>
   );
 };
