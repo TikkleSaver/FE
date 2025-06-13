@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import lockImageURL from "../../assets/wishLockGrey.svg";
+import unlockImageURL from "../../assets/wishUnlockGrey.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { getWishInfo, updateWishExistProduct } from "../../api/wish/wishAPI";
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
@@ -352,20 +355,94 @@ const ProductCancelBtn = styled.button`
 function UpdateWishExistPage() {
 
     const navigate = useNavigate();
+    const [wishInfo, setWishInfo] = useState([]);
     const [selectedCategory, setCategory] = useState("식비");
     const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
     const [selectedSatisfaction, setSatisfaction] = useState("만족");
     const satisfactions = ["만족", "불만족"];
     const [isPublic, setIsPublic] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [inputPrice, setInputPrice] = useState("");
+    const location = useLocation();
+    const wishId = location.state?.wishId;
+
+    const categoryMap = {
+        1: "식비",
+        2: "카페",
+        3: "쇼핑",
+        4: "건강",
+        5: "취미",
+        6: "교통비",
+        7: "기타 생활비",
+    };
+
+    const categoryReverseMap = {
+      "식비": 1,
+      "카페": 2,
+      "쇼핑": 3,
+      "건강": 4,
+      "취미": 5,
+      "교통비": 6,
+      "기타 생활비": 7
+    };
+
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const wish = await getWishInfo(wishId);
+                setWishInfo(wish);
+            } catch (error) {
+                console.error("API 불러오기 실패", error);
+            }
+        };
+        fetch();
+    }, []);
+
+    useEffect(() => {
+          if (wishInfo) {
+            setCategory(categoryMap[wishInfo.categoryId] || "");
+            setIsPublic(wishInfo.publicStatus === "PRIVATE");
+            setInputPrice(wishInfo.price ? String(wishInfo.price) : "");
+            if (wishInfo.purchaseStatus === "PURCHASE") {
+              const satisfactionMap = {
+                SATISFIED: "만족",
+                DISSATISFIED: "불만족",
+              };
+              setSatisfaction(satisfactionMap[wishInfo.satisfactionStatus] || "");
+            }
+          }
+    }, [wishInfo]);
+
+    const handleUpdateWish = async () => {
+      const wishData = {
+        publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
+        price: parseInt(inputPrice),
+        categoryId: categoryReverseMap[selectedCategory],
+        ...(wishInfo.purchaseStatus === "PURCHASE" && selectedSatisfaction && {
+          satisfactionStatus: selectedSatisfaction === "만족" ? "SATISFIED" : "DISSATISFIED"
+        })
+      };
+
+      const result = await updateWishExistProduct(wishId, wishData);
+      if (result) {
+        alert("위시가 성공적으로 수정되었습니다.");
+        navigate("/wish/mine");
+      }
+  };
 
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
-            <ProductImage imageUrl={ProductImageUrl}/>
+            <ProductImage imageUrl={wishInfo.productImg}/>
             <ProductTextInfoContainer>
-              <ProductCategory>문구{">"}필기류{">"}색연필</ProductCategory>
-              <ProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치 5세대 4세대 10.9인치 오드밤</ProductName>
+              <ProductCategory>                {[
+                  wishInfo.category1,
+                  wishInfo.category2,
+                  wishInfo.category3,
+                  wishInfo.category4
+                ]
+                .filter(Boolean)
+                .join(" > ")}</ProductCategory>
+              <ProductName>{wishInfo.title}</ProductName>
               <ProductInputInfoContainer>
                 <ProductCategoryContainer>
                   <ProductCategoryText>카테고리</ProductCategoryText>
@@ -408,32 +485,34 @@ function UpdateWishExistPage() {
                       <SearchInput
                           type="text"
                           placeholder=""
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
+                          value={inputPrice}
+                          onChange={(e) => setInputPrice(e.target.value)}
                       />
                       <ProductPriceWonText>원</ProductPriceWonText>
                     </SearchContainer>
                   </ProductPriceContainer>
-                  <ProductSatisfactionContainer>
-                    <ProductSatisfactionText>만족 여부</ProductSatisfactionText>
-                    <ProductSatisfactionTabWrapper>
-                        <ProductSatisfactionTabBtnContainer>
-                            {satisfactions.map((satisfaction) => (
-                                <ProductSatisfactionTabBtn
-                                key={satisfaction}
-                                $active={selectedSatisfaction === satisfaction ? "true" : "false"}
-                                onClick={() => setSatisfaction(satisfaction)}
-                                >
-                                {satisfaction}
-                                </ProductSatisfactionTabBtn>
-                            ))}
-                        </ProductSatisfactionTabBtnContainer>
-                    </ProductSatisfactionTabWrapper>
-                  </ProductSatisfactionContainer>
+                  {wishInfo.purchaseStatus === "PURCHASE" && (
+                    <ProductSatisfactionContainer>
+                      <ProductSatisfactionText>만족 여부</ProductSatisfactionText>
+                      <ProductSatisfactionTabWrapper>
+                          <ProductSatisfactionTabBtnContainer>
+                              {satisfactions.map((satisfaction) => (
+                                  <ProductSatisfactionTabBtn
+                                  key={satisfaction}
+                                  $active={selectedSatisfaction === satisfaction ? "true" : "false"}
+                                  onClick={() => setSatisfaction(satisfaction)}
+                                  >
+                                  {satisfaction}
+                                  </ProductSatisfactionTabBtn>
+                              ))}
+                          </ProductSatisfactionTabBtnContainer>
+                      </ProductSatisfactionTabWrapper>
+                    </ProductSatisfactionContainer>
+                 )} 
               </ProductInputInfoContainer>
               <ProductButtonWapper>
-                <ProductUpdateBtn>수정 완료</ProductUpdateBtn>
-                <ProductCancelBtn>수정 취소</ProductCancelBtn>
+                <ProductUpdateBtn onClick={handleUpdateWish}>수정 완료</ProductUpdateBtn>
+                <ProductCancelBtn onClick={() => navigate(-1)}>수정 취소</ProductCancelBtn>
               </ProductButtonWapper>
             </ProductTextInfoContainer>
           </ProductInfoContainer>

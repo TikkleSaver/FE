@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import agreeImageUrl from "../../assets/wishAgree.svg";
@@ -10,6 +10,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { deleteWish } from "../../api/wish/wishAPI";
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -45,6 +46,7 @@ const MyWishLeftTopContainer = styled.div`
 const MyWishRightTopContainer = styled.div`   
   display: flex;
   gap: 10px;
+  position: relative;
 `;
 
 // 닉네임 & 날짜
@@ -107,6 +109,42 @@ const MyWishEtcImage = styled.span`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat; 
+`;
+
+
+// 수정 삭제 드롭다운
+const EtcDropdown = styled.div`
+  position: absolute;
+  top: 40px;
+  right: -30px;
+  background-color: white;
+  border: 1px solid ${Colors.secondary50};
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  width: 57px;
+  height: 94px;
+  display: flex;           
+  flex-direction: column;   
+  align-items: center;        
+  justify-content: center; 
+`;
+
+// 수정 삭제 드롭다운 내용
+const EtcDropdownItem = styled.div`
+  padding: 10px;
+  font-size: 15px;
+  color: ${Colors.secondary500};
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: ${Colors.secondary25};
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid ${Colors.secondary50};
+  }
 `;
 
 // 공개 로고
@@ -331,6 +369,9 @@ function formatDateTime(dateString) {
 
 const MyWishPurchasedCard = ({ wish }) => {
     const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const dropdownRef = useRef();
 
     // 공개 여부
     const isPublic = wish.publicStatus === "PUBLIC";
@@ -354,6 +395,45 @@ const MyWishPurchasedCard = ({ wish }) => {
         navigate(`/wish-info`, { state: { wishId: wish.wishId } });
     };
 
+const handleEditClick = (e) => {
+        e.stopPropagation(); 
+        setIsOpen(false); 
+
+        if (wish.productType === "MYPRODUCT") {
+            navigate("/wish/update/not-exist", { state: { wishId: wish.wishId  } });
+        } else {
+            navigate("/wish/update/exist", { state: { wishId: wish.wishId } });
+        }
+    };
+
+    useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+        }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+    }, [isOpen]);
+
+    const handleDeleteClick = async (e) => {
+        e.stopPropagation(); 
+        setIsOpen(false);
+    
+        const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
+        if (!isConfirmed) return;
+    
+        try {
+            await deleteWish(wish.wishId);
+            alert("위시가 성공적으로 삭제되었습니다.");
+            window.location.reload(); 
+        } catch (error) {
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+    
     return (
         <>
         <CardContainer onClick={handleClick}>
@@ -370,7 +450,23 @@ const MyWishPurchasedCard = ({ wish }) => {
                         <MyWishPublicBtn>
                         <MyWishPublicImage imageUrl={publicIconUrl} />
                             {publicText}</MyWishPublicBtn>
-                            <MyWishEtcImage imageUrl={etcImageUrl} />
+                            <MyWishEtcImage imageUrl={etcImageUrl}
+                                onClick={(e) => {
+                                e.stopPropagation()
+                                setIsOpen((prev) => !prev);
+                            }}   />
+                            {isOpen && (
+                                <EtcDropdown ref={dropdownRef}>
+                                <EtcDropdownItem 
+                                    onClick={handleEditClick}>
+                                    수정
+                                </EtcDropdownItem>
+                                <EtcDropdownItem
+                                    onClick={handleDeleteClick}>
+                                    삭제
+                                </EtcDropdownItem>
+                                </EtcDropdown>
+                            )}
                     </MyWishRightTopContainer>
                 </MyWishTopContainer>
                 <SatisfactionWrapper>

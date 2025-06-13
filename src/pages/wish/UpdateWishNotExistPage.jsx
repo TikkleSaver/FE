@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import lockImageURL from "../../assets/wishLockGrey.svg";
+import unlockImageURL from "../../assets/wishUnlockGrey.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { getWishInfo, updateWishNotExistProduct } from "../../api/wish/wishAPI";
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
@@ -399,6 +402,7 @@ const ProductCancelBtn = styled.button`
 function UpdateWishNotExistPage() {
 
     const navigate = useNavigate();
+    const [wishInfo, setWishInfo] = useState([]);
     const [selectedCategory, setCategory] = useState("식비");
     const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
     const [selectedSatisfaction, setSatisfaction] = useState("만족");
@@ -407,11 +411,138 @@ function UpdateWishNotExistPage() {
     const [inputName, setInputName] = useState("");
     const [inputBrand, setInputBrand] = useState("");
     const [inputPrice, setInputPrice] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+    const location = useLocation();
+    const wishId = location.state?.wishId;
+
+    // 상품 사진
+    const [preview, setPreview] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const handleClick = () => {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    };
+
+    const handleImageChange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setPreview(imageUrl);
+        setImageFile(file);
+      }
+    };
+
+    const categoryMap = {
+        1: "식비",
+        2: "카페",
+        3: "쇼핑",
+        4: "건강",
+        5: "취미",
+        6: "교통비",
+        7: "기타 생활비",
+    };
+
+    const categoryReverseMap = {
+      "식비": 1,
+      "카페": 2,
+      "쇼핑": 3,
+      "건강": 4,
+      "취미": 5,
+      "교통비": 6,
+      "기타 생활비": 7
+    };
+
+
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const wish = await getWishInfo(wishId);
+                setWishInfo(wish);
+            } catch (error) {
+                console.error("API 불러오기 실패", error);
+            }
+        };
+        fetch();
+    }, []);
+
+    useEffect(() => {
+      if (wishInfo) {
+        setInputName(wishInfo.title || "");
+        setInputBrand(wishInfo.brand || "");
+        setCategory(categoryMap[wishInfo.categoryId] || "");
+        setIsPublic(wishInfo.publicStatus === "PRIVATE");
+        setInputPrice(wishInfo.price ? String(wishInfo.price) : "");
+        if (wishInfo.purchaseStatus === "PURCHASE") {
+              const satisfactionMap = {
+                SATISFIED: "만족",
+                DISSATISFIED: "불만족",
+              };
+          setSatisfaction(satisfactionMap[wishInfo.satisfactionStatus] || "");
+        }
+      }
+    }, [wishInfo]);
+
+    const handleupdateWish = async () => {
+      if (!inputName.trim()) {
+        alert("제품명을 입력해주세요.");
+        return;
+      }
+
+      if (!inputBrand.trim()) {
+        alert("브랜드를 입력해주세요.");
+        return;
+      }
+
+      if (!inputPrice.trim()) {
+        alert("가격을 입력해주세요.");
+        return;
+      }
+
+      const priceNumber = parseInt(String(inputPrice).replace(/,/g, ""), 10);
+      if (isNaN(priceNumber) || priceNumber <= 0) {
+        alert("유효한 숫자 형식의 가격을 입력해주세요.");
+        return;
+      }
+
+      const wishData = {
+        publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
+        title: inputName,
+        brand: inputBrand,
+        price: parseInt(inputPrice),
+        categoryId: categoryReverseMap[selectedCategory],
+        ...(wishInfo.purchaseStatus === "PURCHASE" && selectedSatisfaction && {
+          satisfactionStatus: selectedSatisfaction === "만족" ? "SATISFIED" : "DISSATISFIED"
+        })
+      };
+
+      const formData = new FormData();
+      formData.append("request", new Blob([JSON.stringify(wishData)], { type: "application/json" }));
+
+      if (imageFile) {
+        formData.append("file", imageFile); 
+      }
+
+      const result = await updateWishNotExistProduct(wishId, formData);
+      if (result) {
+        alert("위시가 성공적으로 수정되었습니다.");
+        navigate("/wish/mine");
+      }
+    };
 
     return (
         <ProductPageContainer>
           <ProductInfoContainer>
-            <ProductImage imageUrl={ProductImageUrl}/>
+            <ProductImage imageUrl={preview || wishInfo.productImg} onClick={handleClick}>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+            </ProductImage>
             <ProductTextInfoContainer>
               <ProductInputInfoContainer>
                 <ProductNameContainer>
@@ -456,9 +587,15 @@ function UpdateWishNotExistPage() {
                     <ProductPublicWapper>
                       <ProductPublicTextWapper>
                         <ProductPublicText>공개 설정</ProductPublicText>
-                        <ProductPublicExplain>해당 상품을 공개하지 않습니다.
-                          <ProductLockImage imageUrl={lockImageURL} />
-                        </ProductPublicExplain>
+                          {isPublic ? (
+                          <ProductPublicExplain>해당 상품을 공개하지 않습니다.
+                            <ProductLockImage imageUrl={lockImageURL} />
+                          </ProductPublicExplain>
+                          ) : (
+                          <ProductPublicExplain>해당 상품을 공개합니다.
+                            <ProductLockImage imageUrl={unlockImageURL} />
+                          </ProductPublicExplain>
+                          )}
                       </ProductPublicTextWapper>
                       <ProductPublicSwitch>
                         <ProductPublicSwitchInput 
@@ -483,26 +620,28 @@ function UpdateWishNotExistPage() {
                       <ProductPriceWonText>원</ProductPriceWonText>
                     </SearchContainer>
                   </ProductPriceContainer>
-                  <ProductSatisfactionContainer>
-                    <ProductSatisfactionText>만족 여부</ProductSatisfactionText>
-                    <ProductSatisfactionTabWrapper>
-                        <ProductSatisfactionTabBtnContainer>
-                            {satisfactions.map((satisfaction) => (
-                                <ProductSatisfactionTabBtn
-                                key={satisfaction}
-                                $active={selectedSatisfaction === satisfaction ? "true" : "false"}
-                                onClick={() => setSatisfaction(satisfaction)}
-                                >
-                                {satisfaction}
-                                </ProductSatisfactionTabBtn>
-                            ))}
-                        </ProductSatisfactionTabBtnContainer>
-                    </ProductSatisfactionTabWrapper>
-                  </ProductSatisfactionContainer>
+                  {wishInfo.purchaseStatus === "PURCHASE" && (
+                    <ProductSatisfactionContainer>
+                      <ProductSatisfactionText>만족 여부</ProductSatisfactionText>
+                      <ProductSatisfactionTabWrapper>
+                          <ProductSatisfactionTabBtnContainer>
+                              {satisfactions.map((satisfaction) => (
+                                  <ProductSatisfactionTabBtn
+                                  key={satisfaction}
+                                  $active={selectedSatisfaction === satisfaction ? "true" : "false"}
+                                  onClick={() => setSatisfaction(satisfaction)}
+                                  >
+                                  {satisfaction}
+                                  </ProductSatisfactionTabBtn>
+                              ))}
+                          </ProductSatisfactionTabBtnContainer>
+                      </ProductSatisfactionTabWrapper>
+                    </ProductSatisfactionContainer>
+                 )} 
               </ProductInputInfoContainer>
               <ProductButtonWapper>
-                <ProductUpdateBtn>수정 완료</ProductUpdateBtn>
-                <ProductCancelBtn>수정 취소</ProductCancelBtn>
+                <ProductUpdateBtn onClick={handleupdateWish}>수정 완료</ProductUpdateBtn>
+                <ProductCancelBtn onClick={() => navigate(-1)}>수정 취소</ProductCancelBtn>
               </ProductButtonWapper>
             </ProductTextInfoContainer>
           </ProductInfoContainer>

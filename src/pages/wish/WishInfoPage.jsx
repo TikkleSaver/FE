@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import styled from "styled-components";
 import WishCommentCard from "../../components/wish/WishCommentCard";
@@ -12,7 +13,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { getWishInfo } from "../../api/wish/wishAPI";
+import { getWishInfo, deleteWish } from "../../api/wish/wishAPI";
 import { getWishCommentList } from "../../api/wish/wishCommentAPI";
 
 const WishInfoPageContainer = styled.div`
@@ -48,6 +49,7 @@ const WishInfoLeftTopContainer = styled.div`
 const WishInfoRightTopContainer = styled.div`   
   display: flex;
   gap: 10px;
+  position: relative;
 `;
 
 // 닉네임 & 날짜
@@ -147,6 +149,42 @@ const WishInfoEtcImage = styled.span`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat; 
+`;
+
+
+// 수정 삭제 드롭다운
+const EtcDropdown = styled.div`
+  position: absolute;
+  top: 40px;
+  right: -30px;
+  background-color: white;
+  border: 1px solid ${Colors.secondary50};
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  width: 57px;
+  height: 94px;
+  display: flex;           
+  flex-direction: column;   
+  align-items: center;        
+  justify-content: center; 
+`;
+
+// 수정 삭제 드롭다운 내용
+const EtcDropdownItem = styled.div`
+  padding: 10px;
+  font-size: 15px;
+  color: ${Colors.secondary500};
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: ${Colors.secondary25};
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid ${Colors.secondary50};
+  }
 `;
 
 // 상위 구분선
@@ -434,12 +472,16 @@ function formatDateTime(dateString) {
 }
 
 function WishInfoPage() {
+    const navigate = useNavigate();
     const location = useLocation();
     const { wishId } = location.state || {};
     const [newComment, setNewComment] = useState("");
     const [wishInfo, setWishInfo] = useState([]);
     const [comments, setComments] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
+    const dropdownRef = useRef();
+    
     const categoryMap = {
         1: "식비",
         2: "카페",
@@ -468,6 +510,45 @@ function WishInfoPage() {
         fetch();
     }, []);
 
+    const handleEditClick = (e) => {
+        e.stopPropagation(); 
+        setIsOpen(false); 
+
+        if (wishInfo.productType === "MYPRODUCT") {
+            navigate("/wish/update/not-exist", { state: { wishId: wishInfo.wishId  } });
+        } else {
+            navigate("/wish/update/exist", { state: { wishId: wishInfo.wishId } });
+        }
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
+
+    const handleDeleteClick = async (e) => {
+        e.stopPropagation(); 
+        setIsOpen(false);
+    
+        const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
+        if (!isConfirmed) return;
+    
+        try {
+            await deleteWish(wishInfo.wishId);
+            alert("위시가 성공적으로 삭제되었습니다.");
+            navigate(-1)
+        } catch (error) {
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+
     return (
         <WishInfoPageContainer>
             <WishInfoBox>
@@ -495,7 +576,25 @@ function WishInfoPage() {
                             불만족
                             </WishInfoDisSatisfaction>
                         )}
-                        <WishInfoEtcImage imageUrl={etcImageUrl} />
+                        {wishInfo.isAuthor && (
+                            <WishInfoEtcImage imageUrl={etcImageUrl} 
+                                    onClick={(e) => {
+                                    e.stopPropagation()
+                                    setIsOpen((prev) => !prev);
+                                }}   />
+                        )}
+                        {isOpen && (
+                            <EtcDropdown ref={dropdownRef}>
+                            <EtcDropdownItem 
+                                onClick={handleEditClick}>
+                                수정
+                            </EtcDropdownItem>
+                            <EtcDropdownItem
+                                onClick={handleDeleteClick}>
+                                삭제
+                            </EtcDropdownItem>
+                            </EtcDropdown>
+                        )}
                     </WishInfoRightTopContainer>
                 </WishInfoTopContainer>
                 <WishInfoTopLine/>
