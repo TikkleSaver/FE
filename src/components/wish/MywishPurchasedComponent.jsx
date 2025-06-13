@@ -360,7 +360,7 @@ const MyWishPurchasedCard = ({ wish }) => {
             <MyWishInfoContainer>
                 <MyWishTopContainer>
                     <MyWishLeftTopContainer>
-                        <MyWishProfileImg imageUrl={ProfileImageUrl}/>
+                        <MyWishProfileImg imageUrl={profileUrl}/>
                         <MyWishNickNDateContainer>
                             <MyWishNickname>{wish.nickname}</MyWishNickname>
                             <MyWishCreatedDate>{formatDateTime(wish.createdAt)}</MyWishCreatedDate>

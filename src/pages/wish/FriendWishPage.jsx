@@ -4,7 +4,7 @@ import styled from "styled-components";
 import FriendwishPlannedComponent from "../../components/wish/FriendwishPlannedComponent";
 import FriendwishPurchasedComponent from "../../components/wish/FriendwishPurchasedComponent";
 import Colors from "../../constanst/color.mjs";
-import { getFriendWishPlanned } from "../../api/wish/wishAPI";
+import { getFriendWishPlanned, getFriendWishPurchased } from "../../api/wish/wishAPI";
 
 const FriendWishPageContainer = styled.div`
     width:70%;
@@ -84,15 +84,17 @@ function FriendWishPage() {
     const [selectedTab, setSelectedTab] = useState("구매 예정");
 
     const [plannedItems, setPlannedItems] = useState([]);  
-    const [purchasedItems, setPurchasedItems] = useState([1, 2, 3, 4, 5, 6]); 
+    const [purchasedItems, setPurchasedItems] = useState([]); 
 
     // API 연동
     useEffect(() => {
         const fetchAll = async () => {
             try {
             const planned = await getFriendWishPlanned(friendId);   // 구매 예정 목록 조회
+            const purchased = await getFriendWishPurchased(friendId);   // 구매 완료 목록 조회
 
             setPlannedItems(planned.friendWishPlannedList);
+            setPurchasedItems(purchased.friendWishPurchasedList);
             } catch (error) {
                 console.error("API 불러오기 실패", error);
             }
@@ -132,8 +134,9 @@ function FriendWishPage() {
                                     <FriendwishPlannedComponent key={index} wish={item} />
                                 ))}
                             {selectedTab === "구매 완료" &&
+                            purchasedItems.length > 0 &&
                                 purchasedItems.map((item, index) => (
-                                    <FriendwishPurchasedComponent key={index} />
+                                    <FriendwishPurchasedComponent key={index} wish={item} />
                                 ))}
                     </TopFriendWishInnerContainer>
                 </TabFriendWishContainer>

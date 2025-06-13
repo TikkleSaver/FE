@@ -66,3 +66,14 @@ export const getFriendWishPlanned = async (friendId) => {
     throw error;
   }
 };
+
+// 친구의 구매 완료 위시 목록 조회
+export const getFriendWishPurchased = async (friendId) => {
+  try {
+    const response = await axiosInstance.get(`/wish/friend/${friendId}/purchased`);
+    return response.data.result;
+  } catch (error) {
+    console.error("친구의 구매 완료 위시 조회 실패:", error);
+    throw error;
+  }
+};
