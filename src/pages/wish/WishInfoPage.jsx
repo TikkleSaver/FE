@@ -12,7 +12,7 @@ import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { getWishInfo } from "../../api/wish/wish";
+import { getWishInfo } from "../../api/wish/wishAPI";
 
 const WishInfoPageContainer = styled.div`
     display: flex;
