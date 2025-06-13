@@ -7,7 +7,7 @@ import lockImageURL from "../../assets/wishLockGrey.svg";
 import unlockImageURL from "../../assets/wishUnlockGrey.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { createWishExistProductAPI } from "../../api/wish/wish";
+import { createWishExistProduct } from "../../api/wish/wish";
 
 // 전체 상자
 const ProductPageContainer = styled.div`   
@@ -322,24 +322,24 @@ function AddWishExistPage() {
     }
     
     const handleAddWish = async () => {
-    const wishData = {
-      publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
-      title: product.title,
-      brand: product.brand,
-      price: parseInt(inputPrice),
-      image: product.image,
-      category1: product.category1,
-      category2: product.category2,
-      category3: product.category3,
-      category4: product.category4,
-      categoryId: categoryMap[selectedCategory]
-    };
+      const wishData = {
+        publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
+        title: product.title,
+        brand: product.brand || "네이버",
+        price: parseInt(inputPrice),
+        image: product.image,
+        category1: product.category1,
+        category2: product.category2,
+        category3: product.category3,
+        category4: product.category4,
+        categoryId: categoryMap[selectedCategory]
+      };
 
-    const result = await createWishExistProductAPI(wishData);
-    if (result) {
-      alert("위시가 성공적으로 추가되었습니다.");
-      navigate("/wish/mine");
-    }
+      const result = await createWishExistProduct(wishData);
+      if (result) {
+        alert("위시가 성공적으로 추가되었습니다.");
+        navigate("/wish/mine");
+      }
   };
 
     return (
