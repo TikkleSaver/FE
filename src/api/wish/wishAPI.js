@@ -77,3 +77,15 @@ export const getFriendWishPurchased = async (friendId) => {
     throw error;
   }
 };
+
+
+// 참견소 위시 목록 조회
+export const getWishList = async () => {
+  try {
+    const response = await axiosInstance.get(`/wish`);
+    return response.data.result;
+  } catch (error) {
+    console.error("참견소 위시 목록 조회 실패:", error);
+    throw error;
+  }
+};

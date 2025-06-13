@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import satisfactionImageUrl from "../../assets/wishSatisfaction.svg";
+import disSatisfactionImageUrl from "../../assets/wishDisSatisfacrion.svg";
 import agreeImageUrl from "../../assets/wishAgree.svg";
 import disagreeImageUrl from "../../assets/wishDisagree.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
@@ -94,13 +95,28 @@ const MeddlingPurChased = styled.span`
     border-radius: 10px; 
 `;
 
-// 만족 여부
+// 만족 여부 (만족)
 const MeddlingSatisfaction = styled.span` 
     width: 86px;
     height: 29px;
     flex-shrink: 0;
     border: 1px solid ${Colors.satisfactionBox}; 
     color : ${Colors.satisfactionBox}; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    gap: 13px; 
+`;
+
+
+// 만족 여부 (불만족)
+const MeddlingDisSatisfaction = styled.span` 
+    width: 86px;
+    height: 29px;
+    flex-shrink: 0;
+    border: 1px solid ${Colors.disSatisfactionBox}; 
+    color : ${Colors.disSatisfactionBox}; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -275,52 +291,85 @@ const MeddlingLine = styled.div`
     margin-bottom: c;
 `;
 
-const MeddlePreviewCard = () => {
+
+// 날짜 변환
+function formatDateTime(dateString) {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date)) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}.${month}.${day} ${hours}:${minutes}`;
+}
+
+const MeddlePreviewCard = ({ wish }) => {
     const navigate = useNavigate();
+
+    // 프로필 여부
+    const profileUrl = wish.profileUrl || ProfileImageUrl;
+
+    const handleClick = () => {
+        navigate(`/wish-info`, { state: { wishId: wish.wishId } });
+    };
 
     return (
         <>
-        <CardContainer>
+        <CardContainer onClick={handleClick}>
             <MeddlingInfoContainer>
                 <MeddlingTopContainer>
                     <MeddlingLeftTopContainer>
-                        <MeddlingProfileImg imageUrl={ProfileImageUrl}/>
+                        <MeddlingProfileImg imageUrl={profileUrl}/>
                         <MeddlingNickNDateContainer>
-                            <MeddlingNickname>닉네임</MeddlingNickname>
-                            <MeddlingCreatedDate>2025.04.04 11:30</MeddlingCreatedDate>
+                            <MeddlingNickname>{wish.nickname}</MeddlingNickname>
+                            <MeddlingCreatedDate>{formatDateTime(wish.createdAt)}</MeddlingCreatedDate>
                         </MeddlingNickNDateContainer> 
                     </MeddlingLeftTopContainer>  
                     <MeddlingRightTopContainer>
-                        <MeddlingPurChased>구매 완료</MeddlingPurChased>
-                        <MeddlingSatisfaction>
-                        <MeddlingSatisfactionImage imageUrl={satisfactionImageUrl} />
+                        {wish.purchaseStatus === "PURCHASE" && (
+                            <MeddlingPurChased>구매 완료</MeddlingPurChased>
+                        )}
+                        {wish.purchaseStatus === "PURCHASE" && wish.satisfactionStatus === "SATISFIED" && (
+                            <MeddlingSatisfaction>
+                                <MeddlingSatisfactionImage imageUrl={satisfactionImageUrl} />
                             만족</MeddlingSatisfaction>
+                        )}
+                        {wish.purchaseStatus === "PURCHASE" && wish.satisfactionStatus === "DISSATISFIED" && (
+                            <MeddlingDisSatisfaction>
+                                <MeddlingSatisfactionImage imageUrl={disSatisfactionImageUrl} />
+                            불만족</MeddlingDisSatisfaction>
+                        )}
                     </MeddlingRightTopContainer>
                 </MeddlingTopContainer>
-                <MeddlingProductName>감성 투명 아이패드 케이스 에어 7세대 6세대 11인치</MeddlingProductName>
-                <MeddlingProductPrice>가격</MeddlingProductPrice>
+                <MeddlingProductName>{wish.title}</MeddlingProductName>
+                <MeddlingProductPrice>{wish.price}원</MeddlingProductPrice>
                 <MeddlingButtonContainer>
                     <MeddlingAgreeContainer>
                         <MeddlingAgreeImage imageUrl={agreeImageUrl} />
                         <MeddlingAgreeText>
                         찬성</MeddlingAgreeText>
-                        <MeddlingAgreeCntText>23</MeddlingAgreeCntText>
+                        <MeddlingAgreeCntText>{wish.likeCnt}</MeddlingAgreeCntText>
                     </MeddlingAgreeContainer>
                     <MeddlingDisagreeContainer>
                         <MeddlingDisagreeImage imageUrl={disagreeImageUrl} />
                         <MeddlingDisagreeText>
-                        찬성</MeddlingDisagreeText>
-                        <MeddlingDisagreeCntText>23</MeddlingDisagreeCntText>
+                        반대</MeddlingDisagreeText>
+                        <MeddlingDisagreeCntText>{wish.unLikeCnt}</MeddlingDisagreeCntText>
                     </MeddlingDisagreeContainer>
                     <MeddlingCommentContainer>
                         <MeddlingCommentImage imageUrl={commentImageUrl} />
                         <MeddlingCommentText>
-                        찬성</MeddlingCommentText>
-                        <MeddlingCommentCntText>23</MeddlingCommentCntText>
+                        댓글</MeddlingCommentText>
+                        <MeddlingCommentCntText>{wish.commentCnt}</MeddlingCommentCntText>
                     </MeddlingCommentContainer>
                 </MeddlingButtonContainer>
             </MeddlingInfoContainer>
-            <MeddlingProductImg imageUrl={ProductImageUrl}/>
+            <MeddlingProductImg imageUrl={wish.image}/>
         </CardContainer>
         <MeddlingLine/>
         </>
