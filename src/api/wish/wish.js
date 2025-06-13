@@ -46,3 +46,14 @@ export const getMyWishPurchased = async () => {
     throw error;
   }
 };
+
+// 위시 상세 조회
+export const getWishInfo = async (wishId) => {
+  try {
+    const response = await axiosInstance.get(`/wish/${wishId}`);
+    return response.data.result;
+  } catch (error) {
+    console.error("위시 상세 내용 조회 실패:", error);
+    throw error;
+  }
+};

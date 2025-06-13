@@ -350,9 +350,13 @@ const MyWishPurchasedCard = ({ wish }) => {
         mapStatusToText[wish.satisfactionStatus] || ""
     );
 
+    const handleClick = () => {
+        navigate(`/wish-info`, { state: { wishId: wish.wishId } });
+    };
+
     return (
         <>
-        <CardContainer>
+        <CardContainer onClick={handleClick}>
             <MyWishInfoContainer>
                 <MyWishTopContainer>
                     <MyWishLeftTopContainer>
