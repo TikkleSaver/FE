@@ -472,10 +472,10 @@ function UpdateWishNotExistPage() {
         setInputName(wishInfo.title || "");
         setInputBrand(wishInfo.brand || "");
         setCategory(categoryMap[wishInfo.categoryId] || "");
-        setIsPublic(wishInfo.isPublic || false);
+        setIsPublic(wishInfo.publicStatus === "PRIVATE");
         setInputPrice(wishInfo.price ? String(wishInfo.price) : "");
         if (wishInfo.purchaseStatus === "PURCHASE") {
-          setSatisfaction(wishInfo.satisfaction || "");
+          setSatisfaction(wishInfo.satisfactionStatus || "");
         }
       }
     }, [wishInfo]);
@@ -507,7 +507,10 @@ function UpdateWishNotExistPage() {
         title: inputName,
         brand: inputBrand,
         price: parseInt(inputPrice),
-        categoryId: categoryReverseMap[selectedCategory]
+        categoryId: categoryReverseMap[selectedCategory],
+        ...(wishInfo.purchaseStatus === "PURCHASE" && selectedSatisfaction && {
+          satisfactionStatus: selectedSatisfaction === "만족" ? "SATISFIED" : "DISSATISFIED"
+        })
       };
 
       const formData = new FormData();
