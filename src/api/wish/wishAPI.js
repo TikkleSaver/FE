@@ -1,8 +1,6 @@
 import axios from "axios";
 import axiosInstance from "../axiosInstance";
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 // 존재 상품 위시 추가 API
 export const createWishExistProduct = async (wishData) => {
   try {
@@ -43,6 +41,17 @@ export const getMyWishPurchased = async () => {
     return response.data.result;
   } catch (error) {
     console.error("나의 구매 완료 위시 조회 실패:", error);
+    throw error;
+  }
+};
+
+// 위시 상세 조회
+export const getWishInfo = async (wishId) => {
+  try {
+    const response = await axiosInstance.get(`/wish/${wishId}`);
+    return response.data.result;
+  } catch (error) {
+    console.error("위시 상세 내용 조회 실패:", error);
     throw error;
   }
 };

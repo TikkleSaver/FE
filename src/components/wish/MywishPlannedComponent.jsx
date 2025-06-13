@@ -323,9 +323,13 @@ const MyWishPlannedCard = ({ wish }) => {
     // 프로필 여부
     const profileUrl = wish.profileUrl || ProfileImageUrl;
 
+    const handleClick = () => {
+        navigate(`/wish-info`, { state: { wishId: wish.wishId } });
+    };
+
     return (
         <>
-        <CardContainer>
+        <CardContainer onClick={handleClick}>
             <MyWishInfoContainer>
                 <MyWishTopContainer>
                     <MyWishLeftTopContainer>

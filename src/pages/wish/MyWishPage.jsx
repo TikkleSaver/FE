@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MywishPlannedComponent from "../../components/wish/MywishPlannedComponent";
 import MywishPurchasedComponent from "../../components/wish/MywishPurchasedComponent";
 import Colors from "../../constanst/color.mjs";
-import { getMyWishPlanned, getMyWishPurchased } from "../../api/wish/wish";
+import { getMyWishPlanned, getMyWishPurchased } from "../../api/wish/wishAPI";
 
 const MyWishPageContainer = styled.div`
     width:70%;

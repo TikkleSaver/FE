@@ -25,7 +25,8 @@ const Colors ={
     yellowTab:"#FFB129",
 
     purchasedBox:"#B60000",
-    satisfactionBox:"#0341BE"
+    satisfactionBox:"#0341BE",
+    disSatisfactionBox:"#B60000"
 
 }
 

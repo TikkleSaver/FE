@@ -4,7 +4,7 @@ import styled from "styled-components";
 import lockImageURL from "../../assets/wishLockGrey.svg";
 import wishEmptyImageURL from "../../assets/wishEmptyImg.svg"
 import Colors from "../../constanst/color.mjs";
-import { createWishNotExistProduct } from "../../api/wish/wish";
+import { createWishNotExistProduct } from "../../api/wish/wishAPI";
 
 // 전체 상자
 const ProductPageContainer = styled.div`    
