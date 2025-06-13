@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import agreeImageUrl from "../../assets/wishAgree.svg";
 import disagreeImageUrl from "../../assets/wishDisagree.svg";
+import agreeImageGreenUrl from "../../assets/wishAgreeColor.svg";
+import disagreeImageGreenUrl from "../../assets/wishDisagreeColor.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import unLockImageUrl from "../../assets/wishUnlock.svg";
 import lockImageUrl from "../../assets/wishLock.svg";
@@ -11,6 +13,7 @@ import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
 import { deleteWish, updateWishPurchaseSatus, updateWishPublicSatus } from "../../api/wish/wishAPI"; 
+import { createWishVote } from "../../api/wish/wishVoteAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -353,6 +356,9 @@ const MyWishPlannedCard = ({ wish }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [publicStatus, setPublicStatus] = useState(wish.publicStatus);
+    const [voted, setVoted] = useState(null); 
+    const [likeCnt, setLikeCnt] = useState(wish.likeCnt);
+    const [unLikeCnt, setUnLikeCnt] = useState(wish.unLikeCnt);
 
     const dropdownRef = useRef();
 
@@ -422,6 +428,21 @@ const MyWishPlannedCard = ({ wish }) => {
         }
     };
 
+    const handleCreateVote = async (newStatus) => {
+        try {
+            await createWishVote(wish.wishId, newStatus);
+            if (newStatus === "LIKE") {
+                setLikeCnt((prev) => prev + 1);
+                setVoted("LIKE");
+             } else if (newStatus === "UNLIKE") {
+                setUnLikeCnt((prev) => prev + 1);
+                setVoted("UNLIKE");
+            }
+        } catch (error) {
+            alert(error.response.data.message);
+        }
+    };
+
     return (
         <>
         <CardContainer onClick={handleClick}>
@@ -465,17 +486,25 @@ const MyWishPlannedCard = ({ wish }) => {
                 <MyWishProductPrice>{wish.price}원</MyWishProductPrice>
                 <MyWishBottomContainer>
                     <MyWishBottomButtonContainer>
-                        <MyWishAgreeContainer>
-                            <MyWishAgreeImage imageUrl={agreeImageUrl} />
+                        <MyWishAgreeContainer
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleCreateVote("LIKE");
+                            }}>
+                            <MyWishAgreeImage imageUrl={voted === "LIKE" ? agreeImageGreenUrl : agreeImageUrl} />
                             <MyWishAgreeText>
                             찬성</MyWishAgreeText>
-                            <MyWishAgreeCntText>{wish.likeCnt}</MyWishAgreeCntText>
+                            <MyWishAgreeCntText>{likeCnt}</MyWishAgreeCntText>
                         </MyWishAgreeContainer>
-                        <MyWishDisagreeContainer>
-                            <MyWishDisagreeImage imageUrl={disagreeImageUrl} />
+                        <MyWishDisagreeContainer
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleCreateVote("UNLIKE");
+                            }}>
+                           <MyWishDisagreeImage imageUrl={voted === "UNLIKE" ? disagreeImageGreenUrl : disagreeImageUrl} />
                             <MyWishDisagreeText>
                             반대</MyWishDisagreeText>
-                            <MyWishDisagreeCntText>{wish.unLikeCnt}</MyWishDisagreeCntText>
+                            <MyWishDisagreeCntText>{unLikeCnt}</MyWishDisagreeCntText>
                         </MyWishDisagreeContainer>
                         <MyWishCommentContainer>
                             <MyWishCommentImage imageUrl={commentImageUrl} />

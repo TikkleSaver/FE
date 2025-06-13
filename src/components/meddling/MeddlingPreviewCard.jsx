@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import satisfactionImageUrl from "../../assets/wishSatisfaction.svg";
 import disSatisfactionImageUrl from "../../assets/wishDisSatisfacrion.svg";
 import agreeImageUrl from "../../assets/wishAgree.svg";
 import disagreeImageUrl from "../../assets/wishDisagree.svg";
+import agreeImageGreenUrl from "../../assets/wishAgreeColor.svg";
+import disagreeImageGreenUrl from "../../assets/wishDisagreeColor.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { createWishVote } from "../../api/wish/wishVoteAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -310,12 +313,30 @@ function formatDateTime(dateString) {
 
 const MeddlePreviewCard = ({ wish }) => {
     const navigate = useNavigate();
+    const [voted, setVoted] = useState(null); 
+    const [likeCnt, setLikeCnt] = useState(wish.likeCnt);
+    const [unLikeCnt, setUnLikeCnt] = useState(wish.unLikeCnt);
 
     // 프로필 여부
     const profileUrl = wish.profileUrl || ProfileImageUrl;
 
     const handleClick = () => {
         navigate(`/wish-info`, { state: { wishId: wish.wishId } });
+    };
+
+    const handleCreateVote = async (newStatus) => {
+        try {
+            await createWishVote(wish.wishId, newStatus);
+            if (newStatus === "LIKE") {
+                setLikeCnt((prev) => prev + 1);
+                setVoted("LIKE");
+             } else if (newStatus === "UNLIKE") {
+                setUnLikeCnt((prev) => prev + 1);
+                setVoted("UNLIKE");
+            }
+        } catch (error) {
+            alert(error.response.data.message);
+        }
     };
 
     return (
@@ -349,17 +370,25 @@ const MeddlePreviewCard = ({ wish }) => {
                 <MeddlingProductName>{wish.title}</MeddlingProductName>
                 <MeddlingProductPrice>{wish.price}원</MeddlingProductPrice>
                 <MeddlingButtonContainer>
-                    <MeddlingAgreeContainer>
-                        <MeddlingAgreeImage imageUrl={agreeImageUrl} />
+                <MeddlingAgreeContainer
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleCreateVote("LIKE");
+                    }}>
+                    <MeddlingAgreeImage imageUrl={voted === "LIKE" ? agreeImageGreenUrl : agreeImageUrl} />
                         <MeddlingAgreeText>
                         찬성</MeddlingAgreeText>
-                        <MeddlingAgreeCntText>{wish.likeCnt}</MeddlingAgreeCntText>
+                        <MeddlingAgreeCntText>{likeCnt}</MeddlingAgreeCntText>
                     </MeddlingAgreeContainer>
-                    <MeddlingDisagreeContainer>
-                        <MeddlingDisagreeImage imageUrl={disagreeImageUrl} />
+                    <MeddlingDisagreeContainer
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCreateVote("UNLIKE");
+                        }}>
+                        <MeddlingDisagreeImage imageUrl={voted === "UNLIKE" ? disagreeImageGreenUrl : disagreeImageUrl} />
                         <MeddlingDisagreeText>
                         반대</MeddlingDisagreeText>
-                        <MeddlingDisagreeCntText>{wish.unLikeCnt}</MeddlingDisagreeCntText>
+                        <MeddlingDisagreeCntText>{unLikeCnt}</MeddlingDisagreeCntText>
                     </MeddlingDisagreeContainer>
                     <MeddlingCommentContainer>
                         <MeddlingCommentImage imageUrl={commentImageUrl} />
