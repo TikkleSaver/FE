@@ -7,7 +7,7 @@ import lockImageURL from "../../assets/wishLockGrey.svg";
 import unlockImageURL from "../../assets/wishUnlockGrey.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
-import { createWishExistProductAPI } from "../../api/wish";
+import { createWishExistProductAPI } from "../../api/wish/wish";
 
 // 전체 상자
 const ProductPageContainer = styled.div`   

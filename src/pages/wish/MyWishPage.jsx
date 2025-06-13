@@ -3,6 +3,7 @@ import styled from "styled-components";
 import MywishPlannedComponent from "../../components/wish/MywishPlannedComponent";
 import MywishPurchasedComponent from "../../components/wish/MywishPurchasedComponent";
 import Colors from "../../constanst/color.mjs";
+import { getMyWishPlanned } from "../../api/wish/wish";
 
 const MyWishPageContainer = styled.div`
     width:70%;
@@ -78,9 +79,22 @@ const TopMyWishInnerContainer = styled.div`
 function MyWishPage() {
     const [selectedTab, setSelectedTab] = useState("구매 예정");
 
-    const [plannedItems, setPlannedItems] = useState([1, 2, 3, 4, 5]);  // 더미 데이터
-    const [purchasedItems, setPurchasedItems] = useState([1, 2, 3, 4, 5, 6]); // 더미 데이터
+    const [plannedItems, setPlannedItems] = useState([]);
+    const [purchasedItems, setPurchasedItems] = useState([1, 2, 3, 4, 5, 6]); 
 
+    useEffect(() => {
+        const fetchPlannedItems = async () => {
+            try {
+                const result = await getMyWishPlanned();
+                setPlannedItems(result.myWishPlannedLst);
+            } catch (error) {
+                console.error("구매 예정 위시 불러오기 실패", error);
+            }
+        };
+
+        fetchPlannedItems();
+    }, []);    
+    
     const tabs = [
       { name: "구매 예정" },
       { name: "구매 완료" },
@@ -107,14 +121,15 @@ function MyWishPage() {
                 </TabContainer>
                 <TabMyWishContainer>
                     <TopMyWishInnerContainer>
-                            {selectedTab === "구매 예정" &&
-                                plannedItems.map((item, index) => (
-                                    <MywishPlannedComponent key={index} />
-                                ))}
-                            {selectedTab === "구매 완료" &&
-                                purchasedItems.map((item, index) => (
-                                    <MywishPurchasedComponent key={index} />
-                                ))}
+                        {selectedTab === "구매 예정" &&
+                            plannedItems.length > 0 &&
+                            plannedItems.map((item, index) => (
+                                <MywishPlannedComponent key={index} wish={item} />
+                        ))}
+                        {selectedTab === "구매 완료" &&
+                            purchasedItems.map((item, index) => (
+                                <MywishPurchasedComponent key={index} />
+                        ))}
                     </TopMyWishInnerContainer>
                 </TabMyWishContainer>
             </MyWishContainer>
