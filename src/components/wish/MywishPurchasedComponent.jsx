@@ -5,6 +5,7 @@ import agreeImageUrl from "../../assets/wishAgree.svg";
 import disagreeImageUrl from "../../assets/wishDisagree.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import unLockImageUrl from "../../assets/wishUnlock.svg";
+import lockImageUrl from "../../assets/wishLock.svg";
 import etcImageUrl from "../../assets/wishEtc.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
@@ -291,7 +292,7 @@ const SatisfactionWrapper = styled.div`
 // 만족 불만족 상자
 const SatisfactionBtnContainer = styled.div`    
     position: absolute;
-    top: 5px;
+    top: -10px;
     right: 45px;
     display: flex;
     gap: 10px;
@@ -312,10 +313,42 @@ const SatisfactionBtn = styled.button`
     font-weight: 500;
 `;
 
-const MyWishPurchasedCard = () => {
+// 날짜 변환
+function formatDateTime(dateString) {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date)) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}.${month}.${day} ${hours}:${minutes}`;
+}
+
+const MyWishPurchasedCard = ({ wish }) => {
     const navigate = useNavigate();
-    const [selectedSatisfaction, setSatisfaction] = useState("");
+
+    // 공개 여부
+    const isPublic = wish.publicStatus === "PUBLIC";
+    const publicIconUrl = isPublic ? unLockImageUrl : lockImageUrl;
+    const publicText = isPublic ? "공개" : "비공개";
+
+    // 프로필 여부
+    const profileUrl = wish.profileUrl || ProfileImageUrl;
+
+    // 만족 여부
     const satisfactions = ["만족", "불만족"];
+    const mapStatusToText = {
+        SATISFIED: "만족",
+        DISSATISFIED: "불만족",
+    };
+    const [selectedSatisfaction, setSatisfaction] = useState(
+        mapStatusToText[wish.satisfactionStatus] || ""
+    );
 
     return (
         <>
@@ -325,14 +358,14 @@ const MyWishPurchasedCard = () => {
                     <MyWishLeftTopContainer>
                         <MyWishProfileImg imageUrl={ProfileImageUrl}/>
                         <MyWishNickNDateContainer>
-                            <MyWishNickname>닉네임</MyWishNickname>
-                            <MyWishCreatedDate>2025.04.04 11:30</MyWishCreatedDate>
+                            <MyWishNickname>{wish.nickname}</MyWishNickname>
+                            <MyWishCreatedDate>{formatDateTime(wish.createdAt)}</MyWishCreatedDate>
                         </MyWishNickNDateContainer> 
                     </MyWishLeftTopContainer>  
                     <MyWishRightTopContainer>
                         <MyWishPublicBtn>
-                        <MyWishPublicImage imageUrl={unLockImageUrl} />
-                            공개</MyWishPublicBtn>
+                        <MyWishPublicImage imageUrl={publicIconUrl} />
+                            {publicText}</MyWishPublicBtn>
                             <MyWishEtcImage imageUrl={etcImageUrl} />
                     </MyWishRightTopContainer>
                 </MyWishTopContainer>
@@ -349,32 +382,32 @@ const MyWishPurchasedCard = () => {
                         ))}
                     </SatisfactionBtnContainer>
                 </SatisfactionWrapper>
-                <MyWishProductName>명칭</MyWishProductName>
-                <MyWishProductPrice>가격</MyWishProductPrice>
+                <MyWishProductName>{wish.title}</MyWishProductName>
+                <MyWishProductPrice>{wish.price}원</MyWishProductPrice>
                 <MyWishBottomContainer>
                     <MyWishBottomButtonContainer>
                         <MyWishAgreeContainer>
                             <MyWishAgreeImage imageUrl={agreeImageUrl} />
                             <MyWishAgreeText>
                             찬성</MyWishAgreeText>
-                            <MyWishAgreeCntText>23</MyWishAgreeCntText>
+                            <MyWishAgreeCntText>{wish.likeCnt}</MyWishAgreeCntText>
                         </MyWishAgreeContainer>
                         <MyWishDisagreeContainer>
                             <MyWishDisagreeImage imageUrl={disagreeImageUrl} />
                             <MyWishDisagreeText>
                             반대</MyWishDisagreeText>
-                            <MyWishDisagreeCntText>23</MyWishDisagreeCntText>
+                            <MyWishDisagreeCntText>{wish.unLikeCnt}</MyWishDisagreeCntText>
                         </MyWishDisagreeContainer>
                         <MyWishCommentContainer>
                             <MyWishCommentImage imageUrl={commentImageUrl} />
                             <MyWishCommentText>
                             댓글</MyWishCommentText>
-                            <MyWishCommentCntText>23</MyWishCommentCntText>
+                            <MyWishCommentCntText>{wish.commentCnt}</MyWishCommentCntText>
                         </MyWishCommentContainer>
                     </MyWishBottomButtonContainer>
                 </MyWishBottomContainer>
             </MyWishInfoContainer>
-            <MyWishProductImg imageUrl={ProductImageUrl}/>
+            <MyWishProductImg imageUrl={wish.image}/>
         </CardContainer>
         <MyWishLine/>
         </>
