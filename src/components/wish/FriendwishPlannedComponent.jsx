@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import agreeImageUrl from "../../assets/wishAgree.svg";
 import disagreeImageUrl from "../../assets/wishDisagree.svg";
+import agreeImageGreenUrl from "../../assets/wishAgreeColor.svg";
+import disagreeImageGreenUrl from "../../assets/wishDisagreeColor.svg";
 import commentImageUrl from "../../assets/wishComment.svg";
 import ProfileImageUrl from "./../../assets/defaultProfile.svg";
 import ProductImageUrl from "./../../images/wishProduct.png"    // 임시 사진
 import Colors from "../../constanst/color.mjs";
+import { createWishVote, getWishVote, deleteWishVote } from "../../api/wish/wishVoteAPI"; 
 
 // 큰 상자
 const CardContainer = styled.div`   
@@ -248,6 +251,9 @@ function formatDateTime(dateString) {
 
 const FriendWishPlannedCard = ({ wish }) => {
     const navigate = useNavigate();
+    const [voted, setVoted] = useState(null); 
+    const [likeCnt, setLikeCnt] = useState(wish.likeCnt);
+    const [unLikeCnt, setUnLikeCnt] = useState(wish.unLikeCnt);
 
     // 프로필 여부
     const profileUrl = wish.profileUrl || ProfileImageUrl;
@@ -255,6 +261,44 @@ const FriendWishPlannedCard = ({ wish }) => {
     const handleClick = () => {
         navigate(`/wish-info`, { state: { wishId: wish.wishId } });
     };
+
+    const handleCreateDeleteVote = async (newStatus) => {
+        try {
+            if (voted === newStatus) {
+                await deleteWishVote(wish.wishId);
+            if (newStatus === "LIKE") {
+                setLikeCnt((prev) => prev - 1);
+            } else if (newStatus === "UNLIKE") {
+                setUnLikeCnt((prev) => prev - 1);
+            }
+            setVoted(null);
+            } else {
+                await createWishVote(wish.wishId, newStatus);
+            if (newStatus === "LIKE") {
+                setLikeCnt((prev) => prev + 1);
+                if (voted === "UNLIKE") setUnLikeCnt((prev) => prev - 1);
+            } else if (newStatus === "UNLIKE") {
+                setUnLikeCnt((prev) => prev + 1);
+                if (voted === "LIKE") setLikeCnt((prev) => prev - 1);
+            }
+                setVoted(newStatus);
+            }
+        } catch (error) {
+            alert(error.response.data.message);
+        }
+    };
+
+    useEffect(() => {
+        const fetchVoteStatus = async () => {
+        try {
+            const data = await getWishVote(wish.wishId);
+            setVoted(data.result.likeStatus);
+        } catch (error) {
+            console.error("투표 상태 불러오기 실패:", error);
+        }
+        };
+        fetchVoteStatus();
+    }, [wish.wishId]);
 
     return (
         <>
@@ -272,17 +316,25 @@ const FriendWishPlannedCard = ({ wish }) => {
                 <FriendWishProductName>{wish.title}</FriendWishProductName>
                 <FriendWishProductPrice>{wish.price}원</FriendWishProductPrice>
                 <FriendWishButtonContainer>
-                    <FriendWishAgreeContainer>
-                        <FriendWishAgreeImage imageUrl={agreeImageUrl} />
+                    <FriendWishAgreeContainer
+                        onClick={(e) => {
+                            e.stopPropagation();
+                             handleCreateDeleteVote("LIKE");
+                        }}>
+                        <FriendWishAgreeImage imageUrl={voted === "LIKE" ? agreeImageGreenUrl : agreeImageUrl} />
                         <FriendWishAgreeText>
                         찬성</FriendWishAgreeText>
-                        <FriendWishAgreeCntText>{wish.likeCnt}</FriendWishAgreeCntText>
+                        <FriendWishAgreeCntText>{likeCnt}</FriendWishAgreeCntText>
                     </FriendWishAgreeContainer>
-                    <FriendWishDisagreeContainer>
-                        <FriendWishDisagreeImage imageUrl={disagreeImageUrl} />
+                    <FriendWishDisagreeContainer
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCreateDeleteVote("UNLIKE");
+                        }}>
+                        <FriendWishDisagreeImage imageUrl={voted === "UNLIKE" ? disagreeImageGreenUrl : disagreeImageUrl} />
                         <FriendWishDisagreeText>
                         반대</FriendWishDisagreeText>
-                        <FriendWishDisagreeCntText>{wish.unLikeCnt}</FriendWishDisagreeCntText>
+                        <FriendWishDisagreeCntText>{unLikeCnt}</FriendWishDisagreeCntText>
                     </FriendWishDisagreeContainer>
                     <FriendWishCommentContainer>
                         <FriendWishCommentImage imageUrl={commentImageUrl} />
