@@ -81,13 +81,28 @@ const WishListMenu = () => {
 
       <Dropdown className="dropdown" $open={open}>
         <DropdownItem
-          onClick={() => navigate("/products")}
+          onClick={() => { 
+            const token = localStorage.getItem("accessToken");
+            if (token) {
+              navigate("/products");
+            } else {
+                alert("로그인 후 이용해주세요");
+            }
+          }}
           $active={location.pathname === "/products"}
         >
           상품 검색
         </DropdownItem>
         <DropdownItem
-          onClick={() => navigate("/wish/mine")}
+          onClick={() => {
+            const token = localStorage.getItem("accessToken");
+            if (token) {
+              navigate("/wish/mine");
+            }
+            else {
+              alert("로그인 후 이용해주세요");
+            }
+          }}
           $active={location.pathname === "/wish/mine"}
         >
           위시 목록
