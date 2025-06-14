@@ -397,7 +397,7 @@ const WishInfoCommentListContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 639px;
-  height: 370px;
+  height: 340px;
   box-sizing: border-box;
   overflow: hidden;
 `;
@@ -611,6 +611,10 @@ function WishInfoPage() {
         fetchVoteStatus();
     }, [wishInfo.wishId]);
 
+    const handleRefresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+    };
+
     return (
         <WishInfoPageContainer>
             <WishInfoBox>
@@ -703,7 +707,7 @@ function WishInfoPage() {
                         <WishInfoCommentListContainer>
                             <WishInfoComments>
                             {comments.map((c, i) =>
-                                <WishCommentCard key={i} comment={c} />
+                                <WishCommentCard key={i} comment={c} onRefresh={handleRefresh} />
                             )}
                             </WishInfoComments>{" "}
                             <CommentInputWrapper>

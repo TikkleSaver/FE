@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Profile from "./../../assets/defaultProfile.svg";
 import Etc from "./../../assets/etc-vertical.svg";
 import Colors from "../../constanst/color.mjs";
-import { deleteWishComment } from "../../api/wish/wishCommentAPI"; 
+import { deleteWishComment, updateWishComment } from "../../api/wish/wishCommentAPI"; 
 
 const WishCommentCardContainer = styled.div`
   position: relative;
@@ -25,6 +25,17 @@ const WishCommentText = styled.div`
   font-size: 16px;
   word-break: keep-all;
   overflow-wrap: break-word;
+`;
+
+const WishCommentInput = styled.input`
+  width: 95%;
+  height: 30px;
+  padding: 0 50px 0 15px;
+  border: 1px solid ${Colors.secondary100};
+  border-radius: 15px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
 `;
 
 const WishCommentDate = styled.div`
@@ -70,6 +81,33 @@ const EtcDropdownItem = styled.div`
   }
 `;
 
+
+const EditButtons = styled.div`
+  margin-right: 5%;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+`;
+
+const SaveButton = styled.button`
+  align-self: flex-end;
+  padding: 5px 15px;
+  background-color: ${Colors.primary};
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+`;
+
+const CancelButton = styled.button`
+  padding: 5px 15px;
+  background-color: ${Colors.secondary100};
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+`;
+
 // 날짜 변환
 function formatDateTime(dateString) {
   if (!dateString) return "";
@@ -86,8 +124,10 @@ function formatDateTime(dateString) {
   return `${year}.${month}.${day} ${hours}:${minutes}`;
 }
 
-const WishCommentCard = ({ comment }) => {
+const WishCommentCard = ({ comment, onRefresh }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(comment.contents);
 
   const dropdownRef = useRef();
 
@@ -106,7 +146,6 @@ const WishCommentCard = ({ comment }) => {
   }, [isOpen]);
 
   const handleDeleteClick = async (e) => {
-    e.stopPropagation(); 
     setIsOpen(false);
 
      const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
@@ -114,10 +153,26 @@ const WishCommentCard = ({ comment }) => {
 
       try {
           await deleteWishComment(comment.wishCommentId);
-          alert("위시 댓글 성공적으로 삭제되었습니다.");
-          window.location.reload(); 
+          onRefresh?.();  
       } catch (error) {
           alert("삭제 중 오류가 발생했습니다.");
+      }
+  };
+
+  const handleUpdateSubmit = async () => {
+    try {
+        const CommentData = {
+          contents: editContent
+        };
+
+        await updateWishComment(
+          comment.wishCommentId,
+          CommentData
+        );
+        setIsEditing(false); 
+        onRefresh?.(); 
+      } catch (err) {
+        alert("수정 중 오류가 발생했습니다");
       }
   };
 
@@ -127,7 +182,28 @@ const WishCommentCard = ({ comment }) => {
         <img src={profileUrl} alt="사용자프로필"/>
         {comment.nickname}
       </WishUserName>
-      <WishCommentText>{comment.contents}</WishCommentText>
+            {isEditing ? (
+        <>
+          <WishCommentInput
+            type="text"
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+          />
+          <EditButtons>
+            <SaveButton onClick={handleUpdateSubmit}>저장</SaveButton>
+            <CancelButton
+              onClick={() => {
+                setIsEditing(false);
+                setEditContent(comment.content); 
+              }}
+            >
+              취소
+            </CancelButton>
+          </EditButtons>
+        </>
+      ) : (
+        <WishCommentText>{comment.contents}</WishCommentText>
+      )}
       <WishCommentDate>{formatDateTime(comment.createdAt)}</WishCommentDate>
 
       {comment.isAuthor && (
@@ -141,11 +217,17 @@ const WishCommentCard = ({ comment }) => {
       )}
       {isOpen && (
         <EtcDropdown ref={dropdownRef}>
-          <EtcDropdownItem>
+          <EtcDropdownItem
+            onClick={() => {
+              setIsOpen(false);
+              setIsEditing(true);
+            }}>
               수정
           </EtcDropdownItem>
           <EtcDropdownItem
-            onClick={handleDeleteClick}>
+            onClick={() => {
+              setIsOpen(false);
+              handleDeleteClick()}} >
             삭제
           </EtcDropdownItem>
         </EtcDropdown>
