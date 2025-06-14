@@ -54,12 +54,14 @@ const ProductContainer = styled.div`
 const ButtonWrapper = styled.div`   
   display: flex;
   justify-content: flex-end;
-  padding: 0 55px; 
+  padding: 0 40px; 
   margin-bottom: 40px; 
+  width: 90%;        
+  max-width: 1200px;
 `;
 
 // 직접 추가 버튼
-const ProductCreateBtn = styled.button`   // 잊지 말자 좌우 간격 줄이기
+const ProductCreateBtn = styled.button`
   width : 120px;
   height: 35px;
   background-color: ${Colors.primary300};

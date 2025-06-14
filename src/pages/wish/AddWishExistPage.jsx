@@ -146,7 +146,7 @@ const ProductPublicExplain = styled.div`
   display: flex;                
   align-items: center; 
   color: ${Colors.secondary300};
-  font-size: 8px; // 13px -- 잊지 말자 크기 수정 
+  font-size: 13px;
   font-weight: 500;
   line-height: 15px;
   word-wrap: break-word;
@@ -301,13 +301,15 @@ const  ProductAddImage = styled.span`
 
 function AddWishExistPage() {
 
+  const location = useLocation();
+  const product = location.state?.product;
   const navigate = useNavigate();
   const [selectedCategory, setCategory] = useState("식비");
   const categories = ["식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
   const [isPublic, setIsPublic] = useState(false);
-  const [inputPrice, setInputPrice] = useState("");
-  const location = useLocation();
-  const product = location.state?.product;
+  const [inputPrice, setInputPrice] = useState(
+    product.lprice != null ? String(product.lprice) : ""
+  );
 
   const categoryMap = {
     "식비": 1,
@@ -413,7 +415,6 @@ function AddWishExistPage() {
                     <PriceInputContainer>
                       <PriceInput
                           type="text"
-                          placeholder={product.lprice}
                           value={inputPrice}
                           onChange={(e) => setInputPrice(e.target.value)}
                       />
