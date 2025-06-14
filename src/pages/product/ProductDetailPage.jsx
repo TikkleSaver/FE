@@ -58,6 +58,9 @@ const ProductName = styled.div`
   font-weight: 600;
   line-height: 30px;
   word-wrap: break-word;
+  b {
+    font-weight: 600; 
+  }
 `;
 
 // 브랜드
@@ -170,7 +173,7 @@ function ProductDetailPage() {
                     .filter(Boolean)
                     .join(" > ")}
               </ProductCategory>
-              <ProductName>{product.title}</ProductName>
+              <ProductName dangerouslySetInnerHTML={{ __html: product.title }} />
               <ProductBrand>브랜드 | {product.brand}</ProductBrand>
               <ProductMallName>쇼핑몰 | {product.mallName}</ProductMallName>
               <ProductLowPrice>가격 | {product.lprice}원</ProductLowPrice>

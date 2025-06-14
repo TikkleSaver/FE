@@ -144,7 +144,10 @@ const FriendWishProductName = styled.div`
     font-weight: 600;
     line-height: 30px;
     word-wrap: break-word;
-    padding-top: 30px;
+    padding-top: 30px;  
+    b {
+        font-weight: 600; 
+    }
 `;
 
 // 상품 가격
@@ -389,7 +392,7 @@ const FriendWishPurchasedCard = ({ wish }) => {
                         )}
                     </FriendWishRightTopContainer>
                 </FriendWishTopContainer>
-                <FriendWishProductName>{wish.title}</FriendWishProductName>
+                <FriendWishProductName dangerouslySetInnerHTML={{ __html: wish.title }} />
                 <FriendWishProductPrice>{wish.price}원</FriendWishProductPrice>
                 <FriendWishButtonContainer>
                     <FriendWishAgreeContainer

@@ -58,6 +58,9 @@ const ProductName = styled.div`
   font-weight: 600;
   line-height: 30px;
   word-wrap: break-word;
+  b {
+    font-weight: 600; 
+  }
 `;
 
 // 설정해야할 정보 (카테고리, 공개, 가격)
@@ -362,7 +365,7 @@ function AddWishExistPage() {
                 .filter(Boolean)
                 .join(" > ")}
               </ProductCategory>
-              <ProductName>{product.title}</ProductName>
+              <ProductName dangerouslySetInnerHTML={{ __html: product.title }} />
               <ProductInputInfoContainer>
                 <ProductCategoryContainer>
                   <ProductCategoryText>카테고리</ProductCategoryText>

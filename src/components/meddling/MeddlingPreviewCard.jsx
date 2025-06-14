@@ -146,6 +146,9 @@ const MeddlingProductName = styled.div`
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 30px;
+    b {
+        font-weight: 600; 
+    }
 `;
 
 // 상품 가격
@@ -390,7 +393,7 @@ const MeddlePreviewCard = ({ wish }) => {
                         )}
                     </MeddlingRightTopContainer>
                 </MeddlingTopContainer>
-                <MeddlingProductName>{wish.title}</MeddlingProductName>
+                <MeddlingProductName dangerouslySetInnerHTML={{ __html: wish.title }} />
                 <MeddlingProductPrice>{wish.price}원</MeddlingProductPrice>
                 <MeddlingButtonContainer>
                 <MeddlingAgreeContainer

@@ -362,6 +362,9 @@ const WishInfoProductName = styled.div`
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word;
+    b {
+        font-weight: 600; 
+    }
 `;
 
 // 브랜드
@@ -689,7 +692,7 @@ function WishInfoPage() {
                     <WishInfoRightMiddleContainer>
                         <WishInfoProductContainer>
                             <WishInfoProductCategory>{categoryMap[wishInfo.categoryId]}</WishInfoProductCategory>
-                            <WishInfoProductName>{wishInfo.title}</WishInfoProductName>
+                            <WishInfoProductName dangerouslySetInnerHTML={{ __html: wishInfo.title }} />
                             <WishInfoProductBrand>브랜드 | {wishInfo.brand}</WishInfoProductBrand>
                             <WishInfoProductPrice>가격 | {wishInfo.price}원</WishInfoProductPrice>
                             <WishInfoLine/>
