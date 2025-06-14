@@ -73,7 +73,7 @@ const AlarmBtn = styled.div`
 
 export default function FriendsPage() {
   const [hasNewRequest, setHasNewRequest] = useState(true);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,10 +91,10 @@ export default function FriendsPage() {
       }
     }
     loadFriends();
-  }, []);
+  }, [showModal]);
 
-  const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
+  const handleModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -103,7 +103,7 @@ export default function FriendsPage() {
         <img src={friendsImg} alt="friends" style={{ width: '30px' }} />
         <Title>친구</Title>
         <FriendNum>{friends.length}</FriendNum>
-        <AlarmBtn onClick={() => setShowDeleteModal(true)}>
+        <AlarmBtn onClick={() => setShowModal(true)}>
           <img src={alarm} alt="friends" style={{ width: '35px' }} />
           {hasNewRequest && <RedIcon src={redIcon} alt="friends" />}
         </AlarmBtn>
@@ -118,7 +118,7 @@ export default function FriendsPage() {
           friends.map((item) => <FriendCard key={item.id} item={item} />)}
       </Items>
 
-      {showDeleteModal && <RequestListModal onClose={handleCloseDeleteModal} />}
+      {showModal && <RequestListModal onClose={handleModal} />}
     </SearchFreindPageContainer>
   );
 }
