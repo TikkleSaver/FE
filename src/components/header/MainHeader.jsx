@@ -94,7 +94,7 @@ function MainHeader() {
         </div>
         <ul className="header__menulist">
           <li
-            className={location.pathname === '/' ? 'active' : ''}
+            className={location.pathname === '/meddling' ? 'active' : ''}
             onClick={() => {
               const token = localStorage.getItem("accessToken");
               if (token) {
