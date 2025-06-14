@@ -77,13 +77,15 @@ export default function FriendsPage() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [myId, setMyId] = useState();
 
   useEffect(() => {
     async function loadFriends() {
       try {
         setLoading(true);
-        const friendList = await fetchFriendList();
-        setFriends(friendList);
+        const result = await fetchFriendList();
+        setFriends(result.friendList);
+        setMyId(result.memberId);
       } catch (e) {
         setError('친구 목록을 불러오는데 실패했습니다.');
       } finally {
@@ -115,7 +117,9 @@ export default function FriendsPage() {
         {!loading && !error && friends.length === 0 && <p>친구가 없습니다.</p>}
         {!loading &&
           !error &&
-          friends.map((item) => <FriendCard key={item.id} item={item} />)}
+          friends.map((item) => (
+            <FriendCard key={item.id} item={item} myId={myId} />
+          ))}
       </Items>
 
       {showModal && <RequestListModal onClose={handleModal} />}

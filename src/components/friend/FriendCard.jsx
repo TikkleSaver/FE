@@ -51,17 +51,25 @@ const BtnGroup = styled.div`
   display: flex;
   flex-wrap: nowrap;
 `;
-const FriendCard = ({ item }) => {
+const FriendCard = ({ item, myId }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/friendprofile', { state: { memberId: item.id } });
   };
 
+  // 구매 목록 이동
+  const handleExpenseListClick = (e) => {
+    e.stopPropagation(); // 부모 클릭 방지
+    navigate(`/expense-calendar?memberId=${item.id}&viewerId=${myId}`);
+  };
+
   // 친구 위시리스트로 이동
   const handleWishlistClick = (e) => {
     e.stopPropagation(); // 부모 클릭 방지
-    navigate('/wish/friend', { state: { friendId: item.id, friendName: item.nickname, } });
+    navigate('/wish/friend', {
+      state: { friendId: item.id, friendName: item.nickname },
+    });
   };
 
   return (
@@ -70,7 +78,7 @@ const FriendCard = ({ item }) => {
       <ItemName>{item.nickname}</ItemName>
       <BtnGroup>
         <UpdateBtn2 onClick={handleWishlistClick}>위시리스트</UpdateBtn2>
-        <UpdateBtn2>구매 목록</UpdateBtn2>
+        <UpdateBtn2 onClick={handleExpenseListClick}>구매 목록</UpdateBtn2>
       </BtnGroup>
     </Item>
   );
