@@ -58,14 +58,14 @@ export default function SignUp() {
     }
     try {
       const result = await signUp(data);
-      const memberId = result.data.id;
+      const memberId = result.id;
 
-      alert(`환영합니다 ${data.nickname}님, 티끌모으기입니다!`);
+      alert(`환영합니다 ${result.nickname}님, 티끌모으기입니다!`);
       navigate('/onboarding/category', {
         state: { memberId },
       });
     } catch (error) {
-      alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+      alert('회원가입에 실패했습니다. 다시 시도해주세요.' + error);
     }
   };
 

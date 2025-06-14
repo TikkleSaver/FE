@@ -14,9 +14,8 @@ export const signUp = async (formValues) => {
     };
 
     const response = await refreshAxios.post('/signup', requestBody);
-    console.error('회원가입 실패:', response.data);
 
-    return response.data;
+    return response.data.result;
   } catch (error) {
     console.error('회원가입 실패:', error);
     throw error;
