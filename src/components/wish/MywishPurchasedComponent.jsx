@@ -168,6 +168,10 @@ const MyWishProductName = styled.div`
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 30px;
+    margin-right: 30px;
+    b {
+        font-weight: 600; 
+    }
 `;
 
 // 상품 가격
@@ -556,7 +560,7 @@ const MyWishPurchasedCard = ({ wish }) => {
                         ))}
                     </SatisfactionBtnContainer>
                 </SatisfactionWrapper>
-                <MyWishProductName>{wish.title}</MyWishProductName>
+                <MyWishProductName dangerouslySetInnerHTML={{ __html: wish.title }} />
                 <MyWishProductPrice>{wish.price}원</MyWishProductPrice>
                 <MyWishBottomContainer>
                     <MyWishBottomButtonContainer>

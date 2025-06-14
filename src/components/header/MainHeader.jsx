@@ -94,8 +94,15 @@ function MainHeader() {
         </div>
         <ul className="header__menulist">
           <li
-            className={location.pathname === '/' ? 'active' : ''}
-            onClick={() => navigate('/meddling')}
+            className={location.pathname === '/meddling' ? 'active' : ''}
+            onClick={() => {
+              const token = localStorage.getItem("accessToken");
+              if (token) {
+                navigate('/meddling');
+              } else {
+                alert("로그인 후 이용해주세요");
+              }
+            }}
           >
             참견소
           </li>

@@ -187,7 +187,7 @@ const ProductPublicExplain = styled.div`
   display: flex;                
   align-items: center; 
   color: ${Colors.secondary300};
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 15px;
   word-wrap: break-word;

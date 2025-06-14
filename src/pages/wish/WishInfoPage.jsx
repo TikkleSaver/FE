@@ -362,6 +362,9 @@ const WishInfoProductName = styled.div`
     font-weight: 700;
     line-height: 30px;
     word-wrap: break-word;
+    b {
+        font-weight: 600; 
+    }
 `;
 
 // 브랜드
@@ -484,8 +487,8 @@ function WishInfoPage() {
     const [isOpen, setIsOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [voted, setVoted] = useState(null); 
-    const [likeCnt, setLikeCnt] = useState(wishInfo.likeCnt ?? 0);
-    const [unLikeCnt, setUnLikeCnt] = useState(wishInfo.unLikeCnt ?? 0);
+    const [likeCnt, setLikeCnt] = useState(0);
+    const [unLikeCnt, setUnLikeCnt] = useState(0);
 
     const dropdownRef = useRef();
     
@@ -510,12 +513,14 @@ function WishInfoPage() {
                 setWishInfo(wish);
                 const commentList = await getWishCommentList(wishId);
                 setComments(commentList.wishCommentList || []);
+                const data = await getWishVote(wishId);
+                setVoted(data.result.likeStatus);
             } catch (error) {
                 console.error("API 불러오기 실패", error);
             }
         };
         fetch();
-    }, [refreshTrigger]);
+    }, [wishId, refreshTrigger]);
 
     const handleEditClick = (e) => {
         e.stopPropagation(); 
@@ -598,18 +603,6 @@ function WishInfoPage() {
             alert(error.response.data.message);
         }
     };
-    
-    useEffect(() => {
-        const fetchVoteStatus = async () => {
-        try {
-            const data = await getWishVote(wishInfo.wishId);
-            setVoted(data.result.likeStatus);
-        } catch (error) {
-            console.error("투표 상태 불러오기 실패:", error);
-        }
-        };
-        fetchVoteStatus();
-    }, [wishInfo.wishId]);
 
     const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -699,7 +692,7 @@ function WishInfoPage() {
                     <WishInfoRightMiddleContainer>
                         <WishInfoProductContainer>
                             <WishInfoProductCategory>{categoryMap[wishInfo.categoryId]}</WishInfoProductCategory>
-                            <WishInfoProductName>{wishInfo.title}</WishInfoProductName>
+                            <WishInfoProductName dangerouslySetInnerHTML={{ __html: wishInfo.title }} />
                             <WishInfoProductBrand>브랜드 | {wishInfo.brand}</WishInfoProductBrand>
                             <WishInfoProductPrice>가격 | {wishInfo.price}원</WishInfoProductPrice>
                             <WishInfoLine/>
