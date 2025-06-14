@@ -160,15 +160,13 @@ export default function FriendProfile() {
       </ChallengeContainer>
       {showAddModal && (
         <CancelModal
+          nickname={profile.nickname}
           friendReqId={requestId}
           onClose={handleCloseAddExpenseModal}
         />
       )}
       {showDeleteModal && (
-        <DeleteModal
-          friendId={profile.friendId}
-          onClose={handleCloseDeleteModal}
-        />
+        <DeleteModal profile={profile} onClose={handleCloseDeleteModal} />
       )}
     </Wrapper>
   );
