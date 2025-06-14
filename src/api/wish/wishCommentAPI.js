@@ -32,3 +32,14 @@ export const deleteWishComment = async (commentId) => {
     throw error;
   }
 };
+
+// 위시 댓글 수정
+export const updateWishComment = async (commentId, commentData) => {
+  try {
+    const response = await axiosInstance.patch(`/wish/comment/${commentId}`, commentData);
+    return response.data.result;
+  } catch (error) {
+    console.error("위시 댓글 수정 실패:", error);
+    throw error;
+  }
+};
