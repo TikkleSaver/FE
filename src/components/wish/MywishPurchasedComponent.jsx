@@ -168,6 +168,7 @@ const MyWishProductName = styled.div`
     line-height: 30px;
     word-wrap: break-word;
     padding-top: 30px;
+    margin-right: 30px;
     b {
         font-weight: 600; 
     }
