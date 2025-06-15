@@ -46,7 +46,13 @@ const MyCommentCard = ({ comment }) => {
   return (
     <CommentCardContainer>
       <UserName>
-        <img src={Profile} alt="사용자프로필" width="33" height="33" />
+        <img
+          src={comment.profileUrl || Profile}
+          alt="사용자프로필"
+          width="33"
+          height="33"
+          style={{ borderRadius: "50%" }}
+        />
         {comment.nickname}
       </UserName>
       <CommentText>{comment.content}</CommentText>
