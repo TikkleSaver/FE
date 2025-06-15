@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import top3RankImg from "../../images/top3RankImg.png";
+import axios from "axios";
+import defaultProfileImg from "../../assets/defaultProfile.svg"
+import Pagination from "../pagination/Pagination";
+
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const ChallengerWrapper = styled.div`
   width: 70%;
@@ -18,11 +23,16 @@ const ChallengerInfo = styled.div`
   display: flex;
 `;
 
-const ChallengerImg = styled.img`
-  width: 100px;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 50px;
+const ChallengerImg = styled.div`
+ 
+img
+{  
+   width: 100px;
+   aspect-ratio: 1 / 1;
+   border-radius: 50px;
+   object-fit: cover;      
+   object-position: center;
+}
 `;
 
 const ChallengerName = styled.div`
@@ -44,7 +54,7 @@ function CertifyComponent({ name, imgSrc }) {
   return (
     <ChallengerContainer>
       <ChallengerInfo>
-        <ChallengerImg src={imgSrc} />
+        <ChallengerImg ><img src={ imgSrc ? imgSrc : defaultProfileImg} alt="프로필 이미지"/></ChallengerImg>
         <ChallengerName>{name}</ChallengerName>
       </ChallengerInfo>
       <ChallengerProfileBtn>프로필 보러가기</ChallengerProfileBtn>
@@ -52,7 +62,35 @@ function CertifyComponent({ name, imgSrc }) {
   );
 }
 
-const ChallengerComponent = () => {
+const ChallengerComponent = ({challengeId}) => {
+    const [memberList, setMemberList] = useState([]);
+    const [page, setPage] = useState(1); 
+    const [totalPage, setTotalPage] = useState(1);
+    const [pageGroup, setPageGroup] = useState(0);
+
+    useEffect(() => {
+      if (!challengeId) return; 
+    
+      const newGroup = Math.floor((page - 1) / 5);
+      if (newGroup !== pageGroup) {
+        setPageGroup(newGroup);
+      }
+    
+      axios.get(`${baseUrl}/join-challenges/${challengeId}/challenger-list`, {
+        params: { page },
+      })
+        .then(response => {
+          console.log("response.data:", response.data);
+          const { memberList, totalPage } = response.data.result;
+    
+          setMemberList(memberList);
+          setTotalPage(totalPage);
+        })
+        .catch(err => {
+          console.error("챌린지 리스트 로드 실패:", err);
+        });
+    
+    }, [page, challengeId]);
 
   const mockData = [
     { name: "홍길동", imgSrc: top3RankImg },
@@ -64,9 +102,14 @@ const ChallengerComponent = () => {
 
   return (
     <ChallengerWrapper>
-      {mockData.map((item, index) => (
-        <CertifyComponent key={index} name={item.name} imgSrc={item.imgSrc} />
+      {memberList.map((item, index) => (
+        <CertifyComponent key={index} name={item.memberName} imgSrc={item.memberImgUrl} />
       ))}
+      <Pagination 
+              page={page} 
+              totalPage={totalPage} 
+              onPageChange={(newPage) => setPage(newPage)} 
+            />
     </ChallengerWrapper>
   );
 };

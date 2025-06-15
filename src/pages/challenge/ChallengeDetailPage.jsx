@@ -3,11 +3,14 @@ import styled from "styled-components";
 import mainIcon from "../../assets/mainIcon.svg";
 import certifyIcon from "../../assets/certifyIcon.svg";
 import challengerIcon from "../../assets/challengerIcon.svg";
-import chaellengeImg from "../../images/challengeImg.png";
 import quitBtnIcon from "../../assets/quitBtnIcon.svg";
 import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
 import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
 import ChallengerComponent from "../../components/challenge/ChallengerComponent";
+import { useParams } from 'react-router-dom';
+import axios from "axios";
+
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const ChallengeContainer = styled.div`
 
@@ -24,18 +27,20 @@ const ChallengInfoContainer = styled.div`
   display:flex;
   justify-content: space-between;
 
-
-img
-{  
-   width:220px;
-   height:165;
-   border-radius:15px;
-}
 `;
 
 
 const ChallengeInnerWrapper= styled.div`
   display: flex;
+
+img
+{  
+   width:220px;
+   height:165px;
+   border-radius:15px;
+   object-fit: cover;      
+   object-position: center;
+}
 
 `;
 const ChallengeInfoWrapper = styled.div`
@@ -161,11 +166,42 @@ const TopChallengeInnerContainer = styled.div`
 
 function ChallengeDetailPage() {
   const [selectedTab, setSelectedTab] = useState("메인");
+  const { challengeId } = useParams();
+  const [challengeData, setChallengeData] = useState(null);
+  const [status, setStatus] = useState(null);
+
+  useEffect(() => {
+    const fetchChallenge = async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/join-challenges/${challengeId}`);
+        setChallengeData(res.data.result);
+        setStatus(res.data.result.status);
+
+      } catch (error) {
+        console.error('챌린지 정보 불러오기 실패:', error);
+      }
+    };
+
+    fetchChallenge();
+  }, [challengeId]);
+
+  if (!challengeData) return <div>로딩 중...</div>;
+
+  const {
+    title,
+    category,
+    description,
+    imgUrl,
+    missionMethods,
+    isPublic,
+    scrapped,
+    challengerCount
+  } = challengeData;
 
   const tabs = [
     { name: "메인", icon: mainIcon },
     { name: "인증하기", icon: certifyIcon },
-    { name: "챌린저", icon: challengerIcon, count: 27 },
+    { name: "챌린저", icon: challengerIcon, count: challengerCount },
   ];
 
   return (
@@ -173,12 +209,13 @@ function ChallengeDetailPage() {
       <ChallengeContainer>
         <ChallengInfoContainer>
           <ChallengeInnerWrapper>
-            <img src={chaellengeImg} />
+            <img src={imgUrl} />
             <ChallengeInfoWrapper>
-              <ChallengeTitle>커피값 세이브</ChallengeTitle>
+              <ChallengeTitle>{title}</ChallengeTitle>
               <ChallengeCheckList>
-                <li>밥 먹기</li>
-                <li>밥 먹기</li>
+              {missionMethods.map((method, index) => (
+              <li key={index}>{method}</li>
+            ))}
               </ChallengeCheckList>
             </ChallengeInfoWrapper>
           </ChallengeInnerWrapper>
@@ -212,7 +249,7 @@ function ChallengeDetailPage() {
         <TopChallengeInnerContainer>
           {selectedTab === "메인" && <ChallengeMainComponent />}
           {selectedTab === "인증하기" && <ChallengeCertifyComponent />}
-          {selectedTab === "챌린저" && <ChallengerComponent/>}
+          {selectedTab === "챌린저" && <ChallengerComponent challengeId={challengeId} />}
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
     </>

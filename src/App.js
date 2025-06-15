@@ -52,11 +52,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
-        <Route path="/challenge-info" element={<ChallengeDetailPage />} />
-        <Route
-          path="/challenges/create-challenge"
-          element={<CreateChallengePage />}
-        />
+        <Route path="/challenge-info/:challengeId" element={ <ChallengeDetailPage/>} />
+        <Route path="/challenges/create-challenge" element={<CreateChallengePage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/wish-info" element={<WishInfoPage />} />
         <Route path="/wish/mine" element={<MyWishPage />} />
