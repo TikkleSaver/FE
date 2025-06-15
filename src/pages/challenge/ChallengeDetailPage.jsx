@@ -9,6 +9,9 @@ import ChallengeCertifyComponent from "../../components/challenge/ChallengeCerti
 import ChallengerComponent from "../../components/challenge/ChallengerComponent";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
+import defaultProfileImg from "../../assets/defaultProfile.svg"
+import axiosInstance from "../../api/axiosInstance";
+import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -171,18 +174,17 @@ function ChallengeDetailPage() {
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    const fetchChallenge = async () => {
+    const loadChallenge = async () => {
       try {
-        const res = await axios.get(`${baseUrl}/join-challenges/${challengeId}`);
-        setChallengeData(res.data.result);
-        setStatus(res.data.result.status);
-
+        const data = await fetchChallenge(challengeId);
+        setChallengeData(data);
+        setStatus(data.status);
       } catch (error) {
-        console.error('챌린지 정보 불러오기 실패:', error);
+        
       }
     };
 
-    fetchChallenge();
+    loadChallenge();
   }, [challengeId]);
 
   if (!challengeData) return <div>로딩 중...</div>;

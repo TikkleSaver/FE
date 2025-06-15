@@ -4,6 +4,8 @@ import top3RankImg from "../../images/top3RankImg.png";
 import axios from "axios";
 import defaultProfileImg from "../../assets/defaultProfile.svg"
 import Pagination from "../pagination/Pagination";
+import axiosInstance from "../../api/axiosInstance";
+import { fetchChallengerList } from "../../api/challenge/challengeDetailApi";
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -69,28 +71,26 @@ const ChallengerComponent = ({challengeId}) => {
     const [pageGroup, setPageGroup] = useState(0);
 
     useEffect(() => {
-      if (!challengeId) return; 
-    
-      const newGroup = Math.floor((page - 1) / 5);
-      if (newGroup !== pageGroup) {
-        setPageGroup(newGroup);
-      }
-    
-      axios.get(`${baseUrl}/join-challenges/${challengeId}/challenger-list`, {
-        params: { page },
-      })
-        .then(response => {
-          console.log("response.data:", response.data);
-          const { memberList, totalPage } = response.data.result;
-    
+      if (!challengeId) return;
+  
+      const loadChallengerList = async () => {
+        try {
+          const newGroup = Math.floor((page - 1) / 5);
+          if (newGroup !== pageGroup) {
+            setPageGroup(newGroup);
+          }
+  
+          const { memberList, totalPage } = await fetchChallengerList(challengeId, page);
           setMemberList(memberList);
           setTotalPage(totalPage);
-        })
-        .catch(err => {
-          console.error("챌린지 리스트 로드 실패:", err);
-        });
-    
+        } catch (error) {
+         
+        }
+      };
+  
+      loadChallengerList();
     }, [page, challengeId]);
+  
 
   const mockData = [
     { name: "홍길동", imgSrc: top3RankImg },

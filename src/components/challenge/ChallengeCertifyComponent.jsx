@@ -4,6 +4,8 @@ import prevMonthIcon from "../../assets/prevMonthIcon.svg"
 import nextMonthIcon from "../../assets/nextMonthIcon.svg"
 import emptyImg from "../../images/emptyImg.svg"
 import Colors from "../../constanst/color.mjs";
+import { useParams } from "react-router-dom";
+import { submitMissionProof } from "../../api/challenge/challengeDetailApi";
 
 const ChallengeCertifyWrapper = styled.div`
   width: 80%;
@@ -253,22 +255,52 @@ function CalendarComponent({ selectedDate, setSelectedDate }) {
 
   function CertifyComponent({ selectedDate }) {
     const [text, setText] = useState('');
-  
+    const [file, setFile] = useState(null);
+    const { challengeId } = useParams();
+
     const handleChange = (e) => {
       const value = e.target.value;
       if (value.length <= 20) setText(value);
     };
   
-    const formattedDate = selectedDate 
+    const handleFileChange = (e) => {
+      setFile(e.target.files[0]);
+    };
+  
+    const handleSubmit = async () => {
+      const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
+    
+      try {
+        const data = await submitMissionProof(
+          challengeId,
+          formattedDate,
+          text,
+          file
+        );
+        console.log("미션 인증 성공:", data);
+        alert("미션 인증이 등록되었습니다.");
+      } catch (error) {
+        alert("미션 인증 등록에 실패했습니다.");
+      }
+    };
+  
+    const displayDate = selectedDate
       ? `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
       : '날짜를 선택해주세요';
   
     return (
       <ChallengeCertifyContainer>
         <ChallengeCertifyText>
-          {formattedDate} 인증 업로드
+          {displayDate} 인증 업로드
         </ChallengeCertifyText>
-        <ChallengeCertifyImg src={emptyImg} />
+  
+        <ChallengeCertifyImg
+          src={file ? URL.createObjectURL(file) : emptyImg}
+          alt="preview"
+        />
+  
+        <input type="file" onChange={handleFileChange} style={{ marginTop: "20px" }} />
+  
         <CertifyTextContainer>
           <CertifyTextInput
             value={text}
@@ -277,7 +309,8 @@ function CalendarComponent({ selectedDate, setSelectedDate }) {
           />
           <CharCount>{text.length}/20</CharCount>
         </CertifyTextContainer>
-        <CertifyBtn>등록하기</CertifyBtn>
+  
+        <CertifyBtn onClick={handleSubmit}>등록하기</CertifyBtn>
       </ChallengeCertifyContainer>
     );
   }
