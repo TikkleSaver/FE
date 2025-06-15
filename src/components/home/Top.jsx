@@ -9,6 +9,7 @@ import image2 from '../../images//home/home2.svg';
 import image3 from '../../images//home/home3.svg';
 import image4 from '../../images//home/home4.svg';
 import image5 from '../../images//home/home5.svg';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 const BaseSlide = styled.div`
@@ -76,9 +77,24 @@ const Btn = styled.span`
   position: absolute;
   bottom: 20px;
   right: 40px;
+  cursor: pointer;
 `;
 
 export default function Top() {
+  const navigate = useNavigate();
+
+  const handleWishClick = () => {
+    navigate('/products');
+  };
+
+  const handleMeddlingClick = () => {
+    navigate('/meddling');
+  };
+
+  const handleChallengeClick = () => {
+    navigate('/challenges');
+  };
+
   return (
     <>
       <Swiper
@@ -100,7 +116,6 @@ export default function Top() {
                 구매 완료된 위시 상품 또한 자동으로 가계부에 포함됩니다.
               </Content>
             </RightBox>
-            <Btn>소비 일기 작성하러 가기&gt;</Btn>
           </Slide1>
         </SwiperSlide>
         <SwiperSlide>
@@ -134,7 +149,7 @@ export default function Top() {
               </Comment>
               <Content></Content>
             </RightBox>
-            <Btn>위시 담으러 가기&gt;</Btn>
+            <Btn onClick={handleWishClick}>위시 담으러 가기&gt;</Btn>
           </Slide3>
         </SwiperSlide>
         <SwiperSlide>
@@ -152,7 +167,7 @@ export default function Top() {
                 상품의 필요성·효율성·가치를 보다 객관적으로 판단할 수 있습니다.
               </Content>
             </RightBox>
-            <Btn> 참견소 방문하기&gt;</Btn>
+            <Btn onClick={handleMeddlingClick}> 참견소 방문하기&gt;</Btn>
           </Slide4>
         </SwiperSlide>
         <SwiperSlide>
@@ -167,7 +182,7 @@ export default function Top() {
               </Comment>
               <Content></Content>
             </RightBox>
-            <Btn>챌린지 참여하러 가기&gt;</Btn>
+            <Btn onClick={handleChallengeClick}>챌린지 참여하러 가기&gt;</Btn>
           </Slide5>
         </SwiperSlide>
       </Swiper>

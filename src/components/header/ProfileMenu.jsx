@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import profileImage from '../../images/profile.svg'; // 예시용 프로필 이미지
@@ -6,9 +6,26 @@ import icon1 from '../../images/header/profile_icon1.svg';
 import icon2 from '../../images/header/profile_icon2.svg';
 import icon3 from '../../images/header/logout_icon.svg';
 import { logout } from '../../api/loginApi';
+import { getUserInfo } from '../../api/profileApi';
 
 export default function ProfileMenu({ setIsLoggedIn }) {
   const navigate = useNavigate();
+
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const result = await getUserInfo();
+        setUserInfo(result); // ApiResponse 구조라면 .result 안에 있음
+      } catch (e) {
+        console.error('유저 정보 가져오기 실패:', e);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -24,7 +41,7 @@ export default function ProfileMenu({ setIsLoggedIn }) {
   return (
     <WishlistWrapper as="li">
       <ProfileButton className="profile-button">
-        <img src={profileImage} alt="My Page" />
+        <img src={userInfo?.profileUrl ?? profileImage} alt="My Page" />
       </ProfileButton>
 
       <Dropdown className="dropdown">
