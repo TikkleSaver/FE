@@ -59,7 +59,7 @@ const SubmitButton = styled.button`
   margin: 30px 0 15px;
 `;
 
-const CancelModal = ({ friendReqId, onClose }) => {
+const CancelModal = ({ nickname, friendReqId, onClose }) => {
   // 배경 클릭 시 모달 닫기
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -81,7 +81,7 @@ const CancelModal = ({ friendReqId, onClose }) => {
     <Overlay onClick={handleOverlayClick}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
         <ModalTitle>친구 요청 취소</ModalTitle>
-        <span>정말로 모티 님에게 보낸 친구 요청을 취소하시겠어요?</span>
+        <span>정말로 {nickname} 님에게 보낸 친구 요청을 취소하시겠어요?</span>
         <SubmitButton onClick={handleCancel}>친구 요청 취소</SubmitButton>
 
         <CloseButton onClick={onClose}>괜찮아요</CloseButton>

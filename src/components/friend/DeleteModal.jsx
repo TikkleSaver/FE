@@ -59,7 +59,7 @@ const SubmitButton = styled.button`
   margin: 30px 0 15px;
 `;
 
-const DeleteModal = ({ friendId, onClose }) => {
+const DeleteModal = ({ profile, onClose }) => {
   // 배경 클릭 시 모달 닫기
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -69,8 +69,8 @@ const DeleteModal = ({ friendId, onClose }) => {
 
   const handleDelete = async () => {
     try {
-      console.log(friendId);
-      await deleteFriend(friendId);
+      console.log(profile.friendId);
+      await deleteFriend(profile.friendId);
       onClose();
       // 필요시 친구 목록 새로고침 로직 여기에
     } catch (error) {
@@ -81,8 +81,8 @@ const DeleteModal = ({ friendId, onClose }) => {
   return (
     <Overlay onClick={handleOverlayClick}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
-        <ModalTitle>모티 님을 제거하기</ModalTitle>
-        <span>정말로 모티 님을 친구에서 삭제하시겠어요?</span>
+        <ModalTitle>{profile.nickname} 님을 제거하기</ModalTitle>
+        <span>정말로 {profile.nickname} 님을 친구에서 삭제하시겠어요?</span>
         <SubmitButton onClick={handleDelete}>친구 삭제하기</SubmitButton>
 
         <CloseButton onClick={onClose}>괜찮아요</CloseButton>
