@@ -78,7 +78,7 @@ function App() {
         <Route path="/friendprofile" element={<FriendProfile />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route
-          path="/challenges/search-result"
+          path="/challenges/search"
           element={<ChallengeSearchPage />}
         />
         <Route

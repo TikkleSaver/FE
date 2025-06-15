@@ -5,6 +5,7 @@ import SearchIcon from "../../assets/search.svg";
 import Colors from "../../constanst/color.mjs";
 import axios from "axios";
 import Pagination from "../../components/pagination/Pagination";
+import axiosInstance from "../../api/axiosInstance"
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -153,7 +154,7 @@ function ChallengeListPage() {
         setPageGroup(newGroup);
       }
 
-      axios.get(`${baseUrl}/challenges/lists`, {
+      axiosInstance.get(`${baseUrl}/challenges/lists`, {
         params: {
           category: category,
           page: page,

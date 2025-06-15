@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import Colors from "../../constanst/color.mjs";
 import privateLockIcon from "../../assets/privateChallenge.svg";
+import axiosInstance from "../../api/axiosInstance";
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -386,7 +387,7 @@ function SignUpPageChallengePage() {
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const res = await axios.get(`${baseUrl}/join-challenges/${challengeId}`);
+        const res = await axiosInstance.get(`${baseUrl}/join-challenges/${challengeId}`);
         setChallengeData(res.data.result);
         setStatus(res.data.result.status);
 
