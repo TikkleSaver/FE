@@ -54,10 +54,11 @@ const ProductContainer = styled.div`
 const ButtonWrapper = styled.div`   
   display: flex;
   justify-content: flex-end;
-  padding: 0 40px; 
-  margin-bottom: 40px; 
   width: 90%;        
-  max-width: 1200px;
+  max-width: 1120px;
+  margin: 0px auto;
+  margin-bottom: 40px; 
+  padding: 0 20px;
 `;
 
 // 직접 추가 버튼
