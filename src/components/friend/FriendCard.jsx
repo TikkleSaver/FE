@@ -74,7 +74,7 @@ const FriendCard = ({ item, myId }) => {
 
   return (
     <Item onClick={handleClick}>
-      <ItemImage src={item.profileUrl} />
+      <ItemImage src={item.profileUrl || profileImage} />
       <ItemName>{item.nickname}</ItemName>
       <BtnGroup>
         <UpdateBtn2 onClick={handleWishlistClick}>위시리스트</UpdateBtn2>

@@ -74,7 +74,9 @@ const RequestCard = ({ item, onRemove }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/friendprofile');
+    navigate('/friendprofile', {
+      state: { memberId: item.sender.id },
+    });
   };
 
   const handleAccept = async (e, reqId) => {
@@ -101,7 +103,7 @@ const RequestCard = ({ item, onRemove }) => {
 
   return (
     <Item onClick={handleClick}>
-      <ItemImage src={item.sender.profileUrl} />
+      <ItemImage src={item.sender.profileUrl || profileImage} />
       <Right>
         <ItemName>{item.sender.nickname}님이 친구 요청을 보냈어요</ItemName>
         <BtnGroup>

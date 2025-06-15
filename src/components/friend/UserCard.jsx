@@ -31,13 +31,13 @@ const UserCard = ({ item }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/friendprofile');
+    navigate('/friendprofile', { state: { memberId: item.id } });
   };
 
   return (
     <Item onClick={handleClick}>
-      <ItemImage src={profileImage} />
-      <ItemName>{item.name}</ItemName>
+      <ItemImage src={item.profileUrl ?? profileImage} />
+      <ItemName>{item.nickname}</ItemName>
     </Item>
   );
 };
