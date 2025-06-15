@@ -108,6 +108,12 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
+const ProfileImage = styled.img`
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+`;
+
 // 날짜 변환
 function formatDateTime(dateString) {
   if (!dateString) return "";
@@ -179,7 +185,7 @@ const WishCommentCard = ({ comment, onRefresh }) => {
   return (
     <WishCommentCardContainer>
       <WishUserName>
-        <img src={profileUrl} alt="사용자프로필"/>
+        <ProfileImage src={profileUrl} alt="사용자프로필"/>
         {comment.nickname}
       </WishUserName>
             {isEditing ? (
