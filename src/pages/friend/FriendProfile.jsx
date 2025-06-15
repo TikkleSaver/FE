@@ -8,15 +8,25 @@ import CancelModal from '../../components/friend/CancelModal';
 import DeleteModal from '../../components/friend/DeleteModal';
 import { fetchFriendProfile } from '../../api/friendApi'; // 아까 만든 API 함수
 import { sendFriendReq } from '../../api/friendRequestApi';
+import AcceptModal from '../../components/friend/AcceptModal';
 
 export default function FriendProfile() {
   const location = useLocation();
   const memberId = location.state?.memberId;
+  const [showAcceptModal, setShowAcceptModal] = useState(false);
+
   const [friendStatus, setFriendStatus] = useState('accepted'); // 상태: 'none' | 'pending' | 'accepted'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [profile, setProfile] = useState(null);
   const [requestId, setRequestId] = useState(null);
+
+  const handleCloseAcceptModal = (success) => {
+    setShowAcceptModal(false);
+    if (success) {
+      setFriendStatus('accepted');
+    }
+  };
 
   const handleFriendRequest = async () => {
     try {
@@ -62,7 +72,7 @@ export default function FriendProfile() {
     if (memberId) {
       fetchProfile(memberId);
     }
-  }, [memberId, showDeleteModal, showAddModal]);
+  }, [memberId, showDeleteModal, showAddModal, showAcceptModal]);
 
   // profile 정보에 따라 friendStatus 설정
   useEffect(() => {
@@ -102,9 +112,7 @@ export default function FriendProfile() {
                     : friendStatus === 'accepted'
                     ? () => setShowDeleteModal(true)
                     : friendStatus === 'pending2'
-                    ? () => {
-                        /* 친구 수락 핸들러 작성 */
-                      }
+                    ? () => setShowAcceptModal(true)
                     : undefined
                 }
                 $status={friendStatus}
@@ -167,6 +175,13 @@ export default function FriendProfile() {
       )}
       {showDeleteModal && (
         <DeleteModal profile={profile} onClose={handleCloseDeleteModal} />
+      )}
+      {showAcceptModal && (
+        <AcceptModal
+          nickname={profile.nickname}
+          friendReqId={requestId}
+          onClose={handleCloseAcceptModal}
+        />
       )}
     </Wrapper>
   );
