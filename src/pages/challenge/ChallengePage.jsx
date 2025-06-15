@@ -4,27 +4,36 @@ import ChallengePreviewCard from "../../components/challenge/ChallengePreviewCar
 import SearchIcon from "../../assets/search.svg"
 import Colors from "../../constanst/color.mjs";
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import categoryIcon from "../../assets/categoryIcon.svg"
+import Dropdown from "../../components/challenge/Dropdown";
+
 
 const ChallengePageContainer = styled.div`
-  width:80%;
+  width:100%;
   max-width: 100%;
   margin: 120px auto;
+
 `;
 
 const SearchContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width:80%;
+  width:100%;
   margin: 0 auto;
+  padding: 30px 0;
+  background-color: rgba(163, 209, 198, 0.15);
+ justify-content: center; 
   
 `;
 
 const SearchInput = styled.input`
- width: 100%;
+ width: 60%;
+   
   padding: 18px 18px 18px 55px; 
-  border: 1px solid ${Colors.secondary100};
-  border-radius: 15px;
+  border: 0px solid ${Colors.secondary100};
+  border-radius: 50px;
   font-size: 16px;
   font-weight: 600;
   outline: none;
@@ -37,7 +46,7 @@ const SearchInput = styled.input`
 
 const SearchIconWrapper = styled.div`
   position: absolute;
-  left: 20px;
+  left: 248px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,9 +54,23 @@ const SearchIconWrapper = styled.div`
   height: 24px;
 `;
 
+const SearchCategoryContainer = styled.div`
+width:25px;
+height:25px;
+display: flex;
+align-items: center;
+justify-content: center;
+background-color: white;
+padding:15px;
+border-radius: 50px;
+margin-left:20px;
+
+
+`;
+
 const ChallengeContainer = styled.div`
   margin: 50px auto;
-  width:100%;
+  width: 80%;
 
 `;
 const TopChallengeInnerContainer = styled.div`
@@ -109,7 +132,18 @@ const MoreBtn = styled(Link)`
 function ChallengePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [selectedSearchCategory, setSelectedSearchCategory] = useState("전체");
   const categories = ["전체", "식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
+
+  const navigate = useNavigate();
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      navigate(
+        `/challenges/search?query=${encodeURIComponent(searchTerm)}&category=${encodeURIComponent(selectedSearchCategory)}`
+      );
+    }
+  };
 
   return (
     <ChallengePageContainer>
@@ -122,7 +156,11 @@ function ChallengePage() {
         placeholder="참여하고 싶은 챌린지를 검색하세요."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyDown={handleKeyPress}
       />
+      <SearchCategoryContainer>
+      <Dropdown options={categories} onSelect={setSelectedSearchCategory} />
+      </SearchCategoryContainer>
     </SearchContainer>
     <ChallengeContainer>
       <TopChallengeText>

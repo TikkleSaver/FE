@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import imageUrl from '../../images/challengeImg.png';
 
 const CardContainer = styled.div`
   border-radius: 8px;
