@@ -294,7 +294,7 @@ const [scrapped, setScrapped] = useState(initialScrapped);
 
   const toggleScrap = async () => {
     try {
-      const res = await axios.patch(`${baseUrl}/challenges-scrap/${challengeId}/scrap`, {
+      const res = await axiosInstance.patch(`${baseUrl}/challenges-scrap/${challengeId}/scrap`, {
         scrapped: !scrapped,
       });
 
@@ -314,7 +314,7 @@ const [scrapped, setScrapped] = useState(initialScrapped);
 
   const handleJoinClick = async (newStatus) => {
     try {
-      const res = await axios.post(`${baseUrl}/join-challenges/${challengeId}`);
+      const res = await axiosInstance.post(`${baseUrl}/join-challenges/${challengeId}`);
       console.log(res.status);
       if (res.data.isSuccess) {
         onJoin(newStatus); 

@@ -111,3 +111,25 @@ export const updateMissionProof = async (missionProofId, requestData, imageFile)
       throw error;
     }
   };
+
+  export const getRequestList = async (challengeId,page) => {
+    try {
+      const res = await axiosInstance.get(`/join-challenges/${challengeId}/request-list`, {
+        params: { page },
+      });
+      return res.data.result;
+    } catch (error) {
+      console.error('챌린지 요청 챌린저 조회 실패', error);
+      throw error;
+    }
+  }
+
+  export const acceptJoinRequest = async (joinChallengeId) => {
+    const response = await axiosInstance.post(`/join-challenges/${joinChallengeId}/accept`);
+    return response.data.result;
+  };
+  
+  export const rejectJoinRequest = async (joinChallengeId) => {
+    const response = await axiosInstance.delete(`/join-challenges/${joinChallengeId}/delete`);
+    return response.data.result;
+  };

@@ -7,14 +7,12 @@ import quitBtnIcon from "../../assets/quitBtnIcon.svg";
 import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
 import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
 import ChallengerComponent from "../../components/challenge/ChallengerComponent";
-import { useParams } from 'react-router-dom';
-import axios from "axios";
-import defaultProfileImg from "../../assets/defaultProfile.svg"
-import axiosInstance from "../../api/axiosInstance";
-import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
-
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
-
+import { useParams, useLocation } from 'react-router-dom';
+import { fetchChallenge, getRequestList } from "../../api/challenge/challengeDetailApi";
+import plus from "../../assets/plus.svg"
+import Colors from "../../constanst/color.mjs";
+import editBtnIcon from "../../assets/edit.svg"
+import ChallengeRequestModal from "../../components/challenge/ChallengeRequestModal";
 const ChallengeContainer = styled.div`
 
   margin: 0 auto;
@@ -167,11 +165,64 @@ const TopChallengeInnerContainer = styled.div`
 
 `;
 
+const BtnContainer = styled.div`
+ display:flex;
+ gap:20px;
+
+`;
+
+const EditChallengeBtn = styled.button`
+
+width:50px;
+height:50px;
+border-radius:100px;
+background-color: #F9FAFC;
+border: 1px solid #E5E5E5;
+img{
+width:25px;}
+`;
+
+const AcceptBtnContainer = styled.button`
+
+width:160px;
+height:50px;
+border-radius:10px;
+background-color: #F9FAFC;
+border: 1px solid #E5E5E5;
+display:flex;
+padding: 13px 8px 8px 8px;
+`;
+const AcceptBtnIcon = styled.img`
+width:22px;
+height:22px;
+
+`;
+const AcceptBtnText = styled.div`
+font-size:16px;
+padding-top:2px;
+padding-left:5px;
+color: ${Colors.secondary400}
+`;
+
+
+
 function ChallengeDetailPage() {
   const [selectedTab, setSelectedTab] = useState("메인");
   const { challengeId } = useParams();
   const [challengeData, setChallengeData] = useState(null);
   const [status, setStatus] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+
+  const [memberId, setMemberId] = useState(null); 
+  const [leaderId, setLeaderId] = useState(null); 
+
+ console.log("leaderId",leaderId)
+
+
+   const handleModal = () => {
+    setShowModal(false);
+  };
 
   useEffect(() => {
     const loadChallenge = async () => {
@@ -179,13 +230,15 @@ function ChallengeDetailPage() {
         const data = await fetchChallenge(challengeId);
         setChallengeData(data);
         setStatus(data.status);
+        setLeaderId(data.leaderId);
       } catch (error) {
         
       }
     };
-
     loadChallenge();
   }, [challengeId]);
+
+
 
   if (!challengeData) return <div>로딩 중...</div>;
 
@@ -221,9 +274,21 @@ function ChallengeDetailPage() {
               </ChallengeCheckList>
             </ChallengeInfoWrapper>
           </ChallengeInnerWrapper>
-          <ChallengeQuitBtn>
-            <img src={quitBtnIcon} alt="나가기" />
-          </ChallengeQuitBtn>
+
+
+  <BtnContainer>
+    <AcceptBtnContainer onClick={() => setShowModal(true)}>
+      <AcceptBtnIcon src={plus}/>
+      <AcceptBtnText >
+      챌린지 참여 요청
+      </AcceptBtnText>
+    </AcceptBtnContainer>
+    <EditChallengeBtn>
+    <img src={editBtnIcon} alt="수정하기" />
+
+    </EditChallengeBtn>
+  </BtnContainer>
+
         </ChallengInfoContainer>
 
         <TabContainer>
@@ -254,7 +319,9 @@ function ChallengeDetailPage() {
           {selectedTab === "챌린저" && <ChallengerComponent challengeId={challengeId} />}
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
+      {showModal && <ChallengeRequestModal onClose={handleModal} challengeId={challengeId}  />}
     </>
+    
   );
 }
 
