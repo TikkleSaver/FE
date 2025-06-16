@@ -101,3 +101,13 @@ export const updateMissionProof = async (missionProofId, requestData, imageFile)
     const response = await axiosInstance.delete(`/mission-proof/${missionProofId}`);
     return response.data;
   };
+
+  export const getMissionProofMain = async (challengeId) => {
+    try {
+      const response = await axiosInstance.get(`/mission-proof/${challengeId}/main`);
+      return response.data.result;
+    } catch (error) {
+      console.error('미션 인증 메인 조회 실패:', error);
+      throw error;
+    }
+  };
