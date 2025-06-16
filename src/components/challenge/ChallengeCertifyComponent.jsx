@@ -4,8 +4,8 @@ import prevMonthIcon from "../../assets/prevMonthIcon.svg"
 import nextMonthIcon from "../../assets/nextMonthIcon.svg"
 import emptyImg from "../../images/emptyImg.svg"
 import Colors from "../../constanst/color.mjs";
-import { useParams,useNavigate, useLocation } from "react-router-dom";
-import { submitMissionProof, getMonthlyProofs, updateMissionProof } from "../../api/challenge/challengeDetailApi";
+import { useParams } from "react-router-dom";
+import { submitMissionProof, getMonthlyProofs, updateMissionProof, deleteMissionProof } from "../../api/challenge/challengeDetailApi";
 
 const ChallengeCertifyWrapper = styled.div`
   width: 80%;
@@ -109,14 +109,7 @@ const DateCell = styled.div`
     color: ${({ isDisabled }) => (isDisabled ? "transparent" : "inherit")};  /* 숫자 숨김 */
   }
 
-  &:hover::before {
-    background-color: ${({ isSelected, isDisabled }) =>
-      isDisabled
-        ? "transparent"
-        : isSelected
-        ? "#A3D1C6"
-        : "#D7F2EB"};
-  }
+  
 `;
 const ChallengeCertifyContainer = styled.div`
   width: 450px;
@@ -130,7 +123,7 @@ const ChallengeCertifyContainer = styled.div`
   display: flex;
   flex-direction: column;  // 세로 방향
   align-items: center;     // 가로 중앙 정렬
-  justify-content: center; // 세로 중앙 정렬
+
 
  
 `;
@@ -138,7 +131,7 @@ const ChallengeCertifyContainer = styled.div`
 const ChallengeCertifyText = styled.div`
     font-size: 18px;
     font-weight: 600;
-    margin-top: 18px;
+    margin-top: 25px;
     color: #4A5660;
 
 `;
@@ -171,6 +164,17 @@ const CertifyTextInput = styled.input`
   outline: none;
 `;
 
+const CertifyText = styled.div`
+  width: 100%;
+  padding-top:10px;
+  padding-left:5px;
+  padding-bottom:10px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+`;
+
 const CharCount = styled.div`
   position: absolute;
   right: 5px;
@@ -179,6 +183,15 @@ const CharCount = styled.div`
   color: #999;
 `;
 
+
+
+const BtnContainer = styled.div`
+  display: flex;
+  position: absolute;
+  right: 220px;
+  bottom: -120px;
+
+`;
 const CertifyBtn = styled.button`
     border: 1px solid ${Colors.primary500};
     background-color: ${Colors.primary};
@@ -187,7 +200,20 @@ const CertifyBtn = styled.button`
     font-size: 15px;
     font-weight: 500;
     border-radius: 10px;
-    margin-left: 230px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  
+`;
+
+const DeleteBtn = styled.button`
+    border: 1px solid ${Colors.secondary200};
+    background-color: ${Colors.secondary100};
+    color: black;
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 10px;
+    margin-left: 15px;
     margin-bottom: 10px;
   
 `;
@@ -222,10 +248,17 @@ function CalendarComponent({  currentDate,
   };
 
   const handleDateClick = (day) => {
-    if (day) {
-      setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
-    }
+    if (!day) return;
+  
+    const selected = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+    const today = new Date();
+  
+    // 오늘보다 미래면 클릭 안되게
+    if (selected > today) return;
+  
+    setSelectedDate(selected);
   };
+  
 
   const isSameDay = (date1, date2) =>
     date1 && date2 &&
@@ -255,6 +288,9 @@ function CalendarComponent({  currentDate,
         ))}
         {getDaysInMonth().map((day, index) => {
           const dateObj = day ? new Date(currentDate.getFullYear(), currentDate.getMonth(), day) : null;
+          const isFuture = dateObj && dateObj > today;
+          const disabled = !day || isFuture;
+        
           return (
             <DateCell
               key={index}
@@ -262,8 +298,9 @@ function CalendarComponent({  currentDate,
               isSelected={isSameDay(dateObj, selectedDate)}
               hasProof={hasProof(day)}
               isDisabled={!day}
-              onClick={() => handleDateClick(day)}
+              onClick={() => !disabled && handleDateClick(day)}
             >
+              
               <span>{day}</span>
             </DateCell>
           );
@@ -274,7 +311,7 @@ function CalendarComponent({  currentDate,
 }
 
 
-function CertifyComponent({ selectedDate, currentProof, setCurrentProof, missionProofs, setMissionProofs }) {
+function CertifyComponent({ selectedDate, currentProof, setCurrentProof, setMissionProofs }) {
   const [text, setText] = useState('');
   const [file, setFile] = useState(null);
   const [isModifying, setIsModifying] = useState(false);
@@ -321,19 +358,57 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
       }
   
       setIsModifying(false);
+      console.log('typeof setMissionProofs', typeof setMissionProofs);
   
       const year = dateToUse.getFullYear();
       const month = dateToUse.getMonth() + 1;
       const refreshed = await getMonthlyProofs(challengeId, year, month);
   
+     
       setMissionProofs(refreshed.result);
-      console.log("수정하기", missionProofs)
   
-      const updatedProof = refreshed.result.find(p => p.date === formattedDate) || null;
+
+      const updatedProof = refreshed.result.find(p => {
+        const proofDate = new Date(p.createdAt);
+        const formattedProofDate = `${proofDate.getFullYear()}-${String(proofDate.getMonth() + 1).padStart(2, '0')}-${String(proofDate.getDate()).padStart(2, '0')}`;
+        return formattedProofDate === formattedDate;
+      }) || null;
+  
       setCurrentProof(updatedProof);
   
     } catch (error) {
       alert('미션 인증 처리에 실패했습니다.');
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!currentProof) return;
+  
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+  
+    try {
+      await deleteMissionProof(currentProof.missionProofId);
+      alert("미션 인증이 삭제되었습니다.");
+  
+      const year = dateToUse.getFullYear();
+      const month = dateToUse.getMonth() + 1;
+      const refreshed = await getMonthlyProofs(challengeId, year, month);
+  
+     
+      setMissionProofs(refreshed.result);
+  
+
+      const updatedProof = refreshed.result.find(p => {
+        const proofDate = new Date(p.createdAt);
+        const formattedProofDate = `${proofDate.getFullYear()}-${String(proofDate.getMonth() + 1).padStart(2, '0')}-${String(proofDate.getDate()).padStart(2, '0')}`;
+        return formattedProofDate === formattedDate;
+      }) || null;
+  
+      setCurrentProof(updatedProof);
+    } catch (error) {
+      alert("삭제에 실패했습니다.");
     }
   };
   
@@ -345,7 +420,7 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
           {printDate} 인증 완료
         </ChallengeCertifyText>
   
-        {/* 이미지 클릭 시 파일 업로드 */}
+
         {isModifying ? (
           <>
             <label htmlFor="file-upload">
@@ -353,7 +428,7 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
     src={
       file
         ? URL.createObjectURL(file)
-        : currentProof.imageUrl // 기존 이미지가 있을 경우 보여줌
+        : currentProof.imageUrl
     }
     alt="미리보기 이미지"
     style={{ cursor: "pointer" }}
@@ -382,29 +457,39 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
           <CharCount>{text.length}/20</CharCount>
         </CertifyTextContainer>
   
+        <BtnContainer>
+        {!isModifying && ( 
+        <DeleteBtn onClick={() => handleDelete()}>삭제하기</DeleteBtn>
+      )}
         {isToday && !isModifying && (
+          <>
           <CertifyBtn onClick={() => setIsModifying(true)}>수정하기</CertifyBtn>
+          
+          </>
         )}
-  
-        {isModifying && (
-          <CertifyBtn onClick={handleSubmit}>수정 완료</CertifyBtn>
+      
+      {isModifying && (
+          <CertifyBtn onClick={handleSubmit}>수정완료</CertifyBtn>
         )}
+        </BtnContainer>
+       
       </ChallengeCertifyContainer>
     );
   }
 
-  // 인증 안된 날인데 오늘인 경우 → 등록 가능
   if (!currentProof && isToday) {
     return (
       <ChallengeCertifyContainer>
         <ChallengeCertifyText>
         아직 오늘의 인증이 업로드되지 않았어요!
         </ChallengeCertifyText>
+        <label htmlFor="file-upload">
         <ChallengeCertifyImg
           src={file ? URL.createObjectURL(file) : emptyImg}
           alt="preview"
         />
-        <input type="file" onChange={handleFileChange} style={{ marginTop: "20px" }} />
+        <input id="file-upload" type="file" onChange={handleFileChange}   style={{ display: "none" }} />
+        </label>
         <CertifyTextContainer>
           <CertifyTextInput
             value={text}
@@ -413,18 +498,23 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
           />
           <CharCount>{text.length}/20</CharCount>
         </CertifyTextContainer>
+        <BtnContainer>
         <CertifyBtn onClick={handleSubmit}>등록하기</CertifyBtn>
+        </BtnContainer>
       </ChallengeCertifyContainer>
     );
   }
 
-  // 인증 안된 날 & 오늘도 아님 → 기본 안내 표시
   return (
     <ChallengeCertifyContainer>
       <ChallengeCertifyText>
-        {printDate} 인증이 완료되지 않은 날입니다.
+        {printDate} 인증 실패
       </ChallengeCertifyText>
       <ChallengeCertifyImg src={emptyImg} alt="기본 이미지" />
+      <CertifyTextContainer>
+          <CertifyText
+          >이미 지난 미션은 등록할 수 없습니다.</CertifyText>
+        </CertifyTextContainer>
     </ChallengeCertifyContainer>
   );
 }
@@ -443,11 +533,23 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth() + 1;
         const response = await getMonthlyProofs(challengeId, year, month);
-        setMissionProofs(response.result);
-        console.log("getMonthlyProofs 응답:", response);
+        const proofs = response.result;
+        setMissionProofs(proofs);
+    
+        // selectedDate가 있으면 바로 currentProof 계산
+        if (selectedDate) {
+          const formattedSelectedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+          const matchedProof = proofs.find(proof => {
+            const proofDate = new Date(proof.createdAt);
+            const formattedProofDate = `${proofDate.getFullYear()}-${String(proofDate.getMonth() + 1).padStart(2, '0')}-${String(proofDate.getDate()).padStart(2, '0')}`;
+            return formattedProofDate === formattedSelectedDate;
+          });
+          setCurrentProof(matchedProof || null);
+        }
       } catch (error) {
         console.error("인증 데이터 불러오기 실패:", error);
         setMissionProofs([]);
+        setCurrentProof(null);
       }
     };
   
@@ -455,7 +557,6 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
   }, [challengeId, currentDate]);
   
   
-  // 2) selectedDate가 바뀔 때 missionProofs에서 찾기
   useEffect(() => {
     if (!selectedDate) {
       setCurrentProof(null);
@@ -481,6 +582,7 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
     setCurrentProof(matchedProof || null);
   }, [selectedDate, missionProofs]);
 
+  
   return (
     <ChallengeCertifyWrapper>
       <CalendarComponent
@@ -490,9 +592,14 @@ function CertifyComponent({ selectedDate, currentProof, setCurrentProof, mission
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         missionProofs={missionProofs}
+        setMissionProofs={setMissionProofs}
       />
       <Divider />
-      <CertifyComponent selectedDate={selectedDate} currentProof={currentProof} />
+      <CertifyComponent 
+       selectedDate={selectedDate}
+       currentProof={currentProof}
+       setCurrentProof={setCurrentProof}
+       setMissionProofs={setMissionProofs} />
     </ChallengeCertifyWrapper>
   );
 };

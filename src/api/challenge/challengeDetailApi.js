@@ -96,3 +96,8 @@ export const updateMissionProof = async (missionProofId, requestData, imageFile)
       throw error;
     }
   };
+
+  export const deleteMissionProof = async (missionProofId) => {
+    const response = await axiosInstance.delete(`/mission-proof/${missionProofId}`);
+    return response.data;
+  };
