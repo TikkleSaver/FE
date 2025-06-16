@@ -49,3 +49,50 @@ export const submitMissionProof = async (challengeId, date, content, file) => {
     throw error;
   }
 };
+
+export const getMonthlyProofs = async (challengeId, year, month) => {
+    try {
+      const response = await axiosInstance.get(`/mission-proof/${challengeId}/month`, {
+        params: { year, month }
+      });
+      console.log("인증 데이터 불러오기 성공:", response.data); 
+      return response.data;
+    } catch (error) {
+      console.error("인증 데이터 불러오기 실패:", error); 
+      throw error; 
+    }
+  };
+
+
+export const updateMissionProof = async (missionProofId, requestData, imageFile) => {
+    const formData = new FormData();
+    if (!missionProofId) {
+        console.error("missionProofId가 없습니다.");
+        return;
+      }
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(requestData)], { type: "application/json" })
+    );
+  
+    if (imageFile) {
+      formData.append("file", imageFile);
+    }
+  
+    try {
+      const response = await axiosInstance.patch(
+        `/mission-proof/${missionProofId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error("미션 인증 수정 실패:", error);
+      throw error;
+    }
+  };
