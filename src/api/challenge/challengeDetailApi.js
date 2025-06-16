@@ -133,3 +133,9 @@ export const updateMissionProof = async (missionProofId, requestData, imageFile)
     const response = await axiosInstance.delete(`/join-challenges/${joinChallengeId}/delete`);
     return response.data.result;
   };
+
+
+  export const exitChallengRequest = async (challengId) => {
+    const response = await axiosInstance.delete(`/join-challenges/${challengId}/exit-challenge`);
+    return response.data.result;
+  };

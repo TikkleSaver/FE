@@ -100,10 +100,6 @@ const Items = styled.div`
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 `;
-const items = Array(6).fill({
-  name: '티모시',
-  image: 'food.jpg',
-});
 
 const ChallengeRequestModal = ({ onClose, challengeId }) => {
     const [requests, setRequests] = useState([]);
@@ -111,7 +107,6 @@ const ChallengeRequestModal = ({ onClose, challengeId }) => {
     const [totalPage, setTotalPage] = useState(1);
     const [pageGroup, setPageGroup] = useState(0);
 
-  // 삭제 함수
   const handleRemove = (indexToRemove) => {
     setRequests((prev) => prev.filter((_, i) => i !== indexToRemove));
   };

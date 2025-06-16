@@ -7,12 +7,13 @@ import quitBtnIcon from "../../assets/quitBtnIcon.svg";
 import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
 import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
 import ChallengerComponent from "../../components/challenge/ChallengerComponent";
-import { useParams, useLocation } from 'react-router-dom';
-import { fetchChallenge, getRequestList } from "../../api/challenge/challengeDetailApi";
+import { useParams } from 'react-router-dom';
+import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
 import plus from "../../assets/plus.svg"
 import Colors from "../../constanst/color.mjs";
 import editBtnIcon from "../../assets/edit.svg"
 import ChallengeRequestModal from "../../components/challenge/ChallengeRequestModal";
+import ChallengeExitModal from "../../components/challenge/\bChallengeExitModal";
 const ChallengeContainer = styled.div`
 
   margin: 0 auto;
@@ -212,8 +213,7 @@ function ChallengeDetailPage() {
   const [challengeData, setChallengeData] = useState(null);
   const [status, setStatus] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberId, setMemberId] = useState(null); 
   const [leaderId, setLeaderId] = useState(null); 
 
@@ -222,6 +222,10 @@ function ChallengeDetailPage() {
 
    const handleModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
   };
 
   useEffect(() => {
@@ -237,6 +241,7 @@ function ChallengeDetailPage() {
     };
     loadChallenge();
   }, [challengeId]);
+
 
 
 
@@ -287,10 +292,11 @@ function ChallengeDetailPage() {
     <img src={editBtnIcon} alt="수정하기" />
 
     </EditChallengeBtn>
+    <ChallengeQuitBtn onClick={() => setShowDeleteModal(true)}>
+    <img src={quitBtnIcon} alt="나가기" />
+    </ChallengeQuitBtn>
   </BtnContainer>
-
         </ChallengInfoContainer>
-
         <TabContainer>
           <TabInnerContainer>
             {tabs.map((tab) => (
@@ -320,6 +326,9 @@ function ChallengeDetailPage() {
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
       {showModal && <ChallengeRequestModal onClose={handleModal} challengeId={challengeId}  />}
+      {showDeleteModal && (
+        <ChallengeExitModal challengeId={challengeId} onClose={handleCloseDeleteModal} />
+      )}
     </>
     
   );
