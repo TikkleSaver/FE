@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import imageUrl from '../../images/challengeImg.png';
 import emptyImageUrl from '../../images/emptyCertificationImg.svg';
 import top3RankImg from '../../images/profile.svg';
 import firstCrown from '../../assets/1stCrown.svg';
 import secondCrown from '../../assets/2stCrown.svg';
 import thirdCrown from '../../assets/3stCrown.svg';
 import { useParams } from "react-router-dom";
-import { getMissionProofMain } from "../../api/challenge/challengeDetailApi"; // 본인이 정의한 API 함수
+import { getMissionProofMain } from "../../api/challenge/challengeDetailApi"; 
 
 
 const ChallengeMainWrapper = styled.div`
@@ -218,7 +217,7 @@ const ChallengeMainComponent = () => {
   const createDateImageArray = (missionProofs, today = new Date()) => {
     const dateMap = new Map();
     missionProofs.forEach(({ createdAt, imageUrl }) => {
-      const date = new Date(createdAt).getDate(); // 일자만 추출
+      const date = new Date(createdAt).getDate(); 
       dateMap.set(date, imageUrl);
     });
   
@@ -251,7 +250,7 @@ const ChallengeMainComponent = () => {
       try {
         const result = await getMissionProofMain(challengeId);
 
-        setRate(result.successRate);
+        setRate(Math.round(result.successRate * 100) / 100);
         setSuccessCount(result.successCount);
         setFailCount(result.failCount);
 

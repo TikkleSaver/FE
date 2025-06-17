@@ -216,6 +216,7 @@ function ChallengeDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberId, setMemberId] = useState(null); 
   const [leaderId, setLeaderId] = useState(null); 
+  const [publicStatus, setPublicSatus] = useState('');
 
  console.log("leaderId",leaderId)
 
@@ -233,8 +234,10 @@ function ChallengeDetailPage() {
       try {
         const data = await fetchChallenge(challengeId);
         setChallengeData(data);
+        setMemberId(data.memberId)
         setStatus(data.status);
         setLeaderId(data.leaderId);
+        setPublicSatus(data.isPublic);
       } catch (error) {
         
       }
@@ -282,19 +285,24 @@ function ChallengeDetailPage() {
 
 
   <BtnContainer>
-    <AcceptBtnContainer onClick={() => setShowModal(true)}>
-      <AcceptBtnIcon src={plus}/>
-      <AcceptBtnText >
-      챌린지 참여 요청
-      </AcceptBtnText>
-    </AcceptBtnContainer>
-    <EditChallengeBtn>
-    <img src={editBtnIcon} alt="수정하기" />
+  {memberId === leaderId ? (
+    <>
+    {isPublic === "PRIVATE" ? (
+  <AcceptBtnContainer onClick={() => setShowModal(true)}>
+    <AcceptBtnIcon src={plus} />
+    <AcceptBtnText>챌린지 참여 요청</AcceptBtnText>
+  </AcceptBtnContainer>
+) : null}
+  <EditChallengeBtn>
+  <img src={editBtnIcon} alt="수정하기" />
+  </EditChallengeBtn>
+  </>
 
-    </EditChallengeBtn>
+  ) : (
     <ChallengeQuitBtn onClick={() => setShowDeleteModal(true)}>
     <img src={quitBtnIcon} alt="나가기" />
     </ChallengeQuitBtn>
+  )}
   </BtnContainer>
         </ChallengInfoContainer>
         <TabContainer>

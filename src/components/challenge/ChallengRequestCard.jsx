@@ -77,22 +77,20 @@ const ChallengRequestCard = ({ item, onRemove }) => {
     navigate('/friendprofile');
   };
 
-  const handleAccept = async (e, reqId) => {
+  const handleAccept = async (e) => {
     e.stopPropagation();
     try {
       await acceptJoinRequest(item.id);
-      alert('참여 요청을 수락했습니다.');
-      onRemove(); 
+      window.location.reload(); 
     } catch (error) {
       alert('수락 실패');
     }
   };
 
-  const handleReject = async (e, reqId) => {
+  const handleReject = async (e) => {
     e.stopPropagation();
     try {
       await rejectJoinRequest(item.id);
-      alert('참여 요청을 거절했습니다.');
       onRemove(); 
     } catch (error) {
       alert('거절 실패');
@@ -105,10 +103,10 @@ const ChallengRequestCard = ({ item, onRemove }) => {
       <Right>
         <ItemName>{item.memberName}님이 챌린지 가입 요청을 보냈어요</ItemName>
         <BtnGroup>
-          <AcceptedBtn onClick={(e) => handleAccept(e, item.id)}>
+          <AcceptedBtn onClick={(e) => handleAccept(e)}>
             수락
           </AcceptedBtn>
-          <UpdateBtn2 onClick={(e) => handleReject(e, item.id)}>
+          <UpdateBtn2 onClick={(e) => handleReject(e)}>
             거절
           </UpdateBtn2>
         </BtnGroup>
