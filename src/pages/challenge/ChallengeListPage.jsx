@@ -3,11 +3,8 @@ import styled from "styled-components";
 import ChallengePreviewCard from "../../components/challenge/ChallengePreviewCard";
 import SearchIcon from "../../assets/search.svg";
 import Colors from "../../constanst/color.mjs";
-import axios from "axios";
 import Pagination from "../../components/pagination/Pagination";
-import axiosInstance from "../../api/axiosInstance"
-
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
+import {fetchChallengeList} from "../../api/challenge/challengeListApi";
 
 const ChallengeListWrapper= styled.div`
   width:80%;
@@ -147,33 +144,24 @@ function ChallengeListPage() {
         7: "기타 생활비",
       };
   
-    useEffect(() => {
-      const category = categoryMap[selectedCategory];
-      const newGroup = Math.floor((page - 1) / 5);
+
+
+      useEffect(() => {
+        const category = categoryMap[selectedCategory];
+        const newGroup = Math.floor((page - 1) / 5);
       if (newGroup !== pageGroup) {
         setPageGroup(newGroup);
       }
 
-      axiosInstance.get(`${baseUrl}/challenges/lists`, {
-        params: {
-          category: category,
-          page: page,
-        },
-      })
-      .then(response => {
-        console.log("response.data:", response.data);
-        const { challengeList, totalPage } = response.data.result;
-      
-        setChallengeList(challengeList);
-        setTotalPage(totalPage);
-      })
-      .catch(err => {
-        console.error("챌린지 리스트 로드 실패:", err);
-      });
-
-      
-    }, [selectedCategory, page]);
-  
+        fetchChallengeList(category, page)
+          .then(({ challengeList, totalPage }) => {
+            setChallengeList(challengeList);
+            setTotalPage(totalPage);
+          })
+          .catch(error => {
+            console.error("챌린지 리스트 로드 실패:", error);
+          });
+      }, [selectedCategory, page]);
 
     const filteredChallenges = challengeList.filter(challenge =>
       challenge.title.includes(searchTerm)

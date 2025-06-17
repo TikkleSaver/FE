@@ -8,6 +8,7 @@ import privateLockIcon from "../../assets/privateLockIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import plusIcon from "../../assets/plusIcon.svg";
 import axios from 'axios';
+import axiosInstance from "../../api/axiosInstance";
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -489,7 +490,7 @@ const handleSubmit = async () => {
   }
 
   try {
-    const response = await axios.post(`${baseUrl}/challenges`, formData, {
+    const response = await axiosInstance.post(`${baseUrl}/challenges`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

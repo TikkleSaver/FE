@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import imageUrl from '../../images/challengeImg.png';
 import emptyImageUrl from '../../images/emptyCertificationImg.svg';
-import top3RankImg from '../../images/top3RankImg.png';
+import top3RankImg from '../../images/profile.svg';
 import firstCrown from '../../assets/1stCrown.svg';
 import secondCrown from '../../assets/2stCrown.svg';
 import thirdCrown from '../../assets/3stCrown.svg';
+import { useParams } from "react-router-dom";
+import { getMissionProofMain } from "../../api/challenge/challengeDetailApi"; 
+
 
 const ChallengeMainWrapper = styled.div`
   width: 85%;
@@ -205,27 +207,72 @@ const MonthlyRankSection = ({ top3 }) => (
 );
 
 const ChallengeMainComponent = () => {
-  const imageList = [
-    imageUrl,
-    imageUrl,
-    emptyImageUrl,
-    imageUrl,
-    imageUrl,
-    imageUrl,
-    imageUrl,
-    emptyImageUrl,
-  ];
-  const top3List = [
-    { img: top3RankImg, crown: firstCrown, alt: '1st Place' },
-    { img: top3RankImg, crown: secondCrown, alt: '2nd Place' },
-    { img: top3RankImg, crown: thirdCrown, alt: '3rd Place' },
-  ];
+  const { challengeId } = useParams();
+  const [rate, setRate] = useState(0);
+  const [successCount, setSuccessCount] = useState(0);
+  const [failCount, setFailCount] = useState(0);
+  const [imageList, setImageList] = useState([]);
+  const [top3List, setTop3List] = useState([]);
+
+  const createDateImageArray = (missionProofs, today = new Date()) => {
+    const dateMap = new Map();
+    missionProofs.forEach(({ createdAt, imageUrl }) => {
+      const date = new Date(createdAt).getDate(); 
+      dateMap.set(date, imageUrl);
+    });
+  
+    const todayDate = today.getDate();
+    const imageArray = [];
+  
+    for (let i = 1; i <= todayDate; i++) {
+      if (dateMap.has(i)) {
+        imageArray.push(dateMap.get(i));
+      } else {
+        imageArray.push(emptyImageUrl);
+      }
+    }
+  
+    return imageArray;
+  };
+
+  const createTop3List = (top3Rankings) => {
+    const crownList = [firstCrown, secondCrown, thirdCrown];
+  
+    return top3Rankings.map((ranking, idx) => ({
+      img: ranking.imageUrl ?? top3RankImg,
+      crown: crownList[idx],
+      alt: `${idx + 1}st Place`
+    }));
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getMissionProofMain(challengeId);
+
+        setRate(Math.round(result.successRate * 100) / 100);
+        setSuccessCount(result.successCount);
+        setFailCount(result.failCount);
+
+        const filledImageList = createDateImageArray(result.missionProofs);
+        setImageList(filledImageList);
+
+        const top3 = createTop3List(result.top3Rankings);
+        setTop3List(top3);
+
+      } catch (error) {
+        console.error('데이터 불러오기 실패:', error);
+      }
+    };
+
+    fetchData();
+  }, [challengeId]);
 
   return (
     <ChallengeMainWrapper>
       <LeftContainer>
-        <AchievementSection rate={80} />
-        <CertificationRecordSection successCount={17} failedCount={2} />
+        <AchievementSection rate={rate} />
+        <CertificationRecordSection successCount={successCount} failedCount={failCount} />
         <CertificationImageGrid images={imageList} />
       </LeftContainer>
       <RightContainer>

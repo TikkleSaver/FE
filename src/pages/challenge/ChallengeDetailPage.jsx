@@ -3,12 +3,17 @@ import styled from "styled-components";
 import mainIcon from "../../assets/mainIcon.svg";
 import certifyIcon from "../../assets/certifyIcon.svg";
 import challengerIcon from "../../assets/challengerIcon.svg";
-import chaellengeImg from "../../images/challengeImg.png";
 import quitBtnIcon from "../../assets/quitBtnIcon.svg";
 import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
 import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
 import ChallengerComponent from "../../components/challenge/ChallengerComponent";
-
+import { useParams } from 'react-router-dom';
+import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
+import plus from "../../assets/plus.svg"
+import Colors from "../../constanst/color.mjs";
+import editBtnIcon from "../../assets/edit.svg"
+import ChallengeRequestModal from "../../components/challenge/ChallengeRequestModal";
+import ChallengeExitModal from "../../components/challenge/\bChallengeExitModal";
 const ChallengeContainer = styled.div`
 
   margin: 0 auto;
@@ -24,18 +29,20 @@ const ChallengInfoContainer = styled.div`
   display:flex;
   justify-content: space-between;
 
-
-img
-{  
-   width:220px;
-   height:165;
-   border-radius:15px;
-}
 `;
 
 
 const ChallengeInnerWrapper= styled.div`
   display: flex;
+
+img
+{  
+   width:220px;
+   height:165px;
+   border-radius:15px;
+   object-fit: cover;      
+   object-position: center;
+}
 
 `;
 const ChallengeInfoWrapper = styled.div`
@@ -159,13 +166,105 @@ const TopChallengeInnerContainer = styled.div`
 
 `;
 
+const BtnContainer = styled.div`
+ display:flex;
+ gap:20px;
+
+`;
+
+const EditChallengeBtn = styled.button`
+
+width:50px;
+height:50px;
+border-radius:100px;
+background-color: #F9FAFC;
+border: 1px solid #E5E5E5;
+img{
+width:25px;}
+`;
+
+const AcceptBtnContainer = styled.button`
+
+width:160px;
+height:50px;
+border-radius:10px;
+background-color: #F9FAFC;
+border: 1px solid #E5E5E5;
+display:flex;
+padding: 13px 8px 8px 8px;
+`;
+const AcceptBtnIcon = styled.img`
+width:22px;
+height:22px;
+
+`;
+const AcceptBtnText = styled.div`
+font-size:16px;
+padding-top:2px;
+padding-left:5px;
+color: ${Colors.secondary400}
+`;
+
+
+
 function ChallengeDetailPage() {
   const [selectedTab, setSelectedTab] = useState("메인");
+  const { challengeId } = useParams();
+  const [challengeData, setChallengeData] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [memberId, setMemberId] = useState(null); 
+  const [leaderId, setLeaderId] = useState(null); 
+  const [publicStatus, setPublicSatus] = useState('');
+
+ console.log("leaderId",leaderId)
+
+
+   const handleModal = () => {
+    setShowModal(false);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  useEffect(() => {
+    const loadChallenge = async () => {
+      try {
+        const data = await fetchChallenge(challengeId);
+        setChallengeData(data);
+        setMemberId(data.memberId)
+        setStatus(data.status);
+        setLeaderId(data.leaderId);
+        setPublicSatus(data.isPublic);
+      } catch (error) {
+        
+      }
+    };
+    loadChallenge();
+  }, [challengeId]);
+
+
+
+
+  if (!challengeData) return <div>로딩 중...</div>;
+
+  const {
+    title,
+    category,
+    description,
+    imgUrl,
+    missionMethods,
+    isPublic,
+    scrapped,
+    challengerCount
+  } = challengeData;
 
   const tabs = [
     { name: "메인", icon: mainIcon },
     { name: "인증하기", icon: certifyIcon },
-    { name: "챌린저", icon: challengerIcon, count: 27 },
+    { name: "챌린저", icon: challengerIcon, count: challengerCount },
   ];
 
   return (
@@ -173,20 +272,39 @@ function ChallengeDetailPage() {
       <ChallengeContainer>
         <ChallengInfoContainer>
           <ChallengeInnerWrapper>
-            <img src={chaellengeImg} />
+            <img src={imgUrl} />
             <ChallengeInfoWrapper>
-              <ChallengeTitle>커피값 세이브</ChallengeTitle>
+              <ChallengeTitle>{title}</ChallengeTitle>
               <ChallengeCheckList>
-                <li>밥 먹기</li>
-                <li>밥 먹기</li>
+              {missionMethods.map((method, index) => (
+              <li key={index}>{method}</li>
+            ))}
               </ChallengeCheckList>
             </ChallengeInfoWrapper>
           </ChallengeInnerWrapper>
-          <ChallengeQuitBtn>
-            <img src={quitBtnIcon} alt="나가기" />
-          </ChallengeQuitBtn>
-        </ChallengInfoContainer>
 
+
+  <BtnContainer>
+  {memberId === leaderId ? (
+    <>
+    {isPublic === "PRIVATE" ? (
+  <AcceptBtnContainer onClick={() => setShowModal(true)}>
+    <AcceptBtnIcon src={plus} />
+    <AcceptBtnText>챌린지 참여 요청</AcceptBtnText>
+  </AcceptBtnContainer>
+) : null}
+  <EditChallengeBtn>
+  <img src={editBtnIcon} alt="수정하기" />
+  </EditChallengeBtn>
+  </>
+
+  ) : (
+    <ChallengeQuitBtn onClick={() => setShowDeleteModal(true)}>
+    <img src={quitBtnIcon} alt="나가기" />
+    </ChallengeQuitBtn>
+  )}
+  </BtnContainer>
+        </ChallengInfoContainer>
         <TabContainer>
           <TabInnerContainer>
             {tabs.map((tab) => (
@@ -212,10 +330,15 @@ function ChallengeDetailPage() {
         <TopChallengeInnerContainer>
           {selectedTab === "메인" && <ChallengeMainComponent />}
           {selectedTab === "인증하기" && <ChallengeCertifyComponent />}
-          {selectedTab === "챌린저" && <ChallengerComponent/>}
+          {selectedTab === "챌린저" && <ChallengerComponent challengeId={challengeId} />}
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
+      {showModal && <ChallengeRequestModal onClose={handleModal} challengeId={challengeId}  />}
+      {showDeleteModal && (
+        <ChallengeExitModal challengeId={challengeId} onClose={handleCloseDeleteModal} />
+      )}
     </>
+    
   );
 }
 
