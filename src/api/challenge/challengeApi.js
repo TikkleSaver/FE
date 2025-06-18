@@ -48,3 +48,8 @@ export const createChallenge = async (challengeData, imageFile) => {
     const response = await axiosInstance.delete(`/challenges/${challengeId}`);
     return response.data;
   };
+
+  export const fetchTop4Challenges = async () => {
+    const response = await axiosInstance.get('/challenges/top4-lists'); 
+    return response.data.result; 
+  };

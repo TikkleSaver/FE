@@ -5,9 +5,8 @@ import SearchIcon from "../../assets/search.svg"
 import Colors from "../../constanst/color.mjs";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import categoryIcon from "../../assets/categoryIcon.svg"
 import Dropdown from "../../components/challenge/Dropdown";
-import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
+import { fetchTop4Challenges } from "../../api/challenge/challengeApi";
 import { fetchChallengeList } from "../../api/challenge/challengeListApi";
 
 
@@ -176,7 +175,9 @@ function ChallengePage() {
   const [selectedSearchCategory, setSelectedSearchCategory] = useState("전체");
   const categories = ["전체", "식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
   const [challengeList, setChallengeList] = useState([]);
-   const [page, setPage] = useState(1); 
+  const [page, setPage] = useState(1); 
+  const [challenges, setChallenges] = useState([]);
+
 
 
   const categoryMap = {
@@ -209,6 +210,18 @@ function ChallengePage() {
     }
   };
 
+  useEffect(() => {
+    const loadChallenges = async () => {
+      try {
+        const data = await fetchTop4Challenges();
+        setChallenges(data);
+      } catch (err) {
+        console.error('인기 챌린지 불러오기 실패:', err);
+      }
+    };
+
+    loadChallenges();
+  }, []);
 
   useEffect(() => {
     const category = categoryMap[selectedCategory];
@@ -248,10 +261,15 @@ function ChallengePage() {
       인기 챌린지🔥
       </TopChallengeText>
       <TopChallengeInnerContainer>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
+      {challenges.map((challenge) => (
+    <ChallengePreviewCard 
+      key={challenge.challengeId}
+      challengeId={challenge.challengeId} 
+      title={challenge.title} 
+      category={reverseCategoryMap[challenge.categoryId]} 
+      imgUrl={challenge.imgUrl} 
+    />
+  ))}
       </TopChallengeInnerContainer>
     </ChallengeContainer>
 
