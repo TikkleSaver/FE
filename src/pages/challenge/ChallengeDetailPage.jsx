@@ -13,7 +13,7 @@ import plus from "../../assets/plus.svg"
 import Colors from "../../constanst/color.mjs";
 import editBtnIcon from "../../assets/edit.svg"
 import ChallengeRequestModal from "../../components/challenge/ChallengeRequestModal";
-import ChallengeExitModal from "../../components/challenge/\bChallengeExitModal";
+import ChallengeExitModal from "../../components/challenge/ChallengeExitModal";
 const ChallengeContainer = styled.div`
 
   margin: 0 auto;
