@@ -33,6 +33,8 @@ import ChallengeSearchPage from './pages/challenge/ChallengeSearchPage';
 import ChallengeListPage from './pages/challenge/ChallengeListPage';
 import EditMember from './pages/myprofile/EditMember';
 import UpdateChallengePage from './pages/challenge/UpdateChallengePage';
+import JoinedChallenge from './pages/myprofile/JoinedChallengeListPage';
+import JoinedChallengeListPage from './pages/myprofile/JoinedChallengeListPage';
 
 function App() {
   return (
@@ -53,9 +55,18 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
-        <Route path="/challenge-info/:challengeId" element={ <ChallengeDetailPage/>} />
-        <Route path="/challenges/create-challenge" element={<CreateChallengePage />} />
-        <Route path="/challenge-info/:challengeId/update-challenge" element={<UpdateChallengePage />} />
+        <Route
+          path="/challenge-info/:challengeId"
+          element={<ChallengeDetailPage />}
+        />
+        <Route
+          path="/challenges/create-challenge"
+          element={<CreateChallengePage />}
+        />
+        <Route
+          path="/challenge-info/:challengeId/update-challenge"
+          element={<UpdateChallengePage />}
+        />
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/wish-info" element={<WishInfoPage />} />
         <Route path="/wish/mine" element={<MyWishPage />} />
@@ -76,14 +87,12 @@ function App() {
         <Route path="/searchFreind" element={<SearchFreindPage />} />
         <Route path="/friendprofile" element={<FriendProfile />} />
         <Route path="/friends" element={<FriendsPage />} />
-        <Route
-          path="/challenges/search"
-          element={<ChallengeSearchPage />}
-        />
+        <Route path="/challenges/search" element={<ChallengeSearchPage />} />
         <Route
           path="/challenges/challenge-list"
           element={<ChallengeListPage />}
         />
+        <Route path="/challenges/join" element={<JoinedChallengeListPage />} />
       </Routes>
     </Router>
   );

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import profileImage from '../../images/profile.svg';
 import check from '../../images/myprofile/material-symbols_check-rounded.svg';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CancelModal from '../../components/friend/CancelModal';
 import DeleteModal from '../../components/friend/DeleteModal';
 import { fetchFriendProfile } from '../../api/friendApi'; // 아까 만든 API 함수
@@ -12,6 +12,7 @@ import AcceptModal from '../../components/friend/AcceptModal';
 
 export default function FriendProfile() {
   const location = useLocation();
+  const navigate = useNavigate();
   const memberId = location.state?.memberId;
   const [showAcceptModal, setShowAcceptModal] = useState(false);
 
@@ -93,6 +94,23 @@ export default function FriendProfile() {
     }
   }, [profile]);
 
+  //친구 위시 이동
+  const handleWishlistClick = (e) => {
+    e.stopPropagation();
+    navigate('/wish/friend', {
+      state: { friendId: profile.memberId, friendName: profile.nickname },
+    });
+  };
+
+  const reverseCategoryMap = {
+    1: '식비',
+    2: '카페',
+    3: '쇼핑',
+    4: '건강',
+    5: '취미',
+    6: '교통비',
+    7: '기타 생활비',
+  };
   if (!profile) return <div>Loading...</div>; // 무조건 필요
 
   return (
@@ -138,11 +156,18 @@ export default function FriendProfile() {
             </ButtonGroup>
           </Top>
           <Bottom>
-            <Group>
+            <Group onClick={handleWishlistClick} style={{ cursor: 'pointer' }}>
               <Number>{profile.wishListNum}</Number>
               <Name>위시리스트</Name>
             </Group>
-            <Group>
+            <Group
+              onClick={() =>
+                navigate('/challenges/join', {
+                  state: { memberId: profile.memberId },
+                })
+              }
+              style={{ cursor: 'pointer' }}
+            >
               <Number>{profile.challengeNum}</Number>
               <Name>참여중인 챌린지</Name>
             </Group>
@@ -156,14 +181,27 @@ export default function FriendProfile() {
 
       <ChallengeContainer>
         <TopChallengeText>
-          <div>참여중인 챌린지</div>
-          <MoreBtn to="/savedChallenge">{'더보기>'}</MoreBtn>
+          <div>저장한 챌린지</div>{' '}
+          <MoreBtn
+            onClick={() =>
+              navigate('/savedChallenge', {
+                state: { scrapedList: profile.challengeScrapedList },
+              })
+            }
+          >
+            {'더보기>'}
+          </MoreBtn>
         </TopChallengeText>
         <TopChallengeInnerContainer>
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
+          {profile.challengeScrapedList.slice(0, 4).map((challenge) => (
+            <ChallengePreviewCard
+              key={challenge.challengeId}
+              challengeId={challenge.challengeId}
+              title={challenge.title}
+              category={reverseCategoryMap[challenge.categoryId]}
+              imgUrl={challenge.imgUrl}
+            />
+          ))}
         </TopChallengeInnerContainer>
       </ChallengeContainer>
       {showAddModal && (
@@ -315,11 +353,14 @@ const TopChallengeText = styled.div`
   }
 `;
 
-const MoreBtn = styled(Link)`
+const MoreBtn = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
   color: #6b6b6b;
   font-size: 1rem;
   font-weight: 400;
-  text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
