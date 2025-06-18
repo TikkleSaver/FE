@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import categoryIcon from "../../assets/categoryIcon.svg"
 import Dropdown from "../../components/challenge/Dropdown";
+import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
+import { fetchChallengeList } from "../../api/challenge/challengeListApi";
 
 
 const ChallengePageContainer = styled.div`
@@ -45,8 +47,8 @@ const SearchInput = styled.input`
 `;
 
 const SearchIconWrapper = styled.div`
-  position: absolute;
-  left: 248px;
+  position: relative;
+  left: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,7 +102,8 @@ const ButtonContainer = styled.div`
   margin-left: 65px;
   margin-bottom: 50px;
   position: relative;
-
+  margin: 0 auto;
+  width: 72%;
 `;
 
 const CateButton = styled.button`
@@ -125,17 +128,78 @@ const MoreBtn = styled(Link)`
   font-weight: 500;
   text-decoration: none;
   position: absolute;
-  right: 70px;
+  right: 0px;
 
 `;
 
+const ChallengeInnerContainer = styled.div`
+  width: 90%; 
+  max-width: 1200px; 
+  margin: 5px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(200px, 1fr)); 
+  gap: 40px;
+  justify-content: center;
+
+
+`;
+
+const NoResultContainer = styled.div`
+
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;     
+  height: 50vh;        
+  text-align: center;
+  padding: 0 20px;         
+  display: flex;
+`;
+
+const NoResultTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${Colors.secondary200};
+  margin-bottom: 10px;
+`;
+
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
+`;
+
+
 function ChallengePage() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [selectedSearchCategory, setSelectedSearchCategory] = useState("전체");
   const categories = ["전체", "식비", "카페", "쇼핑", "건강", "취미", "교통비", "기타 생활비"];
+  const [challengeList, setChallengeList] = useState([]);
+   const [page, setPage] = useState(1); 
 
-  const navigate = useNavigate();
+
+  const categoryMap = {
+    "전체": null,
+    "식비": 1,
+    "카페": 2,
+    "쇼핑": 3,
+    "건강": 4,
+    "취미": 5,
+    "교통비": 6,
+    "기타 생활비": 7,
+  };
+
+  const reverseCategoryMap = {
+      1: "식비",
+      2: "카페",
+      3: "쇼핑",
+      4: "건강",
+      5: "취미",
+      6: "교통비",
+      7: "기타 생활비",
+    };
+    
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
@@ -144,6 +208,23 @@ function ChallengePage() {
       );
     }
   };
+
+
+  useEffect(() => {
+    const category = categoryMap[selectedCategory];
+
+    const loadChallenge = async () => {
+      try {
+        const result = await fetchChallengeList(category, page)
+        const limitedList = result.challengeList.slice(0, 8); // 앞에서 8개만 자름
+        setChallengeList(limitedList);
+      } catch (error) {
+        console.error("챌린지 불러오기 실패:", error);
+      }
+    };
+  
+    loadChallenge();
+  }, [selectedCategory, page]);
 
   return (
     <ChallengePageContainer>
@@ -174,7 +255,7 @@ function ChallengePage() {
       </TopChallengeInnerContainer>
     </ChallengeContainer>
 
-    <ChallengeContainer>
+ 
     <ButtonContainer>
           {categories.map((category) => (
             <CateButton
@@ -187,17 +268,25 @@ function ChallengePage() {
           ))}
           <MoreBtn to="/challenges/challenge-list">{'더보기 >'}</MoreBtn>
         </ButtonContainer>
-      <TopChallengeInnerContainer>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
-      <ChallengePreviewCard/>
+        <ChallengeContainer>
+    
+  <ChallengeInnerContainer>
+  {challengeList.map((challenge) => (
+    <ChallengePreviewCard 
+      key={challenge.challengeId}
+      challengeId={challenge.challengeId} 
+      title={challenge.title} 
+      category={reverseCategoryMap[challenge.categoryId]} 
+      imgUrl={challenge.imgUrl} 
+    />
+  ))}
+</ChallengeInnerContainer>
+            {challengeList.length === 0 && 
+              <NoResultContainer>
+                <NoResultTitle>해당하는 카테고리의 챌린지가 없습니다.</NoResultTitle>
+                <NoResultSubText>챌린지를 직접 생성해보세요!</NoResultSubText>
+            </NoResultContainer>}
       
-      </TopChallengeInnerContainer>
     </ChallengeContainer>
     </ChallengePageContainer>
   );

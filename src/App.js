@@ -32,6 +32,7 @@ import MainPage from './pages/home/MainPage';
 import ChallengeSearchPage from './pages/challenge/ChallengeSearchPage';
 import ChallengeListPage from './pages/challenge/ChallengeListPage';
 import EditMember from './pages/myprofile/EditMember';
+import UpdateChallengePage from './pages/challenge/UpdateChallengePage';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/products" element={<ProductPage />} />
         <Route path="/challenge-info/:challengeId" element={ <ChallengeDetailPage/>} />
         <Route path="/challenges/create-challenge" element={<CreateChallengePage />} />
+        <Route path="/challenge-info/:challengeId/update-challenge" element={<UpdateChallengePage />} />
         <Route path="/product-info" element={<ProductDetailPage />} />
         <Route path="/wish-info" element={<WishInfoPage />} />
         <Route path="/wish/mine" element={<MyWishPage />} />

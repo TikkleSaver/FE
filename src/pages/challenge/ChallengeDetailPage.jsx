@@ -7,7 +7,7 @@ import quitBtnIcon from "../../assets/quitBtnIcon.svg";
 import ChallengeMainComponent from "../../components/challenge/ChallengeMainComponent";
 import ChallengeCertifyComponent from "../../components/challenge/ChallengeCertifyComponent";
 import ChallengerComponent from "../../components/challenge/ChallengerComponent";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate  } from 'react-router-dom';
 import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
 import plus from "../../assets/plus.svg"
 import Colors from "../../constanst/color.mjs";
@@ -217,9 +217,14 @@ function ChallengeDetailPage() {
   const [memberId, setMemberId] = useState(null); 
   const [leaderId, setLeaderId] = useState(null); 
   const [publicStatus, setPublicSatus] = useState('');
+  const navigate = useNavigate();
 
  console.log("leaderId",leaderId)
 
+
+ const handleUpdateChallenge = () => {
+  navigate(`/challenge-info/${challengeId}/update-challenge`);
+};
 
    const handleModal = () => {
     setShowModal(false);
@@ -252,12 +257,9 @@ function ChallengeDetailPage() {
 
   const {
     title,
-    category,
-    description,
     imgUrl,
     missionMethods,
     isPublic,
-    scrapped,
     challengerCount
   } = challengeData;
 
@@ -293,7 +295,7 @@ function ChallengeDetailPage() {
     <AcceptBtnText>챌린지 참여 요청</AcceptBtnText>
   </AcceptBtnContainer>
 ) : null}
-  <EditChallengeBtn>
+  <EditChallengeBtn onClick={() => handleUpdateChallenge() }>
   <img src={editBtnIcon} alt="수정하기" />
   </EditChallengeBtn>
   </>
