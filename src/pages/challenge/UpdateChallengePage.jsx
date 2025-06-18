@@ -7,7 +7,7 @@ import publicLockIcon from "../../assets/publicLockIcon.svg";
 import privateLockIcon from "../../assets/privateLockIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import plusIcon from "../../assets/plusIcon.svg";
-import { updateChallenge, deleteChallenge } from "../../api/challenge/challengeApi";
+import { updateChallenge, deleteChallenge } from "../../api/challenge/challengeApi";
 import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
 
 const UpdateChallengeWrapper = styled.div`
