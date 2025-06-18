@@ -45,8 +45,8 @@ const SearchInput = styled.input`
 `;
 
 const SearchIconWrapper = styled.div`
-  position: absolute;
-  left: 248px;
+  position: relative;
+  left: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
