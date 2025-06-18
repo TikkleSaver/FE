@@ -13,14 +13,12 @@ import {
 import Colors from '../../constanst/color.mjs';
 
 const Container = styled.div`
+  border-top: 1.5px solid ${Colors.secondary100};
   max-width: 965px;
-  margin: 0 auto;
 `;
 
 const CalendarBox = styled.div`
-  padding: 1.5rem 2rem;
-  border: 1.5px solid ${Colors.secondary100};
-  border-radius: 25px;
+  padding: 1rem;
 `;
 
 const Section = styled.div`
@@ -91,13 +89,13 @@ const ExpenseSection = () => {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
   const pieData = [
-    { name: '식비', value: 502300 },
-    { name: '카페', value: 402300 },
-    { name: '쇼핑', value: 2300 },
-    { name: '건강', value: 300 },
-    { name: '취미', value: 502300 },
-    { name: '교통비', value: 302300 },
-    { name: '기타', value: 5020 },
+    { name: '식비', value: 200000 },
+    { name: '카페', value: 150000 },
+    { name: '쇼핑', value: 150000 },
+    { name: '건강', value: 130000 },
+    { name: '취미', value: 110000 },
+    { name: '교통비', value: 56000 },
+    { name: '기타', value: 35020 },
   ];
 
   const sortedPieData = [...pieData].sort((a, b) => b.value - a.value);
@@ -108,7 +106,7 @@ const ExpenseSection = () => {
     { name: '3월', amount: 502300 },
     { name: '4월', amount: 700000 },
     { name: '5월', amount: 820000 },
-    { name: '6월', amount: 0 },
+    { name: '6월', amount: 720000 },
     { name: '7월', amount: 0 },
     { name: '8월', amount: 0 },
     { name: '9월', amount: 0 },

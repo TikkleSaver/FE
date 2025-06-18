@@ -46,7 +46,10 @@ export default function MyProfile() {
             </ButtonGroup>
           </Top>
           <Bottom>
-            <Group>
+            <Group
+              onClick={() => navigate('/wish/mine')}
+              style={{ cursor: 'pointer' }}
+            >
               <Number>{profile.wishListNum}</Number>
               <Name>위시리스트</Name>
             </Group>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import profileImage from '../../images/profile.svg';
 import check from '../../images/myprofile/material-symbols_check-rounded.svg';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CancelModal from '../../components/friend/CancelModal';
 import DeleteModal from '../../components/friend/DeleteModal';
 import { fetchFriendProfile } from '../../api/friendApi'; // 아까 만든 API 함수
@@ -12,6 +12,7 @@ import AcceptModal from '../../components/friend/AcceptModal';
 
 export default function FriendProfile() {
   const location = useLocation();
+  const navigate = useNavigate();
   const memberId = location.state?.memberId;
   const [showAcceptModal, setShowAcceptModal] = useState(false);
 
@@ -93,6 +94,14 @@ export default function FriendProfile() {
     }
   }, [profile]);
 
+  //친구 위시 이동
+  const handleWishlistClick = (e) => {
+    e.stopPropagation();
+    navigate('/wish/friend', {
+      state: { friendId: profile.memberId, friendName: profile.nickname },
+    });
+  };
+
   if (!profile) return <div>Loading...</div>; // 무조건 필요
 
   return (
@@ -138,7 +147,7 @@ export default function FriendProfile() {
             </ButtonGroup>
           </Top>
           <Bottom>
-            <Group>
+            <Group onClick={handleWishlistClick} style={{ cursor: 'pointer' }}>
               <Number>{profile.wishListNum}</Number>
               <Name>위시리스트</Name>
             </Group>

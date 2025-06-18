@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Top from '../../components/home/Top';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import ExpenseSection from '../../components/home/ExpenseSection';
+import { useNavigate } from 'react-router-dom';
+
 const ChallengeContainer = styled.div`
   margin: 50px auto;
   width: 1090px;
@@ -20,7 +22,7 @@ const TopChallengeText = styled.div`
     font-weight: 400;
   }
 `;
-const MoreBtn = styled(Link)`
+const MoreBtn = styled.span`
   color: #6b6b6b;
   font-size: 1rem;
   font-weight: 400;
@@ -29,6 +31,7 @@ const MoreBtn = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
+  cursor: pointer;
 `;
 const TopChallengeInnerContainer = styled.div`
   width: fit-content;
@@ -40,14 +43,15 @@ const TopChallengeInnerContainer = styled.div`
   justify-content: center;
 `;
 export default function MainPage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Top />
       <ChallengeContainer>
         <TopChallengeText>
           <div>챌린지 도전하기</div>
-          <MoreBtn>{'더보기>'}</MoreBtn>
-          {/* <MoreBtn to="/savedChallenge">{'더보기>'}</MoreBtn> */}
+          <MoreBtn onClick={() => navigate('/challenges')}>{'더보기>'}</MoreBtn>
         </TopChallengeText>
         <TopChallengeInnerContainer>
           <ChallengePreviewCard />
