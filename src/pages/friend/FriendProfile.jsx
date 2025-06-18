@@ -102,6 +102,15 @@ export default function FriendProfile() {
     });
   };
 
+  const reverseCategoryMap = {
+    1: '식비',
+    2: '카페',
+    3: '쇼핑',
+    4: '건강',
+    5: '취미',
+    6: '교통비',
+    7: '기타 생활비',
+  };
   if (!profile) return <div>Loading...</div>; // 무조건 필요
 
   return (
@@ -151,7 +160,14 @@ export default function FriendProfile() {
               <Number>{profile.wishListNum}</Number>
               <Name>위시리스트</Name>
             </Group>
-            <Group>
+            <Group
+              onClick={() =>
+                navigate('/challenges/join', {
+                  state: { memberId: profile.memberId },
+                })
+              }
+              style={{ cursor: 'pointer' }}
+            >
               <Number>{profile.challengeNum}</Number>
               <Name>참여중인 챌린지</Name>
             </Group>
@@ -165,14 +181,27 @@ export default function FriendProfile() {
 
       <ChallengeContainer>
         <TopChallengeText>
-          <div>참여중인 챌린지</div>
-          <MoreBtn to="/savedChallenge">{'더보기>'}</MoreBtn>
+          <div>저장한 챌린지</div>{' '}
+          <MoreBtn
+            onClick={() =>
+              navigate('/savedChallenge', {
+                state: { scrapedList: profile.challengeScrapedList },
+              })
+            }
+          >
+            {'더보기>'}
+          </MoreBtn>
         </TopChallengeText>
         <TopChallengeInnerContainer>
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
+          {profile.challengeScrapedList.slice(0, 4).map((challenge) => (
+            <ChallengePreviewCard
+              key={challenge.challengeId}
+              challengeId={challenge.challengeId}
+              title={challenge.title}
+              category={reverseCategoryMap[challenge.categoryId]}
+              imgUrl={challenge.imgUrl}
+            />
+          ))}
         </TopChallengeInnerContainer>
       </ChallengeContainer>
       {showAddModal && (
@@ -324,11 +353,14 @@ const TopChallengeText = styled.div`
   }
 `;
 
-const MoreBtn = styled(Link)`
+const MoreBtn = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
   color: #6b6b6b;
   font-size: 1rem;
   font-weight: 400;
-  text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

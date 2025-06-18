@@ -4,6 +4,8 @@ import Top from '../../components/home/Top';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
 import ExpenseSection from '../../components/home/ExpenseSection';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { fetchTop4Challenges } from '../../api/challenge/challengeApi';
 
 const ChallengeContainer = styled.div`
   margin: 50px auto;
@@ -44,6 +46,30 @@ const TopChallengeInnerContainer = styled.div`
 `;
 export default function MainPage() {
   const navigate = useNavigate();
+  const [challenges, setChallenges] = useState([]);
+
+  const reverseCategoryMap = {
+    1: '식비',
+    2: '카페',
+    3: '쇼핑',
+    4: '건강',
+    5: '취미',
+    6: '교통비',
+    7: '기타 생활비',
+  };
+
+  useEffect(() => {
+    const loadChallenges = async () => {
+      try {
+        const data = await fetchTop4Challenges();
+        setChallenges(data);
+      } catch (err) {
+        console.error('인기 챌린지 불러오기 실패:', err);
+      }
+    };
+
+    loadChallenges();
+  }, []);
 
   return (
     <>
@@ -54,10 +80,15 @@ export default function MainPage() {
           <MoreBtn onClick={() => navigate('/challenges')}>{'더보기>'}</MoreBtn>
         </TopChallengeText>
         <TopChallengeInnerContainer>
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
-          <ChallengePreviewCard />
+          {challenges.map((challenge) => (
+            <ChallengePreviewCard
+              key={challenge.challengeId}
+              challengeId={challenge.challengeId}
+              title={challenge.title}
+              category={reverseCategoryMap[challenge.categoryId]}
+              imgUrl={challenge.imgUrl}
+            />
+          ))}
         </TopChallengeInnerContainer>
       </ChallengeContainer>
       {/* 수정필요 */}

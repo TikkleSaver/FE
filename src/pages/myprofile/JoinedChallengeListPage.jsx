@@ -4,6 +4,7 @@ import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCar
 import SearchIcon from '../../assets/search.svg';
 import { useLocation } from 'react-router-dom';
 import Colors from '../../constanst/color.mjs';
+import { fetchJoinChallengeList } from '../../api/challenge/challengeListApi';
 
 const ChallengePageContainer = styled.div`
   width: 80%;
@@ -50,7 +51,7 @@ const TopChallengeText = styled.div`
   border-bottom: 1.5px solid ${Colors.secondary100};
 `;
 
-function SavedChallenge() {
+function JoinedChallengeListPage() {
   const reverseCategoryMap = {
     1: '식비',
     2: '카페',
@@ -61,14 +62,29 @@ function SavedChallenge() {
     7: '기타 생활비',
   };
   const location = useLocation();
-  const scrapedList = location.state?.scrapedList || [];
+  const [challenges, setChallenges] = useState([]);
+
+  const memberId = location.state?.memberId || [];
+
+  useEffect(() => {
+    const loadChallenges = async () => {
+      try {
+        const data = await fetchJoinChallengeList(memberId);
+        setChallenges(data);
+      } catch (err) {
+        console.error('인기 챌린지 불러오기 실패:', err);
+      }
+    };
+
+    loadChallenges();
+  }, []);
 
   return (
     <ChallengePageContainer>
       <ChallengeContainer>
-        <TopChallengeText>🔖 저장한 챌린지</TopChallengeText>
+        <TopChallengeText>🏃‍♂️참여중인 챌린지</TopChallengeText>
         <TopChallengeInnerContainer>
-          {scrapedList.map((challenge) => (
+          {challenges?.map((challenge) => (
             <ChallengePreviewCard
               key={challenge.challengeId}
               challengeId={challenge.challengeId}
@@ -83,4 +99,4 @@ function SavedChallenge() {
   );
 }
 
-export default SavedChallenge;
+export default JoinedChallengeListPage;
