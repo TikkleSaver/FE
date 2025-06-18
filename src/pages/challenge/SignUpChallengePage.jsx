@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import participantsIcon from "../../assets/participants.svg"
-import person1 from "../../images/person1.jpg";
-import person2 from "../../images/person2.jpg";
-import person3 from "../../images/person3.jpg";
+import defaultImg from "../../images/profile.svg";
 import etcIcon from "../../assets/etc.svg";
 import unscrapped from "../../assets/unscrapped.svg";
 import scraped from "../../assets/scraped.svg";
@@ -13,8 +11,6 @@ import Colors from "../../constanst/color.mjs";
 import privateLockIcon from "../../assets/privateChallenge.svg";
 import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
 import { toggleChallengeScrap, joinChallenge } from "../../api/challenge/challenegeSignUpApi";
-
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const SignUpPageContainer = styled.div`
   width:70%;
@@ -289,7 +285,7 @@ border-radius: 10px;
 
 `;
 
-const ChallengeInnerContainer = ({ challengeId, title, category, description, status, isPublic, scrapped: initialScrapped, challengerCount, onJoin }) => {
+const ChallengeInnerContainer = ({ challengeId, title, category, description, status, isPublic, scrapped: initialScrapped, challengerCount, top3Challenger, onJoin }) => {
 const [scrapped, setScrapped] = useState(initialScrapped);
 
 const toggleScrap = async () => {
@@ -311,6 +307,12 @@ const handleJoinClick = async (newStatus) => {
   }
 };
 
+const copyCurrentUrl = () => {
+  const currentUrl = window.location.href;
+  navigator.clipboard.writeText(currentUrl)
+    .then(() => alert("페이지 주소가 복사되었습니다!"))
+    .catch((err) => alert("복사에 실패했습니다."));
+};
 
   return (
     <InfoContainer>
@@ -327,9 +329,13 @@ const handleJoinClick = async (newStatus) => {
           </ParticipantsNumContainer>
           <ParticipantsImgContainer>
             <Participants3Img>
-              <img src={person1} alt="person1" />
-              <img src={person2} alt="person2" />
-              <img src={person3} alt="person3" />
+            {top3Challenger.map((c, idx) => (
+  <img
+    key={idx}
+    src={c.imageUrl || defaultImg}
+    alt={`챌린저 ${idx}`}
+  />
+))}
             </Participants3Img>
             <ParticipantsEtc>
               <img src={etcIcon} alt="etc" />
@@ -355,7 +361,7 @@ const handleJoinClick = async (newStatus) => {
           <img src={unscrapped} alt="스크랩 안됨" />
         )}
       </ScrapContainer>
-            <CopyContainer>
+            <CopyContainer onClick={copyCurrentUrl}>
               <img src={copyIcon} alt="복사" />
             </CopyContainer>
           </IconsContainer>
@@ -369,6 +375,7 @@ function SignUpPageChallengePage() {
   const { challengeId } = useParams();
   const [challengeData, setChallengeData] = useState(null);
   const [status, setStatus] = useState(null);
+  const [challenger, setChallenger] = useState([]);
 
   useEffect(() => {
     const fetchChallengeInfo = async () => {
@@ -376,6 +383,7 @@ function SignUpPageChallengePage() {
         const res = await fetchChallenge(challengeId);
         setChallengeData(res);
         setStatus(res.status);
+        setChallenger(res.top3Challenger)
 
       } catch (error) {
         console.error('챌린지 정보 불러오기 실패:', error);
@@ -395,7 +403,8 @@ function SignUpPageChallengePage() {
     missionMethods,
     isPublic,
     scrapped,
-    challengerCount
+    challengerCount,
+    top3Challenger
   } = challengeData;
 
   return (
@@ -411,6 +420,7 @@ function SignUpPageChallengePage() {
           isPublic={isPublic}
           scrapped={scrapped}
           challengerCount={challengerCount}
+          top3Challenger={top3Challenger}
           onJoin={setStatus}
         />
       </ChallengeInfoContainer>
