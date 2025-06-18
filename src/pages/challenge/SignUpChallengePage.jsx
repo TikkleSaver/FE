@@ -9,10 +9,10 @@ import unscrapped from "../../assets/unscrapped.svg";
 import scraped from "../../assets/scraped.svg";
 import copyIcon from "../../assets/copy.svg";
 import { useParams } from 'react-router-dom';
-import axios from "axios";
 import Colors from "../../constanst/color.mjs";
 import privateLockIcon from "../../assets/privateChallenge.svg";
-import axiosInstance from "../../api/axiosInstance";
+import { fetchChallenge } from "../../api/challenge/challengeDetailApi";
+import { toggleChallengeScrap, joinChallenge } from "../../api/challenge/challenegeSignUpApi";
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -292,39 +292,25 @@ border-radius: 10px;
 const ChallengeInnerContainer = ({ challengeId, title, category, description, status, isPublic, scrapped: initialScrapped, challengerCount, onJoin }) => {
 const [scrapped, setScrapped] = useState(initialScrapped);
 
-  const toggleScrap = async () => {
-    try {
-      const res = await axiosInstance.patch(`${baseUrl}/challenges-scrap/${challengeId}/scrap`, {
-        scrapped: !scrapped,
-      });
+const toggleScrap = async () => {
+  try {
+    const result = await toggleChallengeScrap(challengeId, scrapped);
+    setScrapped(result.scrapped);
+    console.log(result.message);
+  } catch (error) {
+    console.error('스크랩 상태 변경 실패:', error);
+  }
+};
 
-      console.log(res.status);
-      if (res.data.isSuccess) {
-        const updatedScrap = res.data.result.scrapped;
-        setScrapped(updatedScrap);
-        console.log(res.data.result.message);
-      } else {
-        console.error('스크랩 상태 변경 실패:', res.data.message);
-      }
-    } catch (error) {
-      console.error('스크랩 상태 변경 실패:', error);
-    }
-  };
+const handleJoinClick = async (newStatus) => {
+  try {
+    await joinChallenge(challengeId);
+    onJoin(newStatus); 
+  } catch (error) {
+    console.error('챌린지 가입 실패:', error);
+  }
+};
 
-
-  const handleJoinClick = async (newStatus) => {
-    try {
-      const res = await axiosInstance.post(`${baseUrl}/join-challenges/${challengeId}`);
-      console.log(res.status);
-      if (res.data.isSuccess) {
-        onJoin(newStatus); 
-      } else {
-        console.error('챌린지 가입 실패:', res.data.message);
-      }
-    } catch (error) {
-      console.error('챌린지 가입 실패:', error);
-    }
-  };
 
   return (
     <InfoContainer>
@@ -385,18 +371,18 @@ function SignUpPageChallengePage() {
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    const fetchChallenge = async () => {
+    const fetchChallengeInfo = async () => {
       try {
-        const res = await axiosInstance.get(`${baseUrl}/join-challenges/${challengeId}`);
-        setChallengeData(res.data.result);
-        setStatus(res.data.result.status);
+        const res = await fetchChallenge(challengeId);
+        setChallengeData(res);
+        setStatus(res.status);
 
       } catch (error) {
         console.error('챌린지 정보 불러오기 실패:', error);
       }
     };
 
-    fetchChallenge();
+    fetchChallengeInfo();
   }, [challengeId]);
 
   if (!challengeData) return <div>로딩 중...</div>;

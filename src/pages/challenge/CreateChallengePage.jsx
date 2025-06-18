@@ -7,10 +7,7 @@ import publicLockIcon from "../../assets/publicLockIcon.svg";
 import privateLockIcon from "../../assets/privateLockIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import plusIcon from "../../assets/plusIcon.svg";
-import axios from 'axios';
-import axiosInstance from "../../api/axiosInstance";
-
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
+import { createChallenge } from "../../api/challenge/\bchallengeApi";
 
 const CreateChallengeWrapper = styled.div`
   width:50%;
@@ -474,28 +471,17 @@ const handleSubmit = async () => {
 
   const missionMethods = certifyInputs.map((item) => item.value).filter(Boolean);
 
-  const requestData = {
+  const challengeData = {
     title: nameText,
     description: infoText,
     categoryId: categoryMap[selectedCategory],
     publicStatus: isPublic ? "PRIVATE" : "PUBLIC",
-    missionMethods: missionMethods,
+    missionMethods,
   };
 
-  const formData = new FormData();
-  formData.append("request", new Blob([JSON.stringify(requestData)], { type: "application/json" }));
-
-  if (imageFile) {
-    formData.append("file", imageFile); // 'file' 이름으로 이미지 첨부
-  }
-
   try {
-    const response = await axiosInstance.post(`${baseUrl}/challenges`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log("챌린지 생성 성공:", response.data);
+    const result = await createChallenge(challengeData, imageFile);
+    console.log("챌린지 생성 성공:", result);
     alert("챌린지가 성공적으로 생성되었습니다.");
     navigate("/challenges");
   } catch (error) {
