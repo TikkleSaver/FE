@@ -257,12 +257,9 @@ function ChallengeDetailPage() {
 
   const {
     title,
-    category,
-    description,
     imgUrl,
     missionMethods,
     isPublic,
-    scrapped,
     challengerCount
   } = challengeData;
 

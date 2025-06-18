@@ -5,7 +5,7 @@ import SearchIcon from "../../assets/search.svg";
 import Colors from "../../constanst/color.mjs";
 import Pagination from "../../components/pagination/Pagination";
 import {fetchChallengeList} from "../../api/challenge/challengeListApi";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Dropdown from "../../components/challenge/Dropdown";
 
 const ChallengeListWrapper= styled.div`
@@ -140,10 +140,6 @@ function ChallengeListPage() {
     const [page, setPage] = useState(1); 
     const [totalPage, setTotalPage] = useState(1);
     const [pageGroup, setPageGroup] = useState(0);
-    const [result, setResult] = useState([]);
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get("query");
-    const category = searchParams.get("category");
     const [selectedSearchCategory, setSelectedSearchCategory] = useState("전체");
     const navigate = useNavigate();
   
@@ -196,9 +192,7 @@ function ChallengeListPage() {
           });
       }, [selectedCategory, page]);
 
-    const filteredChallenges = challengeList.filter(challenge =>
-      challenge.title.includes(searchTerm)
-    );
+    
 
       return (
         <ChallengeListWrapper>
@@ -241,7 +235,7 @@ function ChallengeListPage() {
     />
   ))}
 </ChallengeInnerContainer>
-            {filteredChallenges.length === 0 && 
+            {challengeList.length === 0 && 
               <NoResultContainer>
                 <NoResultTitle>해당하는 카테고리의 챌린지가 없습니다.</NoResultTitle>
                 <NoResultSubText>챌린지를 직접 생성해보세요!</NoResultSubText>
