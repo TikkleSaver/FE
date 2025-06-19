@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChallengePreviewCard from '../../components/challenge/ChallengePreviewCard';
-import SearchIcon from '../../assets/search.svg';
 import { useLocation } from 'react-router-dom';
 import Colors from '../../constanst/color.mjs';
 import { fetchJoinChallengeList } from '../../api/challenge/challengeListApi';
@@ -10,24 +9,6 @@ const ChallengePageContainer = styled.div`
   width: 80%;
   max-width: 100%;
   margin: 140px auto;
-`;
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 50px;
-`;
-
-const CateButton = styled.button`
-  background-color: ${(props) =>
-    props.$active === 'true' ? '#51B69E' : 'white'};
-  color: ${(props) => (props.$active === 'true' ? 'white' : '#999999')};
-  border: 1px solid
-    ${(props) => (props.$active === 'true' ? '#51B69E' : '#999999')};
-  padding: 6px 15px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: 400;
 `;
 
 const ChallengeContainer = styled.div`
@@ -50,7 +31,27 @@ const TopChallengeText = styled.div`
   font-weight: 600;
   border-bottom: 1.5px solid ${Colors.secondary100};
 `;
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
+`;
 
+const NoResultTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${Colors.secondary200};
+  margin-bottom: 10px;
+`;
+const NoResultContainer = styled.div`
+  width: 1100px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  text-align: center;
+  padding: 0 20px;
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
+`;
 function JoinedChallengeListPage() {
   const reverseCategoryMap = {
     1: '식비',
@@ -83,17 +84,24 @@ function JoinedChallengeListPage() {
     <ChallengePageContainer>
       <ChallengeContainer>
         <TopChallengeText>🏃‍♂️참여중인 챌린지</TopChallengeText>
-        <TopChallengeInnerContainer>
-          {challenges?.map((challenge) => (
-            <ChallengePreviewCard
-              key={challenge.challengeId}
-              challengeId={challenge.challengeId}
-              title={challenge.title}
-              category={reverseCategoryMap[challenge.categoryId]}
-              imgUrl={challenge.imgUrl}
-            />
-          ))}
-        </TopChallengeInnerContainer>
+        {challenges.length === 0 ? (
+          <NoResultContainer visible={true}>
+            <NoResultTitle>참여중인 챌린지가 없습니다.</NoResultTitle>
+            <NoResultSubText>챌린지에 참여해보세요~!</NoResultSubText>
+          </NoResultContainer>
+        ) : (
+          <TopChallengeInnerContainer>
+            {challenges?.map((challenge) => (
+              <ChallengePreviewCard
+                key={challenge.challengeId}
+                challengeId={challenge.challengeId}
+                title={challenge.title}
+                category={reverseCategoryMap[challenge.categoryId]}
+                imgUrl={challenge.imgUrl}
+              />
+            ))}
+          </TopChallengeInnerContainer>
+        )}
       </ChallengeContainer>
     </ChallengePageContainer>
   );
