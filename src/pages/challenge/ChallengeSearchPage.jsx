@@ -148,6 +148,19 @@ function ChallengeSearchPage() {
     기타생활비: 7,
   };
 
+
+  const reverseCategoryMap = {
+    1: "식비",
+    2: "카페",
+    3: "쇼핑",
+    4: "건강",
+    5: "취미",
+    6: "교통비",
+    7: "기타 생활비",
+  };
+  
+
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -198,7 +211,7 @@ function ChallengeSearchPage() {
               key={ch.challengeId}
               challengeId={ch.challengeId}
               title={ch.title}
-              category={ch.category}
+              category={reverseCategoryMap[ch.categoryId]} 
               imgUrl={ch.imgUrl}
             />
           ))}

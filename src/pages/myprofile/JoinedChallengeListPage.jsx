@@ -66,6 +66,8 @@ function JoinedChallengeListPage() {
   const [challenges, setChallenges] = useState([]);
 
   const memberId = location.state?.memberId || [];
+  const fromProfile = location.state?.fromProfile;
+   console.log(fromProfile);
 
   useEffect(() => {
     const loadChallenges = async () => {
@@ -99,6 +101,7 @@ function JoinedChallengeListPage() {
                 category={reverseCategoryMap[challenge.categoryId]}
                 imgUrl={challenge.imgUrl}
                 from="joined-challenge"
+                fromProfile={fromProfile}
               />
             ))}
           </TopChallengeInnerContainer>

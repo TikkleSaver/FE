@@ -58,13 +58,21 @@ const Category = styled.div`
 
 `;
 
-const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from  }) => {
+const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from , fromProfile}) => {
 
+  
   const navigate = useNavigate();
 
   const handleClick = () => {
 
-    if (from === 'joined-challenge') {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+      alert('로그인이 필요한 기능입니다.');
+      return;
+    }
+
+    if (from === 'joined-challenge' && fromProfile==="my") {
       navigate(`/challenge-info/${challengeId}`);
     } else {
       navigate(`/challenges/signup-challenge/${challengeId}`);
@@ -77,7 +85,7 @@ const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from  }) =
     "쇼핑": "#FED9A6",
     "건강": "#BC80BD",
     "취미": "#CCEBC5",
-    "교통비": "#FFFFB3",
+    "교통비": "#FFED6F",
     "기타 생활비": "#D9D9D9",
   };
 
