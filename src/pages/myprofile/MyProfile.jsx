@@ -67,11 +67,10 @@ export default function MyProfile() {
             <Group
               onClick={() =>
                 navigate('/challenges/join', {
-                  state: { memberId: profile.id ,fromProfile: 'my'},
+                  state: { memberId: profile.id, fromProfile: 'my' },
                 })
               }
               style={{ cursor: 'pointer' }}
-              
             >
               <Number>{profile.challengeNum}</Number>
               <Name>참여중인 챌린지</Name>
@@ -129,7 +128,7 @@ const NoResultSubText = styled.div`
 
 const NoResultTitle = styled.div`
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: ${Colors.secondary200};
   margin-bottom: 10px;
 `;

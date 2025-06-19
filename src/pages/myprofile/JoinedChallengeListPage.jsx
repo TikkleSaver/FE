@@ -67,7 +67,7 @@ function JoinedChallengeListPage() {
 
   const memberId = location.state?.memberId || [];
   const fromProfile = location.state?.fromProfile;
-   console.log(fromProfile);
+  console.log(fromProfile);
 
   useEffect(() => {
     const loadChallenges = async () => {
@@ -89,7 +89,6 @@ function JoinedChallengeListPage() {
         {challenges.length === 0 ? (
           <NoResultContainer visible={true}>
             <NoResultTitle>참여중인 챌린지가 없습니다.</NoResultTitle>
-            <NoResultSubText>챌린지에 참여해보세요~!</NoResultSubText>
           </NoResultContainer>
         ) : (
           <TopChallengeInnerContainer>

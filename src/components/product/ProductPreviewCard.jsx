@@ -1,7 +1,7 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import Colors from "../../constanst/color.mjs";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import Colors from '../../constanst/color.mjs';
 
 const CardContainer = styled.div`
   border-radius: 8px;
@@ -14,7 +14,7 @@ const CardContainer = styled.div`
 `;
 
 // 상품 이미지
-const ProductImage = styled.div`  
+const ProductImage = styled.div`
   width: 222px;
   height: 166px;
   border-radius: 20px;
@@ -25,9 +25,9 @@ const ProductImage = styled.div`
 `;
 
 // 상품명
-const ProductName = styled.div`   
+const ProductName = styled.div`
   color: ${Colors.secondary500};
-  width : 198px;
+  width: 198px;
   font-size: 18px;
   font-weight: 700;
   line-height: 24px;
@@ -36,25 +36,25 @@ const ProductName = styled.div`
   margin-left: 10px;
 
   b {
-    font-weight: 700; 
+    font-weight: 700;
   }
 `;
 
 // 상품 가격 설명 상자
-const ProductInfoContainer = styled.div`  
+const ProductInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
 // 버튼 상자
-const BottomContainer = styled.div` 
+const BottomContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
 // 최고가
-const ProductHighPrice = styled.div`  
+const ProductHighPrice = styled.div`
   color: ${Colors.secondary300};
   width: 145px;
   font-size: 15px;
@@ -66,7 +66,7 @@ const ProductHighPrice = styled.div`
 `;
 
 // 최저가
-const ProductLowPrice = styled.div` 
+const ProductLowPrice = styled.div`
   color: ${Colors.secondary300};
   width: 145px;
   font-size: 15px;
@@ -78,7 +78,7 @@ const ProductLowPrice = styled.div`
 `;
 
 // 담기 버튼
-const ProductWishBtn = styled.button` 
+const ProductWishBtn = styled.button`
   width: 50px;
   height: 25px;
   background-color: ${Colors.primary500};
@@ -98,9 +98,15 @@ const ProductWishBtn = styled.button`
 const ProductPreviewCard = ({ item }) => {
   const navigate = useNavigate();
 
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+
   const handleAddWishExistClick = (e) => {
-    e.stopPropagation(); 
-    navigate("/wish/add/exist", { state: { product: item } }); 
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      alert('로그인 후에 이용 가능합니다.');
+      return;
+    }
+    navigate('/wish/add/exist', { state: { product: item } });
   };
 
   return (
@@ -117,5 +123,5 @@ const ProductPreviewCard = ({ item }) => {
     </CardContainer>
   );
 };
-  
+
 export default ProductPreviewCard;

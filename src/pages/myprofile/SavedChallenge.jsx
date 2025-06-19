@@ -90,7 +90,6 @@ function SavedChallenge() {
         {scrapedList.length === 0 ? (
           <NoResultContainer visible={true}>
             <NoResultTitle>저장한 챌린지가 없습니다.</NoResultTitle>
-            <NoResultSubText>챌린지를 탐색해 저장해보세요!</NoResultSubText>
           </NoResultContainer>
         ) : (
           <TopChallengeInnerContainer>

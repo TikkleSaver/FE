@@ -1,31 +1,31 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import ProductPreviewCard from "../../components/product/ProductPreviewCard";
-import SearchIcon from "../../assets/search.svg"
-import Colors from "../../constanst/color.mjs";
-import { fetchShoppingData } from "../../api/product/naver"
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import ProductPreviewCard from '../../components/product/ProductPreviewCard';
+import SearchIcon from '../../assets/search.svg';
+import Colors from '../../constanst/color.mjs';
+import { fetchShoppingData } from '../../api/product/naver';
 
 // 전체 상자
-const ProductPageContainer = styled.div`    
-  width:80%;
+const ProductPageContainer = styled.div`
+  width: 80%;
   max-width: 100%;
   margin: 120px auto;
 `;
 
 // 검색 상자
-const SearchContainer = styled.div` 
+const SearchContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width:80%;
+  width: 80%;
   margin: 0 auto;
 `;
 
 // 검색 입력
-const SearchInput = styled.input`   
+const SearchInput = styled.input`
   width: 100%;
-  padding: 18px 18px 18px 55px; 
+  padding: 18px 18px 18px 55px;
   border: 1px solid #ccc;
   border-radius: 15px;
   font-size: 16px;
@@ -45,25 +45,25 @@ const SearchIconWrapper = styled.div`
 `;
 
 // 상품 상자
-const ProductContainer = styled.div`  
+const ProductContainer = styled.div`
   margin: 30px auto;
-  width:100%;
+  width: 100%;
 `;
 
 // 버튼 상자
-const ButtonWrapper = styled.div`   
+const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  width: 90%;        
+  width: 90%;
   max-width: 1120px;
   margin: 0px auto;
-  margin-bottom: 40px; 
+  margin-bottom: 40px;
   padding: 0 20px;
 `;
 
 // 직접 추가 버튼
 const ProductCreateBtn = styled.button`
-  width : 120px;
+  width: 120px;
   height: 35px;
   background-color: ${Colors.primary300};
   color: white;
@@ -78,27 +78,27 @@ const ProductCreateBtn = styled.button`
 `;
 
 // 상품 목록 상자
-const ProductInnerContainer = styled.div`   
-  width: 90%; 
-  max-width: 1200px; 
+const ProductInnerContainer = styled.div`
+  width: 90%;
+  max-width: 1200px;
   margin: 5px auto;
   padding: 0 20px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(200px, 1fr)); 
+  grid-template-columns: repeat(4, minmax(200px, 1fr));
   gap: 50px;
   justify-content: center;
 `;
 
 // 더보기 상자
-const LookMoreBtnWrapper = styled.div`   
+const LookMoreBtnWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 100px;
 `;
 
 // 더보기 버튼
-const LookMoreBtn = styled.button` 
-  width : 80px;
+const LookMoreBtn = styled.button`
+  width: 80px;
   height: 35px;
   background-color: transparent;
   color: ${Colors.primary500};
@@ -112,13 +112,14 @@ const LookMoreBtn = styled.button`
 `;
 
 function ProductPage() {
-
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1); 
-  const [hasMore, setHasMore] = useState(true); 
-  const latestSearch = useRef("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const latestSearch = useRef('');
+
+  const isLoggedIn = !!localStorage.getItem('accessToken');
 
   // searchTerm(검색어) 바뀌면 page 1로 초기화
   useEffect(() => {
@@ -130,7 +131,10 @@ function ProductPage() {
     const shoppingData = async () => {
       try {
         latestSearch.current = searchTerm;
-        const result = await fetchShoppingData({ query: searchTerm || "가구", page });
+        const result = await fetchShoppingData({
+          query: searchTerm || '가구',
+          page,
+        });
         if (latestSearch.current !== searchTerm) return;
         const newItems = result.items;
 
@@ -142,7 +146,7 @@ function ProductPage() {
 
         setHasMore(newItems.length === 12);
       } catch (e) {
-        console.error("Error fetching data", e);
+        console.error('Error fetching data', e);
       }
     };
 
@@ -162,43 +166,59 @@ function ProductPage() {
 
   // 상품 상세 보기로 이동동
   const handleCardClick = (item) => {
-    navigate("/product-info", { state: { product: item } });
+    if (!isLoggedIn) {
+      alert('로그인 후에 이용 가능합니다.');
+      return;
+    }
+    navigate('/product-info', { state: { product: item } });
   };
 
-    return (
-        <ProductPageContainer>
-            <SearchContainer>
-                <SearchIconWrapper>
-                    <img src={SearchIcon} alt="Search Icon" width="20" height="20" />
-                </SearchIconWrapper>
-                <SearchInput
-                    type="text"
-                    placeholder="원하는 상품을 검색하세요."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-            </SearchContainer>
-            <ProductContainer>
-                <ButtonWrapper>
-                    <ProductCreateBtn onClick={() => navigate("/wish/add/not-exist")}>
-                      직접 추가
-                    </ProductCreateBtn>
-                </ButtonWrapper>
-                <ProductInnerContainer>
-                  {data.map((item, idx) => (
-                    <div key={idx} onClick={() => handleCardClick(item)} style={{ cursor: "pointer" }}>
-                      <ProductPreviewCard item={item} />
-                    </div>
-                  ))}
-                </ProductInnerContainer>
-                       {hasMore && (
-                <LookMoreBtnWrapper>
-                  <LookMoreBtn onClick={loadMore}>더 보기</LookMoreBtn>
-                </LookMoreBtnWrapper>
-              )}
-            </ProductContainer>
-        </ProductPageContainer>
-    );
-  }
-  
-  export default ProductPage;
+  const handleAddClick = () => {
+    if (!isLoggedIn) {
+      alert('로그인 후에 이용 가능합니다.');
+      return;
+    }
+    navigate('/wish/add/not-exist');
+  };
+  return (
+    <ProductPageContainer>
+      <SearchContainer>
+        <SearchIconWrapper>
+          <img src={SearchIcon} alt="Search Icon" width="20" height="20" />
+        </SearchIconWrapper>
+        <SearchInput
+          type="text"
+          placeholder="원하는 상품을 검색하세요."
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </SearchContainer>
+      <ProductContainer>
+        <ButtonWrapper>
+          <ProductCreateBtn onClick={handleAddClick}>
+            {' '}
+            직접 추가
+          </ProductCreateBtn>
+        </ButtonWrapper>
+        <ProductInnerContainer>
+          {data.map((item, idx) => (
+            <div
+              key={idx}
+              onClick={() => handleCardClick(item)}
+              style={{ cursor: 'pointer' }}
+            >
+              <ProductPreviewCard item={item} />
+            </div>
+          ))}
+        </ProductInnerContainer>
+        {hasMore && (
+          <LookMoreBtnWrapper>
+            <LookMoreBtn onClick={loadMore}>더 보기</LookMoreBtn>
+          </LookMoreBtnWrapper>
+        )}
+      </ProductContainer>
+    </ProductPageContainer>
+  );
+}
+
+export default ProductPage;
