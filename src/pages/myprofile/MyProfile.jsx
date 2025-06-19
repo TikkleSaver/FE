@@ -67,10 +67,11 @@ export default function MyProfile() {
             <Group
               onClick={() =>
                 navigate('/challenges/join', {
-                  state: { memberId: profile.id },
+                  state: { memberId: profile.id ,fromProfile: 'my'},
                 })
               }
               style={{ cursor: 'pointer' }}
+              
             >
               <Number>{profile.challengeNum}</Number>
               <Name>참여중인 챌린지</Name>

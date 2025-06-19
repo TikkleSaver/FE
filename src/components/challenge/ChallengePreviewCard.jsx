@@ -58,13 +58,21 @@ const Category = styled.div`
 
 `;
 
-const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from  }) => {
+const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from , fromProfile}) => {
 
+  
   const navigate = useNavigate();
 
   const handleClick = () => {
 
-    if (from === 'joined-challenge') {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+      alert('로그인이 필요한 기능입니다.');
+      return;
+    }
+
+    if (from === 'joined-challenge' && fromProfile==="my") {
       navigate(`/challenge-info/${challengeId}`);
     } else {
       navigate(`/challenges/signup-challenge/${challengeId}`);

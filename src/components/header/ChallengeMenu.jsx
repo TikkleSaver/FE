@@ -88,7 +88,14 @@ const ChallengeMenu = () => {
           챌린지 탐색
         </DropdownItem>
         <DropdownItem
-          onClick={() => navigate("/challenges/create-challenge")}
+         onClick={() => {
+          const token = localStorage.getItem("accessToken");
+          if (token) {
+            navigate("/challenges/create-challenge")
+          } else {
+            alert("로그인 후 이용해주세요");
+          }
+        }}
           $active={location.pathname === "/challenges/create-challenge"}
         >
           챌린지 생성
