@@ -35,6 +35,7 @@ import EditMember from './pages/myprofile/EditMember';
 import UpdateChallengePage from './pages/challenge/UpdateChallengePage';
 import JoinedChallenge from './pages/myprofile/JoinedChallengeListPage';
 import JoinedChallengeListPage from './pages/myprofile/JoinedChallengeListPage';
+import MainFooter from './components/footer/MainFooter';
 
 function App() {
   return (
@@ -94,6 +95,7 @@ function App() {
         />
         <Route path="/challenges/join" element={<JoinedChallengeListPage />} />
       </Routes>
+     <MainFooter/>
     </Router>
   );
 }
