@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { exitChallengRequest } from "../../api/challenge/challengeDetailApi";
+import { useNavigate } from 'react-router-dom';
 
 const Overlay = styled.div`
   position: fixed;
@@ -60,9 +61,12 @@ const SubmitButton = styled.button`
 `;
 
 const ChallengeExitModal = ({challengeId, onClose }) => {
+
+  const navigate = useNavigate();
   // 배경 클릭 시 모달 닫기
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
+
       onClose();
     }
   };
@@ -73,6 +77,7 @@ const ChallengeExitModal = ({challengeId, onClose }) => {
       await exitChallengRequest(challengeId);
       alert('챌린지를 나갔습니다.');
       onClose();
+      navigate(`/myprofile`);
       //추후 마이페이지로 이동시켜야함
     } catch (error) {
       alert('챌린지 나가기 실패');
