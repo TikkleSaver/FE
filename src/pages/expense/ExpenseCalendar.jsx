@@ -8,9 +8,19 @@ import {
   patchGoalCost,
 } from "../../api/expense/expenseCalendarApi";
 
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 120px);
+`;
+
 const Wrapper = styled.div`
-  max-width: 965px;
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
+  padding: 0 1rem;
+  flex: 1;
 `;
 
 const CalendarWrapper = styled.div`
@@ -320,46 +330,48 @@ const ExpenseCalendar = () => {
   };
 
   return (
-    <Wrapper>
-      <CalendarWrapper>
-        <CalendarHeader>
-          <ArrowButton onClick={handlePrevMonth}>&lt;</ArrowButton>
-          <Title>{`${currentYear}.${String(currentMonth + 1).padStart(
-            2,
-            "0"
-          )}`}</Title>
-          <ArrowButton
-            onClick={handleNextMonth}
-            disabled={isNextMonthDisabled()}
-          >
-            &gt;
-          </ArrowButton>
-        </CalendarHeader>
+    <Container>
+      <Wrapper>
+        <CalendarWrapper>
+          <CalendarHeader>
+            <ArrowButton onClick={handlePrevMonth}>&lt;</ArrowButton>
+            <Title>{`${currentYear}.${String(currentMonth + 1).padStart(
+              2,
+              "0"
+            )}`}</Title>
+            <ArrowButton
+              onClick={handleNextMonth}
+              disabled={isNextMonthDisabled()}
+            >
+              &gt;
+            </ArrowButton>
+          </CalendarHeader>
 
-        <Grid>
-          {daysOfWeek.map((day) => (
-            <Day key={day}>{day}</Day>
-          ))}
-          {renderCells()}
-        </Grid>
-      </CalendarWrapper>
-      <Footer>
-        지출 목표 금액 :{" "}
-        {memberId == null ? (
-          <input
-            type="number"
-            value={dailyBudget === "" ? "" : dailyBudget}
-            min={0}
-            onChange={(e) => {
-              const value = e.target.value;
-              setDailyBudget(value === "" ? "" : Number(value));
-            }}
-          />
-        ) : (
-          <span>{dailyBudget.toLocaleString()} 원</span>
-        )}
-      </Footer>
-    </Wrapper>
+          <Grid>
+            {daysOfWeek.map((day) => (
+              <Day key={day}>{day}</Day>
+            ))}
+            {renderCells()}
+          </Grid>
+        </CalendarWrapper>
+        <Footer>
+          지출 목표 금액 :{" "}
+          {memberId == null ? (
+            <input
+              type="number"
+              value={dailyBudget === "" ? "" : dailyBudget}
+              min={0}
+              onChange={(e) => {
+                const value = e.target.value;
+                setDailyBudget(value === "" ? "" : Number(value));
+              }}
+            />
+          ) : (
+            <span>{dailyBudget.toLocaleString()} 원</span>
+          )}
+        </Footer>
+      </Wrapper>
+    </Container>
   );
 };
 

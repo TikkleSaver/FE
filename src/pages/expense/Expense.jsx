@@ -14,6 +14,14 @@ import {
   getExpenseCommentList,
 } from "../../api/expense/expenseCommentApi";
 
+const Wrapper = styled.div`
+  width: 100%;
+  max-width: 100%;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+`;
+
 // 최상위 container
 const ExpenseContainer = styled.div`
   margin: 100px;
@@ -389,103 +397,108 @@ const Expense = () => {
   }, [location.search]);
 
   return (
-    <ExpenseContainer>
-      <ExpenseListContainer>
-        <ExpenseDateHeader>
-          <ArrowButton onClick={() => changeDate(-1)}>{"<"}</ArrowButton>
-          <h2>{formatDateStr(date).replace(/-/g, ".")}</h2>
-          <ArrowButton onClick={() => changeDate(1)} disabled={isNextDisabled}>
-            {">"}
-          </ArrowButton>
-        </ExpenseDateHeader>
+    <Wrapper>
+      <ExpenseContainer>
+        <ExpenseListContainer>
+          <ExpenseDateHeader>
+            <ArrowButton onClick={() => changeDate(-1)}>{"<"}</ArrowButton>
+            <h2>{formatDateStr(date).replace(/-/g, ".")}</h2>
+            <ArrowButton
+              onClick={() => changeDate(1)}
+              disabled={isNextDisabled}
+            >
+              {">"}
+            </ArrowButton>
+          </ExpenseDateHeader>
 
-        <ExpenseItems>
-          {expenses.map((item, idx) =>
-            isMyExpense ? (
-              <MyExpenseCard
-                key={item.expenseId ?? idx}
-                item={item}
-                date={date}
-                onDone={() => {
-                  setPage(1);
-                  setExpenses([]);
-                  setHasMore(true);
-                  loadExpenses(page);
-                }}
+          <ExpenseItems>
+            {expenses.map((item, idx) =>
+              isMyExpense ? (
+                <MyExpenseCard
+                  key={item.expenseId ?? idx}
+                  item={item}
+                  date={date}
+                  onDone={() => {
+                    setPage(1);
+                    setExpenses([]);
+                    setHasMore(true);
+                    loadExpenses(page);
+                  }}
+                />
+              ) : (
+                <FriendExpenseCard key={item.id ?? idx} item={item} />
+              )
+            )}
+
+            {loading && page === 1 && (
+              <LoadingMessage>지출 불러오는 중...</LoadingMessage>
+            )}
+            <div ref={loaderRef} style={{ height: 40 }} />
+          </ExpenseItems>
+
+          {isMyExpense && (
+            <AddExpenseButton onClick={() => setShowAddModal(true)}>
+              + 지출 추가하기
+            </AddExpenseButton>
+          )}
+        </ExpenseListContainer>
+
+        <ExpenseCommentListContainer>
+          <ExpenseCommentTittle>
+            친구의 하루 소비에 피드백을 남겨주세요!
+          </ExpenseCommentTittle>
+          <ExpenseComments>
+            {comments.map((c, i) =>
+              isMyExpense ? (
+                <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
+              ) : viewerId == c.commenterId ? (
+                <FriendCommentCard
+                  key={c.expenseCommentId ?? i}
+                  comment={c}
+                  onDone={() => {
+                    setCommentsPage(1);
+                    setComments([]);
+                    setCommentsHasMore(true);
+                    loadComments(1);
+                  }}
+                />
+              ) : (
+                <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
+              )
+            )}
+            {commentsLoading && commentsPage === 1 && (
+              <LoadingMessage>피드백 불러오는 중...</LoadingMessage>
+            )}
+            <div ref={commentsLoaderRef} style={{ height: 40 }} />
+          </ExpenseComments>
+          {!isMyExpense && (
+            <CommentInputWrapper>
+              <CommentInput
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="피드백을 입력하세요"
               />
-            ) : (
-              <FriendExpenseCard key={item.id ?? idx} item={item} />
-            )
+              <SubmitButton onClick={handleCommentSubmit}>
+                <img src={SubmitBtn} alt="Submit" width="32" height="32" />
+              </SubmitButton>
+            </CommentInputWrapper>
           )}
+        </ExpenseCommentListContainer>
 
-          {loading && page === 1 && (
-            <LoadingMessage>지출 불러오는 중...</LoadingMessage>
-          )}
-          <div ref={loaderRef} style={{ height: 40 }} />
-        </ExpenseItems>
-
-        {isMyExpense && (
-          <AddExpenseButton onClick={() => setShowAddModal(true)}>
-            + 지출 추가하기
-          </AddExpenseButton>
+        {showAddModal && (
+          <AddExpenseModal
+            date={date}
+            onClose={() => setShowAddModal(false)}
+            onDone={() => {
+              setPage(1);
+              setExpenses([]);
+              setHasMore(true);
+              loadExpenses(1);
+            }}
+          />
         )}
-      </ExpenseListContainer>
-
-      <ExpenseCommentListContainer>
-        <ExpenseCommentTittle>
-          친구의 하루 소비에 피드백을 남겨주세요!
-        </ExpenseCommentTittle>
-        <ExpenseComments>
-          {comments.map((c, i) =>
-            isMyExpense ? (
-              <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
-            ) : viewerId == c.commenterId ? (
-              <FriendCommentCard
-                key={c.expenseCommentId ?? i}
-                comment={c}
-                onDone={() => {
-                  setCommentsPage(1);
-                  setComments([]);
-                  setCommentsHasMore(true);
-                  loadComments(1);
-                }}
-              />
-            ) : (
-              <MyCommentCard key={c.expenseCommentId ?? i} comment={c} />
-            )
-          )}
-          {commentsLoading && commentsPage === 1 && (
-            <LoadingMessage>피드백 불러오는 중...</LoadingMessage>
-          )}
-          <div ref={commentsLoaderRef} style={{ height: 40 }} />
-        </ExpenseComments>
-        {!isMyExpense && (
-          <CommentInputWrapper>
-            <CommentInput
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="피드백을 입력하세요"
-            />
-            <SubmitButton onClick={handleCommentSubmit}>
-              <img src={SubmitBtn} alt="Submit" width="32" height="32" />
-            </SubmitButton>
-          </CommentInputWrapper>
-        )}
-      </ExpenseCommentListContainer>
-
-      {showAddModal && (
-        <AddExpenseModal
-          date={date}
-          onClose={() => setShowAddModal(false)}
-          onDone={() => {
-            setPage(1);
-            setExpenses([]);
-            setHasMore(true);
-            loadExpenses(1);
-          }}
-        />
-      )}
-    </ExpenseContainer>
+      </ExpenseContainer>
+    </Wrapper>
   );
 };
 
