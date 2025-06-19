@@ -9,6 +9,7 @@ import DeleteModal from '../../components/friend/DeleteModal';
 import { fetchFriendProfile } from '../../api/friendApi'; // 아까 만든 API 함수
 import { sendFriendReq } from '../../api/friendRequestApi';
 import AcceptModal from '../../components/friend/AcceptModal';
+import Colors from '../../constanst/color.mjs';
 
 export default function FriendProfile() {
   const location = useLocation();
@@ -192,17 +193,23 @@ export default function FriendProfile() {
             {'더보기>'}
           </MoreBtn>
         </TopChallengeText>
-        <TopChallengeInnerContainer>
-          {profile.challengeScrapedList.slice(0, 4).map((challenge) => (
-            <ChallengePreviewCard
-              key={challenge.challengeId}
-              challengeId={challenge.challengeId}
-              title={challenge.title}
-              category={reverseCategoryMap[challenge.categoryId]}
-              imgUrl={challenge.imgUrl}
-            />
-          ))}
-        </TopChallengeInnerContainer>
+        {profile.challengeScrapedList.length === 0 ? (
+          <NoResultContainer visible={true}>
+            <NoResultTitle>저장한 챌린지가 없습니다.</NoResultTitle>
+          </NoResultContainer>
+        ) : (
+          <TopChallengeInnerContainer>
+            {profile.challengeScrapedList.slice(0, 4).map((challenge) => (
+              <ChallengePreviewCard
+                key={challenge.challengeId}
+                challengeId={challenge.challengeId}
+                title={challenge.title}
+                category={reverseCategoryMap[challenge.categoryId]}
+                imgUrl={challenge.imgUrl}
+              />
+            ))}
+          </TopChallengeInnerContainer>
+        )}
       </ChallengeContainer>
       {showAddModal && (
         <CancelModal
@@ -224,6 +231,29 @@ export default function FriendProfile() {
     </Wrapper>
   );
 }
+
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
+`;
+
+const NoResultTitle = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: ${Colors.secondary200};
+  margin-bottom: 10px;
+`;
+
+const NoResultContainer = styled.div`
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 20vh;
+  text-align: center;
+  padding: 0 20px;
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
+`;
 
 const Group = styled.div`
   display: flex;
@@ -325,7 +355,7 @@ const ProfileContainer = styled.div`
 
 const ChallengeContainer = styled.div`
   margin: 50px auto;
-  width: fit-content;
+  width: 1090px;
 `;
 
 const TopChallengeInnerContainer = styled.div`
@@ -341,7 +371,7 @@ const TopChallengeInnerContainer = styled.div`
 const TopChallengeText = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 1090px;
   margin-bottom: 30px;
   font-size: 25px;
   font-weight: 600;
