@@ -98,6 +98,7 @@ function JoinedChallengeListPage() {
                 title={challenge.title}
                 category={reverseCategoryMap[challenge.categoryId]}
                 imgUrl={challenge.imgUrl}
+                from="joined-challenge"
               />
             ))}
           </TopChallengeInnerContainer>

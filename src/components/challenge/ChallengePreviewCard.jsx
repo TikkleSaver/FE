@@ -1,6 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CardContainer = styled.div`
   border-radius: 8px;
@@ -42,11 +42,22 @@ const Category = styled.span`
 
 `;
 
-const ChallengePreviewCard = ({ challengeId, title, category, imgUrl }) => {
+const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from  }) => {
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleClick = () => {
+
+    if (from === 'joined-challenge') {
+      navigate(`/challenge-info/${challengeId}`);
+    } else {
+      navigate(`/challenges/signup-challenge/${challengeId}`);
+    }
+  };
 
   return (
-    <CardContainer onClick={() => navigate(`/challenges/signup-challenge/${challengeId}`)}>
+    <CardContainer  onClick={handleClick}>
       <ChallengeImage imageUrl={imgUrl} />
       <ChallengeInfo>
         <Title>{title}</Title>
