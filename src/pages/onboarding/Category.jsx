@@ -103,7 +103,6 @@ export default function Category() {
 
 const Container = styled.div`
   position: relative;
-  margin-top: 50px;
   display: flex;
   justify-content: center;
 `;
@@ -115,6 +114,7 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 `;
 
 const CategoryWrap = styled.div`
@@ -190,7 +190,7 @@ const CategoryText = styled.div`
 
 const Logo = styled.img`
   position: absolute;
-  top: -40px;
+  top: 10px;
   left: -200px;
   width: 200px;
 `;
