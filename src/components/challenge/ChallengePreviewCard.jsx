@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 const CardContainer = styled.div`
   border-radius: 8px;
@@ -27,25 +27,40 @@ const ChallengeImage = styled.div`
 `;
 
 const Title = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #333333;
   
 `;
 
-const Category = styled.span`
+const CategoryContainer = styled.span`
+  font-weight: 600;
+  white-space: nowrap;
+  gap:4px;
+  display:flex;
+
+
+`;
+
+ const CategoryColor = styled.div`
+  width:12px;
+  height:12px;
+  background-color: ${({ color }) => color || "#6b6b6b"};
+  margin-top:2px;
+  border-radius:10px;
+
+`;
+const Category = styled.div`
   font-size: 14px;
   color: #6b6b6b;
   font-weight: 600;
   white-space: nowrap;
-
 
 `;
 
 const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from  }) => {
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleClick = () => {
 
@@ -56,12 +71,28 @@ const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from  }) =
     }
   };
 
+  const categoryColorMap = {
+    "식비": "#FB8072",
+    "카페": "#80B1D3",
+    "쇼핑": "#FED9A6",
+    "건강": "#BC80BD",
+    "취미": "#CCEBC5",
+    "교통비": "#FFFFB3",
+    "기타 생활비": "#D9D9D9",
+  };
+
+  const categoryColor = categoryColorMap[category] || "#6b6b6b"; // fallback color
+
+
   return (
     <CardContainer  onClick={handleClick}>
       <ChallengeImage imageUrl={imgUrl} />
       <ChallengeInfo>
         <Title>{title}</Title>
+        <CategoryContainer>
+          <CategoryColor color={categoryColor} />
         <Category>{category}</Category>
+        </CategoryContainer>
       </ChallengeInfo>
     </CardContainer>
   );
