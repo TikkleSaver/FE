@@ -49,7 +49,27 @@ const TopChallengeText = styled.div`
   font-weight: 600;
   border-bottom: 1.5px solid ${Colors.secondary100};
 `;
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
+`;
 
+const NoResultTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${Colors.secondary200};
+  margin-bottom: 10px;
+`;
+const NoResultContainer = styled.div`
+  width: 1100px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  text-align: center;
+  padding: 0 20px;
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
+`;
 function SavedChallenge() {
   const reverseCategoryMap = {
     1: '식비',
@@ -66,18 +86,25 @@ function SavedChallenge() {
   return (
     <ChallengePageContainer>
       <ChallengeContainer>
-        <TopChallengeText>🔖 저장한 챌린지</TopChallengeText>
-        <TopChallengeInnerContainer>
-          {scrapedList.map((challenge) => (
-            <ChallengePreviewCard
-              key={challenge.challengeId}
-              challengeId={challenge.challengeId}
-              title={challenge.title}
-              category={reverseCategoryMap[challenge.categoryId]}
-              imgUrl={challenge.imgUrl}
-            />
-          ))}
-        </TopChallengeInnerContainer>
+        <TopChallengeText>저장한 챌린지</TopChallengeText>
+        {scrapedList.length === 0 ? (
+          <NoResultContainer visible={true}>
+            <NoResultTitle>저장한 챌린지가 없습니다.</NoResultTitle>
+            <NoResultSubText>챌린지를 탐색해 저장해보세요!</NoResultSubText>
+          </NoResultContainer>
+        ) : (
+          <TopChallengeInnerContainer>
+            {scrapedList.map((challenge) => (
+              <ChallengePreviewCard
+                key={challenge.challengeId}
+                challengeId={challenge.challengeId}
+                title={challenge.title}
+                category={reverseCategoryMap[challenge.categoryId]}
+                imgUrl={challenge.imgUrl}
+              />
+            ))}
+          </TopChallengeInnerContainer>
+        )}
       </ChallengeContainer>
     </ChallengePageContainer>
   );
