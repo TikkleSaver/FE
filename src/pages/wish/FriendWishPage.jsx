@@ -10,6 +10,7 @@ const FriendWishPageContainer = styled.div`
     width:70%;
     max-width: 100%;
     margin: 120px auto;
+    margin-Bottom: 150px;
 `;
 
 const FriendWishContainer = styled.div`
@@ -67,6 +68,30 @@ const TabName = styled.div`
         transition: background-color 0.2s ease;
         text-align: center;
     }
+`;
+
+
+const NoResultContainer = styled.div`
+
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;     
+  height: 60vh;          
+  text-align: center;
+  padding: 0 20px;         
+  display: flex;
+`;
+
+const NoResultTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${Colors.secondary200};
+  margin-bottom: 10px;
+`;
+
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
 `;
 
 const TabFriendWishContainer = styled.div`
@@ -138,6 +163,20 @@ function FriendWishPage() {
                                 purchasedItems.map((item, index) => (
                                     <FriendwishPurchasedComponent key={index} wish={item} />
                                 ))}
+                            {selectedTab === "구매 예정" &&
+                            plannedItems.length == 0 && (
+                                    <NoResultContainer>
+                                    <NoResultTitle>해당하는 위시가 없습니다.</NoResultTitle>
+                                    <NoResultSubText>친구가 아직 위시를 담지 않았어요!</NoResultSubText>
+                                </NoResultContainer>
+                            )}
+                            {selectedTab === "구매 완료" &&
+                            purchasedItems.length == 0 && (
+                                    <NoResultContainer>
+                                    <NoResultTitle>해당하는 위시가 없습니다.</NoResultTitle>
+                                    <NoResultSubText>친구가 아직 위시를 담지 않았어요!</NoResultSubText>
+                                </NoResultContainer>
+                            )}
                     </TopFriendWishInnerContainer>
                 </TabFriendWishContainer>
             </FriendWishContainer>

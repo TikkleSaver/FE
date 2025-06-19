@@ -9,6 +9,7 @@ const MyWishPageContainer = styled.div`
     width:70%;
     max-width: 100%;
     margin: 120px auto;
+    margin-Bottom: 150px;
 `;
 
 const MyWishContainer = styled.div`
@@ -76,6 +77,30 @@ const TopMyWishInnerContainer = styled.div`
 
 `;
 
+
+const NoResultContainer = styled.div`
+
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;     
+  height: 60vh;          
+  text-align: center;
+  padding: 0 20px;         
+  display: flex;
+`;
+
+const NoResultTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${Colors.secondary200};
+  margin-bottom: 10px;
+`;
+
+const NoResultSubText = styled.div`
+  font-size: 14px;
+  color: ${Colors.secondary100};
+`;
+
 function MyWishPage() {
     const [selectedTab, setSelectedTab] = useState("구매 예정");
 
@@ -134,6 +159,18 @@ function MyWishPage() {
                             purchasedItems.map((item, index) => (
                                 <MywishPurchasedComponent key={index} wish={item} />
                         ))}
+                        {selectedTab === "구매 예정" &&plannedItems.length == 0 && (
+                                <NoResultContainer>
+                                <NoResultTitle>해당하는 위시가 없습니다.</NoResultTitle>
+                                <NoResultSubText>사고 싶은 상품을 위시에 담아보세요!</NoResultSubText>
+                            </NoResultContainer>
+                        )}
+                        {selectedTab === "구매 완료" &&purchasedItems.length == 0 && (
+                                <NoResultContainer>
+                                <NoResultTitle>해당하는 위시가 없습니다.</NoResultTitle>
+                                <NoResultSubText>사고 싶은 상품을 위시에 담아보세요!</NoResultSubText>
+                            </NoResultContainer>
+                        )}
                     </TopMyWishInnerContainer>
                 </TabMyWishContainer>
             </MyWishContainer>

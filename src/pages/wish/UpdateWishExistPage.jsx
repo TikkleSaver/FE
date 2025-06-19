@@ -467,9 +467,15 @@ function UpdateWishExistPage() {
                     <ProductPublicWapper>
                       <ProductPublicTextWapper>
                         <ProductPublicText>공개 설정</ProductPublicText>
-                        <ProductPublicExplain>해당 상품을 공개하지 않습니다.
-                          <ProductLockImage imageUrl={lockImageURL} />
-                        </ProductPublicExplain>
+                          {isPublic ? (
+                          <ProductPublicExplain>해당 상품을 공개하지 않습니다.
+                            <ProductLockImage imageUrl={lockImageURL} />
+                          </ProductPublicExplain>
+                          ) : (
+                          <ProductPublicExplain>해당 상품을 공개합니다.
+                            <ProductLockImage imageUrl={unlockImageURL} />
+                          </ProductPublicExplain>
+                          )}
                       </ProductPublicTextWapper>
                       <ProductPublicSwitch>
                         <ProductPublicSwitchInput 
