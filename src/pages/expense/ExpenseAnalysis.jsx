@@ -19,8 +19,17 @@ import {
   getAchievedGoalCost,
 } from "../../api/expense/expenseAnalysisApi";
 
+const Wrapper = styled.div`
+  width: 100%;
+  max-width: 100%;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+`;
+
 const Container = styled.div`
-  max-width: 965px;
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
 `;
 
@@ -376,130 +385,137 @@ const ExpenseAnalysis = () => {
   };
 
   return (
-    <Container>
-      <CalendarBox>
-        <Header>
-          <NavButton onClick={handlePrevMonth}>&lt;</NavButton>
-          <MonthTitle>{`${currentYear}.${String(currentMonth + 1).padStart(
-            2,
-            "0"
-          )}`}</MonthTitle>
-          <NavButton onClick={handleNextMonth} disabled={isNextMonthDisabled()}>
-            &gt;
-          </NavButton>
-        </Header>
+    <Wrapper>
+      <Container>
+        <CalendarBox>
+          <Header>
+            <NavButton onClick={handlePrevMonth}>&lt;</NavButton>
+            <MonthTitle>{`${currentYear}.${String(currentMonth + 1).padStart(
+              2,
+              "0"
+            )}`}</MonthTitle>
+            <NavButton
+              onClick={handleNextMonth}
+              disabled={isNextMonthDisabled()}
+            >
+              &gt;
+            </NavButton>
+          </Header>
 
-        <Section>
-          <ChartContainer>
-            <ChartTitle>카테고리별 지출 비율</ChartTitle>
-            <ChartRow>
-              <PieChart width={220} height={220}>
-                <Pie
-                  data={sortedPieData}
-                  dataKey="value"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={70}
-                  innerRadius={30}
-                  label={renderCustomizedLabel}
-                  animationDuration={800}
-                  animationEasing="ease-out"
+          <Section>
+            <ChartContainer>
+              <ChartTitle>카테고리별 지출 비율</ChartTitle>
+              <ChartRow>
+                <PieChart width={220} height={220}>
+                  <Pie
+                    data={sortedPieData}
+                    dataKey="value"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    innerRadius={30}
+                    label={renderCustomizedLabel}
+                    animationDuration={800}
+                    animationEasing="ease-out"
+                  >
+                    {sortedPieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                </PieChart>
+                <Legend>
+                  {sortedPieData.map((item, index) => (
+                    <LegendItem key={item.name}>
+                      <ColorBox color={COLORS[index]} />
+                      <PieSpan>{`${
+                        item.name
+                      } - ${item.value.toLocaleString()}원`}</PieSpan>
+                    </LegendItem>
+                  ))}
+                </Legend>
+              </ChartRow>
+            </ChartContainer>
+
+            <ChartContainer>
+              <ChartTitle>올해의 지출 그래프</ChartTitle>
+              <ResponsiveContainer width="100%" height={230}>
+                <BarChart
+                  data={barData.map((d, i) => ({
+                    ...d,
+                    fill: i === currentMonth ? "#3D8D7A" : "#EAEAEA",
+                  }))}
+                  margin={{ left: 20 }}
                 >
-                  {sortedPieData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-              <Legend>
-                {sortedPieData.map((item, index) => (
-                  <LegendItem key={item.name}>
-                    <ColorBox color={COLORS[index]} />
-                    <PieSpan>{`${
-                      item.name
-                    } - ${item.value.toLocaleString()}원`}</PieSpan>
-                  </LegendItem>
-                ))}
-              </Legend>
-            </ChartRow>
-          </ChartContainer>
+                  <XAxis dataKey="name" interval={0} />
+                  <YAxis
+                    domain={[0, "auto"]}
+                    tickFormatter={(tick) => tick.toLocaleString()}
+                  />
+                  <Bar dataKey="amount">
+                    {barData.map((_, i) => (
+                      <Cell
+                        key={`cell-${i}`}
+                        fill={i === currentMonth ? "#3D8D7A" : "#EAEAEA"}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </Section>
 
-          <ChartContainer>
-            <ChartTitle>올해의 지출 그래프</ChartTitle>
-            <ResponsiveContainer width="100%" height={230}>
-              <BarChart
-                data={barData.map((d, i) => ({
-                  ...d,
-                  fill: i === currentMonth ? "#3D8D7A" : "#EAEAEA",
-                }))}
-                margin={{ left: 20 }}
-              >
-                <XAxis dataKey="name" interval={0} />
-                <YAxis
-                  domain={[0, "auto"]}
-                  tickFormatter={(tick) => tick.toLocaleString()}
-                />
-                <Bar dataKey="amount">
-                  {barData.map((_, i) => (
-                    <Cell
-                      key={`cell-${i}`}
-                      fill={i === currentMonth ? "#3D8D7A" : "#EAEAEA"}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </Section>
+          <Section>
+            <InfoBlock>
+              <SmallTitle>지출 TOP3</SmallTitle>
+              <InfoText>
+                {top3[0]?.label && <Top1>{top3[0].label}</Top1>}
+                {top3[1]?.label && (
+                  <>
+                    {" "}
+                    &gt; <Top2>{top3[1].label}</Top2>
+                  </>
+                )}
+                {top3[2]?.label && (
+                  <>
+                    {" "}
+                    &gt; <Top3>{top3[2].label}</Top3>
+                  </>
+                )}
+              </InfoText>
+            </InfoBlock>
 
-        <Section>
-          <InfoBlock>
-            <SmallTitle>지출 TOP3</SmallTitle>
-            <InfoText>
-              {top3[0]?.label && <Top1>{top3[0].label}</Top1>}
-              {top3[1]?.label && (
-                <>
-                  {" "}
-                  &gt; <Top2>{top3[1].label}</Top2>
-                </>
-              )}
-              {top3[2]?.label && (
-                <>
-                  {" "}
-                  &gt; <Top3>{top3[2].label}</Top3>
-                </>
-              )}
-            </InfoText>
-          </InfoBlock>
+            <VerticalDivider />
 
-          <VerticalDivider />
+            <InfoBlock>
+              <SmallTitle>총 정리</SmallTitle>
+              <InfoText>
+                이번달은 {currentMonthExpense}원을 사용했으며, <br />
+                전달 대비 {saveExpense}원을 아끼셨습니다! <br />
+                목표를 재설정하여 소비를 줄여보세요!
+              </InfoText>
+            </InfoBlock>
 
-          <InfoBlock>
-            <SmallTitle>총 정리</SmallTitle>
-            <InfoText>
-              이번달은 {currentMonthExpense}원을 사용했으며, <br />
-              전달 대비 {saveExpense}원을 아끼셨습니다! <br />
-              목표를 재설정하여 소비를 줄여보세요!
-            </InfoText>
-          </InfoBlock>
+            <VerticalDivider />
 
-          <VerticalDivider />
-
-          <InfoBlock>
-            <SmallTitle>지출 목표 달성률</SmallTitle>
-            <InfoText>
-              이번달 지출 목표 달성 일은{" "}
-              <Highlight>총 {achievedDays}일</Highlight>이며,
-              <br />
-              지출 목표 달성률은 <Highlight>{achievementRate}%</Highlight>{" "}
-              입니다.
-            </InfoText>
-          </InfoBlock>
-        </Section>
-      </CalendarBox>
-    </Container>
+            <InfoBlock>
+              <SmallTitle>지출 목표 달성률</SmallTitle>
+              <InfoText>
+                이번달 지출 목표 달성 일은{" "}
+                <Highlight>총 {achievedDays}일</Highlight>이며,
+                <br />
+                지출 목표 달성률은 <Highlight>
+                  {achievementRate}%
+                </Highlight>{" "}
+                입니다.
+              </InfoText>
+            </InfoBlock>
+          </Section>
+        </CalendarBox>
+      </Container>
+    </Wrapper>
   );
 };
 
