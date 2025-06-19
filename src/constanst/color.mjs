@@ -26,7 +26,16 @@ const Colors ={
 
     purchasedBox:"#B60000",
     satisfactionBox:"#0341BE",
-    disSatisfactionBox:"#B60000"
+    disSatisfactionBox:"#B60000",
+
+    food: "FB8072",
+    cafe: "80B1D3",
+    shop: "FED9A6",
+    health: "BC80BD",
+    hobby: "CCEBC5",
+    transit: "FFFFB3",
+    other: "D9D9D9"
+    
 
 }
 
