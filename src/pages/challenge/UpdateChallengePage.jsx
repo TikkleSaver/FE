@@ -409,7 +409,7 @@ const ChallengeImageUpload = ({ onFileSelect, initialImage }) => {
   const handleImageChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
-      const imageUrl = URL.UpdateObjectURL(file);
+      const imageUrl = URL.createObjectURL(file);
       setPreview(imageUrl);
       onFileSelect(file);
     }
