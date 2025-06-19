@@ -69,7 +69,6 @@ const Input = styled.input`
 //input 태그 스타일
 const Container = styled.div`
   position: relative;
-  margin-top: 50px;
   display: flex;
   justify-content: center;
 `;
@@ -81,6 +80,7 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 `;
 
 const GoalBox = styled.div`
@@ -115,7 +115,7 @@ const Title = styled.span`
 
 const Logo = styled.img`
   position: absolute;
-  top: -40px;
+  top: 10px;
   left: -200px;
   width: 200px;
   /* margin: 10px 40px; */
