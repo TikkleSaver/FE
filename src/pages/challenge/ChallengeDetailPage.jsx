@@ -209,7 +209,7 @@ color: ${Colors.secondary400}
 
 function ChallengeDetailPage() {
   const [selectedTab, setSelectedTab] = useState("메인");
-  const { challengeId } = useParams();
+  const {challengeId } = useParams();
   const [challengeData, setChallengeData] = useState(null);
   const [status, setStatus] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -332,7 +332,7 @@ function ChallengeDetailPage() {
         <TopChallengeInnerContainer>
           {selectedTab === "메인" && <ChallengeMainComponent />}
           {selectedTab === "인증하기" && <ChallengeCertifyComponent />}
-          {selectedTab === "챌린저" && <ChallengerComponent challengeId={challengeId} />}
+          {selectedTab === "챌린저" && <ChallengerComponent challengeId={challengeId} memberId={memberId} />}
         </TopChallengeInnerContainer>
       </TabChallengeContainer>
       {showModal && <ChallengeRequestModal onClose={handleModal} challengeId={challengeId}  />}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import top3RankImg from "../../images/top3RankImg.png";
 import axios from "axios";
@@ -52,19 +53,30 @@ const ChallengerProfileBtn = styled.button`
   border: none;
 `;
 
-function CertifyComponent({ name, imgSrc }) {
+function CertifyComponent({ name, challengerId, memberId, imgSrc }) {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/friendprofile', {
+      state: { memberId: challengerId },
+    });
+  };
+
   return (
     <ChallengerContainer>
       <ChallengerInfo>
         <ChallengerImg ><img src={ imgSrc ? imgSrc : defaultProfileImg} alt="프로필 이미지"/></ChallengerImg>
         <ChallengerName>{name}</ChallengerName>
       </ChallengerInfo>
-      <ChallengerProfileBtn>프로필 보러가기</ChallengerProfileBtn>
+      {memberId !== challengerId && (
+  <ChallengerProfileBtn onClick={handleClick}>프로필 보러가기</ChallengerProfileBtn>
+)}
     </ChallengerContainer>
   );
 }
 
-const ChallengerComponent = ({challengeId}) => {
+const ChallengerComponent = ({challengeId, memberId}) => {
     const [memberList, setMemberList] = useState([]);
     const [page, setPage] = useState(1); 
     const [totalPage, setTotalPage] = useState(1);
@@ -89,21 +101,13 @@ const ChallengerComponent = ({challengeId}) => {
       };
   
       loadChallengerList();
-    }, [page, challengeId]);
-  
+    }, [challengeId,page]);
 
-  const mockData = [
-    { name: "홍길동", imgSrc: top3RankImg },
-    { name: "김철수", imgSrc: top3RankImg },
-    { name: "박영희", imgSrc: top3RankImg },
-    { name: "이민호", imgSrc: top3RankImg },
-    { name: "최지우", imgSrc: top3RankImg },
-  ];
 
   return (
     <ChallengerWrapper>
       {memberList.map((item, index) => (
-        <CertifyComponent key={index} name={item.memberName} imgSrc={item.memberImgUrl} />
+        <CertifyComponent key={index} name={item.memberName} challengerId={item.memberId} memberId={memberId} imgSrc={item.memberImgUrl} />
       ))}
       <Pagination 
               page={page} 
