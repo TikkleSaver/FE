@@ -105,20 +105,6 @@ export default function Top() {
         loop={true}
       >
         <SwiperSlide>
-          <Slide1>
-            <img src={image1} alt={`Slide 1`} />
-            <RightBox>
-              <Title>소비 일기</Title>
-              <Comment>이번 달 나 뭐 샀지?! 가계부에서 확인해보세요!</Comment>
-              <Content>
-                가계부를 작성하고, 일별·월별 소비내역과 합계를 캘린더 형식으로
-                저장하여 한 눈에 확인할 수 있습니다. <br />
-                구매 완료된 위시 상품 또한 자동으로 가계부에 포함됩니다.
-              </Content>
-            </RightBox>
-          </Slide1>
-        </SwiperSlide>
-        <SwiperSlide>
           <Slide2>
             <img src={image2} alt={`Slide 1`} />
             <RightBox>
@@ -138,10 +124,24 @@ export default function Top() {
           </Slide2>
         </SwiperSlide>
         <SwiperSlide>
+          <Slide1>
+            <img src={image1} alt={`Slide 1`} />
+            <RightBox>
+              <Title>소비 일기</Title>
+              <Comment>이번 달 나 뭐 샀지?! 가계부에서 확인해보세요!</Comment>
+              <Content>
+                가계부를 작성하고, 일별·월별 소비내역과 합계를 캘린더 형식으로
+                저장하여 한 눈에 확인할 수 있습니다. <br />
+                구매 완료된 위시 상품 또한 자동으로 가계부에 포함됩니다.
+              </Content>
+            </RightBox>
+          </Slide1>
+        </SwiperSlide>
+        <SwiperSlide>
           <Slide3>
             <img src={image3} alt={`Slide 1`} />
             <RightBox>
-              <Title>티끌모으기</Title>
+              <Title>위시리스트</Title>
               <Comment>
                 이제 충동적인 구매는 그만!
                 <br />
