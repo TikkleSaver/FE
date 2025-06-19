@@ -85,7 +85,7 @@ const ChallengePreviewCard = ({ challengeId, title, category, imgUrl, from , fro
     "쇼핑": "#FED9A6",
     "건강": "#BC80BD",
     "취미": "#CCEBC5",
-    "교통비": "#FFFFB3",
+    "교통비": "#FFED6F",
     "기타 생활비": "#D9D9D9",
   };
 
