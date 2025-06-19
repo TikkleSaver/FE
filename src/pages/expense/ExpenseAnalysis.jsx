@@ -164,15 +164,15 @@ const ChartRow = styled.div`
 `;
 
 // Constants
-const COLORS = [
-  "#3D8D7A",
-  "#8BC1AE",
-  "#C2E2D4",
-  "#2C6F60",
-  "#1F4E47",
-  "#A5D5C3",
-  "#6FA89A",
-];
+const CATEGORY_COLORS = {
+  1: "#FB8072", // 식비
+  2: "#80B1D3", // 카페
+  3: "#FED9A6", // 쇼핑
+  4: "#BC80BD", // 건강
+  5: "#CCEBC5", // 취미
+  6: "#FFED6F", // 교통비
+  7: "#D9D9D9", // 기타
+};
 
 const ExpenseAnalysis = () => {
   const today = new Date();
@@ -276,9 +276,13 @@ const ExpenseAnalysis = () => {
           const matchedCategory = categories.find(
             (cat) => cat.id === categoryId
           );
+          const color = matchedCategory
+            ? CATEGORY_COLORS[matchedCategory.id]
+            : "#ccc";
           return {
             name: matchedCategory ? matchedCategory.label : "기타 생활비",
             value: totalAmount,
+            fill: color || "#ccc",
           };
         });
         setPieData(updatedPieData);
@@ -419,17 +423,14 @@ const ExpenseAnalysis = () => {
                     animationEasing="ease-out"
                   >
                     {sortedPieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Pie>
                 </PieChart>
                 <Legend>
                   {sortedPieData.map((item, index) => (
                     <LegendItem key={item.name}>
-                      <ColorBox color={COLORS[index]} />
+                      <ColorBox color={item.fill} />
                       <PieSpan>{`${
                         item.name
                       } - ${item.value.toLocaleString()}원`}</PieSpan>

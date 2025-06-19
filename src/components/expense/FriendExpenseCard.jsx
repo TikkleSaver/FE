@@ -37,7 +37,7 @@ const ItemDetail = styled.div`
 `;
 
 const ItemCategory = styled.div`
-  background-color: #f19797;
+  background-color: ${(props) => props.bgColor || "#f19797"};
   color: white;
   font-size: 11px;
   border-radius: 2px;
@@ -69,19 +69,30 @@ const categories = [
   { id: 7, label: "기타 생활비" },
 ];
 
+const CATEGORY_COLORS = {
+  1: "#FB8072", // 식비
+  2: "#80B1D3", // 카페
+  3: "#FED9A6", // 쇼핑
+  4: "#BC80BD", // 건강
+  5: "#CCEBC5", // 취미
+  6: "#FFED6F", // 교통비
+  7: "#D9D9D9", // 기타
+};
+
 const FriendExpenseCard = ({ item }) => {
   const categoryLabel =
     categories.find((cat) => cat.id === item.categoryId)?.label || "알 수 없음";
   const imageurl = item.image
     ? item.image
     : require("./../../images/emptyImg.svg").default;
+  const categoryColor = CATEGORY_COLORS[item.categoryId] || "#f19797";
 
   return (
     <ExpenseItem>
       <ItemImage imageUrl={imageurl} />
       <ItemInfo>
         <ItemDetail>
-          <ItemCategory>{categoryLabel}</ItemCategory>
+          <ItemCategory bgColor={categoryColor}>{categoryLabel}</ItemCategory>
           <ItemName>{item.expenseName}</ItemName>
           <ItemPlace>{item.expensePlace}</ItemPlace>
         </ItemDetail>
